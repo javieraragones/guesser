@@ -184,7 +184,7 @@
 
 </html>
 
-<script>
+<>
     async function getFotogramas() {
         try {
             const response = await fetch('http://localhost:81/serieFotogramas');
@@ -207,3 +207,90 @@
     getFotogramas();
 </script>
 ;?>
+
+
+
+
+
+
+    /*
+    
+    //----TRABAJAR EN ESTA FUNCIÓN PARA FINALIZARLA Y QUE FUNCIONE CORRECTAMENTE----
+    function enviarRespuesta(respuesta) {
+        const inputText = document.querySelector('.input-buscador');
+        const respuestaTrim = respuesta.trim().toLowerCase();
+
+        if (respuestaTrim === '') {
+            alert('Debe ingresar una respuesta');
+            return;
+        }
+
+        // Obtener el valor de la respuesta correcta del input hidden
+        const respuestaCorrecta = document.getElementById('respuesta-correcta').value.trim().toLowerCase();
+
+        if (respuestaTrim === respuestaCorrecta) {
+            inputText.value = '';
+            mostrarMensaje('¡Correcto!', 'mensaje-exito');
+        } else {
+            inputText.value = '';
+            mostrarMensaje('¡Incorrecto!', 'mensaje-error');
+        }
+
+        const historialIntentos = document.querySelector('.historial-intentos');
+        const nuevoIntento = document.createElement('div');
+        nuevoIntento.classList.add('intento-fallido');
+        nuevoIntento.innerText = respuestaTrim;
+        historialIntentos.appendChild(nuevoIntento);
+
+        const intentosRestantes = document.querySelector('.intentos-restantes');
+        const numeroIntentos = intentosRestantes.querySelector('span');
+        const intentosRestantesValor = parseInt(numeroIntentos.innerText);
+        numeroIntentos.innerText = intentosRestantesValor - 1;
+
+        if (intentosRestantesValor - 1 === 0) {
+            inputText.disabled = true;
+            mostrarMensaje('¡Lo siento, has agotado tus intentos!', 'mensaje - error ');
+        }
+    }
+
+    function mostrarMensaje(texto, clase) {
+        const mensaje = document.createElement('div');
+        mensaje.classList.add('mensaje');
+        mensaje.classList.add(clase);
+        mensaje.innerText = texto;
+
+        const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+        cajaReto.appendChild(mensaje);
+
+        setTimeout(() => {
+            cajaReto.removeChild(mensaje);
+        }, 3000);
+    }
+    */
+
+
+    /*---------Función con la que muestro en el elemento caja reto la imagen del reto---------
+    //Función con la que muestro en el elemento caja reto la imagen del reto
+    async function getFotogramas() {
+        try {
+            //Llamo a la API que está activa en el puerto 81 de mi ordenador gracias XAMPP
+            const response = await fetch('http://localhost:81/serieFotogramas');
+            //const response = await fetch(API_URL + '/serieFotogramas');
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            const array = data.message;
+            const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+            const imgURL = array[0].img1; // Obtener URL de la imagen desde la columna "img1"
+            cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
+            cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
+            cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
+            // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
+            cajaReto.style.backgroundColor = 'black';
+        } catch (error) {
+            console.error(`Error fetching data: ${error}`);
+        }
+    }
+    getFotogramas();
+    */
