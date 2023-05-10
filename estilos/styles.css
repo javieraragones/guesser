@@ -3,9 +3,9 @@
 :root{
   /*--bg-color: #393940;*/
   /*--bg-color: #212121;*/
-  --bg-color: #222831;
+  --bg-color: #222831; /*BG COLOR PALETA V1
   /*--box-color: #4D4957;*/
-  --box-color:#393E46;
+  --box-color:#393E46; /*COLOR CAJAS PALETA V1
   --header-text-color: #F5EFDF;
   --complementary-color1: #47404D;
   --complementary-color2: #494C57;
@@ -15,13 +15,20 @@
   --primary-100:#00ADB5;
   --primary-200:#AAE3E2;
   --primary-300:#fdf6fd;
-  --accent-100:#AC7DD2;
+  --accent-100: #AC7DD2;
   --accent-200:#fff4ff;
   --text-100:#EEEEEE;
   --text-200:#C5C5C5;
   --bg-100:#222831;
   --bg-200:#393E46;
   --bg-300:#454e59;
+
+  /*---PALETA V2---*/
+  --bg-color: #26292B ; /*PALETA V2*/
+  --box-color:#2E3239; /*PALETA V2*/
+  --primary-100: #5F7ADB;
+  --accent-100: #A2B2EE;
+  
 }
 *{
     text-align: center;
@@ -146,6 +153,10 @@ header {
   position: absolute; /* para posicionar el botón de cerrar */
   top: 5px; /* para posicionar el botón de cerrar en la parte superior */
   right: 5px; /* para posicionar el botón de cerrar en la parte derecha */
+}
+/*Para que no se vean los cuadros de texto durante un momento al recargar la página */
+#cuadroTextoPreg, #cuadroTextoInfo {
+  display: none;
 }
 
 
@@ -309,7 +320,7 @@ header {
   width: 0;
   border-radius: 15px;
   background-color: var(--accent-100);
-  /*background-color: #212121;*/
+  /*background-color: #212121; #5F7ADB #A2B2EE*/
   z-index: -1;
   -webkit-box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
   box-shadow: 4px 8px 19px -3px rgba(0,0,0,0.27);
@@ -352,6 +363,7 @@ header {
 .caja-reto{
   width: 100%;
   height: 250px;
+  min-height: 250px;
   background-color: #00ADB5;
   margin-bottom: 50px;
   border-radius: 10px;
@@ -460,8 +472,11 @@ header {
   left: 14px;
   border-radius: 20px;
 }
-
-
+/*Estilos historial pistas*/
+/* Agregamos regla CSS para ocultar los botones */
+.boton-navegacion {
+    display: none;
+}
 
 /*---Barra de búsqueda V1---
 .buscador-container {
@@ -518,6 +533,7 @@ header {
 */
 
 /*---Barra de búsqueda V2---*/
+
 .cuadro-busqueda {
   display: flex;
   justify-content: center;
@@ -568,6 +584,11 @@ header {
   background-color: #f4f4f4;
 }
 
+
+
+
+
+
 /*Mensajes respuestas*/
 .mensaje {
   position: absolute;
@@ -598,9 +619,11 @@ header {
 }
 
 
+/*Historial intentos*/
 
-
-
+#historial-intentos{
+  max-height: 300px;
+}
 
 
 

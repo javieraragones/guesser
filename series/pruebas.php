@@ -2,26 +2,97 @@
 
 
 <div class="caja-reto caja-reto-fotogramas" id="caja-reto-series-fotogramas">
+    <div id="imagen">
+        <!-- Agregar imagen por defecto -->
+        <img id="imagen-fallo" src="">
+    </div>
 </div>
+<script>
+    //Función con la que muestro en el elemento caja reto la imagen del reto
+    async function selectorFotograma(columna) {
+        try {
+            //Llamo a la API que está activa en el puerto 81 de mi ordenador gracias XAMPP
+            const response = await fetch('http://localhost:81/serieFotogramas');
+            //const response = await fetch(API_URL + '/serieFotogramas');
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            const array = data.message;
+            const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+            if (array[0].hasOwnProperty(columna)) { // Verificar si la columna existe en el objeto array
+                const imgURL = array[0][columna]; // Obtener URL de la imagen desde la columna
+                cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
+                cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
+                cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
+                // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
+                cajaReto.style.backgroundColor = 'black';
+            } else {
+                console.error(`Error: la columna ${columna} no existe en el objeto array.`);
+            }
+        } catch (error) {
+            console.error(`Error fetching data: ${error}`);
+        }
+    }
+    selectorFotograma('img1'); //Muestro la primera imagen
+</script>
 
 <div class="historial-pistas">
+    <button id="btn-img1" class="boton-navegacion">Imagen 1</button>
+    <button id="btn-img2" class="boton-navegacion">Imagen 2</button>
+    <button id="btn-img3" class="boton-navegacion">Imagen 3</button>
+    <button id="btn-img4" class="boton-navegacion">Imagen 4</button>
+    <button id="btn-img5" class="boton-navegacion">Imagen 5</button>
+    <button id="btn-img6" class="boton-navegacion">Imagen 6</button>
 </div>
+
+<script>
+    //Función para realizar la navegación entre las imágenes de los retos
+    const nombresColumnasImagenes = ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'];
+    let indiceImagenActual = 0;
+    //let cantidadFallos = 0; // Llevar registro de la cantidad de fallos
+    // Obtener los botones de navegación
+    const btnImg1 = document.getElementById('btn-img1');
+    const btnImg2 = document.getElementById('btn-img2');
+    const btnImg3 = document.getElementById('btn-img3');
+    const btnImg4 = document.getElementById('btn-img4');
+    const btnImg5 = document.getElementById('btn-img5');
+    const btnImg6 = document.getElementById('btn-img6');
+    // Agregar evento click a cada botón de navegación
+    btnImg1.addEventListener('click', () => {
+        selectorFotograma(nombresColumnasImagenes[0]);
+    });
+    btnImg2.addEventListener('click', () => {
+        selectorFotograma(nombresColumnasImagenes[1]);
+    });
+    btnImg3.addEventListener('click', () => {
+        selectorFotograma(nombresColumnasImagenes[2]);
+    });
+    btnImg4.addEventListener('click', () => {
+        selectorFotograma(nombresColumnasImagenes[3]);
+    });
+    btnImg5.addEventListener('click', () => {
+        selectorFotograma(nombresColumnasImagenes[4]);
+    });
+    btnImg6.addEventListener('click', () => {
+        selectorFotograma(nombresColumnasImagenes[5]);
+    });
+</script>
 
 <div class="cuadro-busqueda">
     <div class="buscador-container">
         <input type="text" name="buscador" class="input-buscador" placeholder="Buscar..." onkeyup="buscarTitulo(this.value)">
         <div id="resultados-busqueda"></div>
     </div>
-    <button onclick="comprobarRespuesta()">Enviar</button>
+    <button class="boton-buscar" onclick="comprobarRespuesta()">Enviar</button>
 </div>
-
 
 <!-- Agregar el input hidden con la respuesta correcta -->
 <input type="hidden" id="respuesta-correcta" value="">
 
 <script>
     //FUNCIÓN QUE INTRODUCE LA RESPUESTA CORRECTA EN EL INPUT HIDDEN PARA COMPARAR CON LA RESPUESTA DEL USUARIO
-    async function getFotogramas() {
+    async function getRespuestaCorrecta() {
         try {
             //const response = await fetch(API_URL + '/series');
             const response = await fetch('http://localhost:81/serieFotogramas');
@@ -37,27 +108,75 @@
             console.error(`Error fetching data: ${error}`);
         }
     }
-    getFotogramas();
+    getRespuestaCorrecta();
 </script>
 
-
-
 <script>
-    //FUNCIÓN PARA COMPROBAR RESPUESTA-COMPARA LA INTRODUCIDA CON LA QUE TIENE EL INPT HIDDEN
-    //FUNCIÓN PARA ENVIAR LA RESPUESTA ESCRITA
+    let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
+    let cuentaIntentosRestantes = 6;
+
+    // Función para mostrar el botón correspondiente según la cantidad de fallos
+    function mostrarBotonDesbloqueado(fallos) {
+        const botones = [btnImg1, btnImg2, btnImg3, btnImg4, btnImg5, btnImg6];
+        if (fallos >= 0 && fallos < botones.length) {
+            botones[fallos].style.display = 'inline-block';
+        }
+    }
+
+    //Función que muestra la siguiente imagen al cometer un fallo
+    async function mostrarFotograma() {
+        try {
+            await selectorFotograma(`img${cantidadFallos + 1}`);
+        } catch (error) {
+            console.error(error);
+            document.getElementById('imagen-fallo').src = 'https://thumbs.dreamstime.com/b/error-109026446.jpg'; // cambia la ruta a la imagen que quieras mostrar
+        }
+    }
+    //función para poner la primera letra mayúscula
+    function primeraLetraMayus(str) {
+        return str.replace(
+            /\w\S*/g,
+            function(txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            }
+        );
+    }
+
     function comprobarRespuesta() {
+        // Verificar si se han agotado los intentos
+        if (cuentaIntentosRestantes <= 0) {
+            alert("Ya has alcanzado el límite de intentos. ¡Inténtalo de nuevo más tarde!");
+            document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+            return;
+        }
+        mostrarBotonDesbloqueado(cantidadFallos);
         // Obtener la respuesta del usuario
         var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase();
-
         // Obtener la respuesta correcta
         var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase();
-
         // Comparar las respuestas
         if (respuestaUsuario === respuestaCorrecta) {
             alert("¡Respuesta correcta!");
         } else {
             alert("Respuesta incorrecta. Inténtalo de nuevo.");
+            cantidadFallos++;
+            mostrarBotonDesbloqueado(cantidadFallos);
+            mostrarFotograma();
+            // Añade la respuesta al historial
+            var historialIntentos = document.getElementById("historial-intentos");
+            historialIntentos.innerHTML += `<p>Intento ${cantidadFallos}: ${primeraLetraMayus(respuestaUsuario)}</p>`;
+
+            // Actualiza los intentos restantes
+            cuentaIntentosRestantes--;
         }
+        var intentosRestantes = document.getElementById("num-intentos-restantes");
+        intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
+    }
+
+    function mostrarIntentosRestantes(cuentaIntentosRestantes) {
+        // Muestra los intentos restantes al cargar la página
+        var intentosRestantes = document.getElementById("num-intentos-restantes");
+        intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
     }
 
     //FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
@@ -84,7 +203,7 @@
         if (resultados.length > 0) {
             htmlResultados += "<ul>";
             for (let i = 0; i < resultados.length; i++) {
-                htmlResultados += "<li><a href=\"#\" onclick=\"enviarRespuesta('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
+                htmlResultados += "<li><a href=\"#\" onclick=\"seleccionarResultado('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
             }
             htmlResultados += "</ul>";
         } else {
@@ -93,63 +212,22 @@
         document.getElementById("resultados-busqueda").innerHTML = htmlResultados;
     }
 
-    //----TRABAJAR EN ESTA FUNCIÓN PARA FINALIZARLA Y QUE FUNCIONE CORRECTAMENTE----
-    function enviarRespuesta(respuesta) {
-        const inputText = document.querySelector('.input-buscador');
-        const respuestaTrim = respuesta.trim().toLowerCase();
-
-        if (respuestaTrim === '') {
-            alert('Debe ingresar una respuesta');
-            return;
-        }
-
-        // Obtener el valor de la respuesta correcta del input hidden
-        const respuestaCorrecta = document.getElementById('respuesta-correcta').value.trim().toLowerCase();
-
-        if (respuestaTrim === respuestaCorrecta) {
-            inputText.value = '';
-            mostrarMensaje('¡Correcto!', 'mensaje-exito');
-        } else {
-            inputText.value = '';
-            mostrarMensaje('¡Incorrecto!', 'mensaje-error');
-        }
-
-        const historialIntentos = document.querySelector('.historial-intentos');
-        const nuevoIntento = document.createElement('div');
-        nuevoIntento.classList.add('intento-fallido');
-        nuevoIntento.innerText = respuestaTrim;
-        historialIntentos.appendChild(nuevoIntento);
-
-        const intentosRestantes = document.querySelector('.intentos-restantes');
-        const numeroIntentos = intentosRestantes.querySelector('span');
-        const intentosRestantesValor = parseInt(numeroIntentos.innerText);
-        numeroIntentos.innerText = intentosRestantesValor - 1;
-
-        if (intentosRestantesValor - 1 === 0) {
-            inputText.disabled = true;
-            mostrarMensaje('¡Lo siento, has agotado tus intentos!', 'mensaje - error ');
-        }
-    }
-
-    function mostrarMensaje(texto, clase) {
-        const mensaje = document.createElement('div');
-        mensaje.classList.add('mensaje');
-        mensaje.classList.add(clase);
-        mensaje.innerText = texto;
-
-        const cajaReto = document.getElementById('caja-reto-series-fotogramas');
-        cajaReto.appendChild(mensaje);
-
-        setTimeout(() => {
-            cajaReto.removeChild(mensaje);
-        }, 3000);
+    //FUNCIÓN QUE SE EJECUTA AL SELECCIONAR UN RESULTADO
+    function seleccionarResultado(tituloSeleccionado) {
+        document.querySelector(".input-buscador").value = tituloSeleccionado;
+        document.getElementById("resultados-busqueda").innerHTML = "";
     }
 </script>
-<div class="historial-intentos">
-    Aquí se muestran los inputs de los intentos fallidos.
+<div class="historial-intentos" id="historial-intentos">
+
 </div>
+
 <div class="intentos-restantes">
-    <p>Intentos restantes: <span>3</span></p>
+    <p>Intentos restantes: <span id="num-intentos-restantes">
+            <script>
+                mostrarIntentosRestantes(6);
+            </script>
+        </span></p>
 </div>
 </div>
 </div>
@@ -157,27 +235,13 @@
 
 </html>
 <script>
-    //Función con la que muestro en el elemento caja reto la imagen del reto
-    async function getFotogramas() {
-        try {
-            //Llamo a la API que está activa en el puerto 81 de mi ordenador gracias XAMPP
-            const response = await fetch('http://localhost:81/serieFotogramas');
-            //const response = await fetch(API_URL + '/serieFotogramas');
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
+    document.addEventListener("DOMContentLoaded", function() {
+        var input = document.getElementById("input-buscador");
+        input.addEventListener("keydown", function(event) {
+            if (event.keyCode === 13) {
+                event.preventDefault();
+                comprobarRespuesta();
             }
-            const data = await response.json();
-            const array = data.message;
-            const cajaReto = document.getElementById('caja-reto-series-fotogramas');
-            const imgURL = array[0].img1; // Obtener URL de la imagen desde la columna "img1"
-            cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
-            cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
-            cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
-            // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
-            cajaReto.style.backgroundColor = 'black';
-        } catch (error) {
-            console.error(`Error fetching data: ${error}`);
-        }
-    }
-    getFotogramas();
+        });
+    });
 </script>
