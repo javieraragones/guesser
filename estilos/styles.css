@@ -360,7 +360,16 @@ header {
   align-items: center;
   background-color: var(--primary-300);
   text-align: center;
-  
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+}
+.caja-reto-fotogramas{
+  background-color: black !important;
+}
+/*Estilo para la caja de reto de modo de juego emojis*/
+.reto-emojis{
+  font-size: 80px;
 }
 
 /*---BARRA NAVEGACION SERIES---*/
@@ -454,8 +463,7 @@ header {
 
 
 
-
-/*---Barra de búsqueda---*/
+/*---Barra de búsqueda V1---
 .buscador-container {
   display: flex;
   justify-content: center;
@@ -506,6 +514,78 @@ header {
 
 .search__btn:hover {
   background-color: rgba(54, 54, 56, 1);
+}
+*/
+
+/*---Barra de búsqueda V2---*/
+.cuadro-busqueda {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.buscador-container {
+  position: relative;
+  width: 100%;
+}
+
+.input-buscador {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 16px;
+  padding: 10px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+#resultados-busqueda {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: #fff;
+  border: 2px solid #ccc;
+  border-top: none;
+  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+#resultados-busqueda ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#resultados-busqueda li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+#resultados-busqueda li:hover {
+  background-color: #f4f4f4;
+}
+
+/*Mensajes respuestas*/
+.mensaje {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 10px 20px;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 5px;
+}
+
+.mensaje-exito {
+  background-color: #0f0;
+}
+
+.mensaje-error {
+  background-color: #f00;
 }
 
 /*---Fin barra de búsqueda---*/
