@@ -99,9 +99,143 @@
 
 
 
+<?php /*Funciones emojiseries
+    exit(var_dump(API_URL));
+    include_once('../funcionesPHP/conexion.php');
+    // Crear una instancia de la clase ConectarDB
+    $conexion = new ConectarDB();
+    $conn = $conexion->conectar();
+    // Realizar la consulta para obtener un elemento aleatorio de la tabla "emojis_serie"
+    $sql = "SELECT * FROM emojis_serie ORDER BY RAND() LIMIT 1"; // Seleccionar un elemento aleatorio de la tabla
+    $stmt = $conn->query($sql);
+    $resultado = $stmt->fetch();
+    if ($resultado) : ?>
+        <h1><?php echo $resultado['emoji']; ?></h1> <!-- Muestra el elemento -->
+    <?php else : ?>
+        <p>No se encontraron elementos</p>
+        <?php endif; ?><?php
+                        // Cerrar la conexión a la base de datos
+                        $conexion->cerrar();
+                        */ ?>
+/*async function getEmojis() {
+try {
+const response = await fetch(API_URL + '/series')
+if (!response.ok) {
+throw new Error(`HTTP error! Status: ${response.status}`);
+}
+const data = await response.json();
+// console.log(data)
+for (let a of data.message) {
+console.log(a.emoji)
+}
+} catch (error) {
+console.error(`Error fetching data: ${error}`);
+}
+}
+getEmojis()
 
 
-<?php /* include './estrucInicioSeries.php'; ?><!-- Incluir el contenido base -->
+
+/*
+----------------------------------------------funciones iniciales serieEmojis----------------------------------------------
+
+async function getEmojis() {
+try {
+// ARREGLAR RUTAS, PARA QUE LUEGO ESTÉ ASÍ
+// const response = await fetch(API_URL + '/series')
+const response = await fetch('http://localhost:81/serieEmojis')
+if (!response.ok) {
+throw new Error(`HTTP error! Status: ${response.status}`);
+}
+const data = await response.json();
+const array = data.message;
+const cajaReto = document.getElementById('caja-reto-series-emojis');
+// const serieRandom = getSerieRandom(data.series);
+let emojis = array[0].emoji; // cadena con dos emojis
+// regex es un formateo de datos
+const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+const emojiArray = emojis.match(regex);
+console.log(emojiArray); // ['\ud83e\udd91', '\ud83c\udfae']
+cajaReto.innerHTML = emojiArray.join('');
+} catch (error) {
+console.error(`Error fetching data: ${error}`);
+}
+}
+
+//getEmojis()
+
+//Función funcional inicial emojis
+async function selectorEmojis(posicion) {
+try {
+// ARREGLAR RUTAS, PARA QUE LUEGO ESTÉ ASÍ
+// const response = await fetch(API_URL + '/series')
+const response = await fetch('http://localhost:81/serieEmojis')
+if (!response.ok) {
+throw new Error(`HTTP error! Status: ${response.status}`);
+}
+const data = await response.json();
+const array = data.message;
+const cajaReto = document.getElementById('caja-reto-series-emojis');
+// const serieRandom = getSerieRandom(data.series);
+let emojis = array[0].emoji; // cadena con dos emojis
+// regex es un formateo de datos
+const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+const emojiArray = emojis.match(regex);
+console.log(emojiArray); // ['\ud83e\udd91', '\ud83c\udfae']
+cajaReto.innerHTML = emojiArray[posicion];
+} catch (error) {
+console.error(`Error fetching data: ${error}`);
+}
+}
+//selectorEmojis(0);
+/*COMPROBAR RESPUESTA FUNCIONAL
+
+function comprobarRespuesta() {
+
+// Obtener la respuesta del usuario
+var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase();
+// Obtener la respuesta correcta
+var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase();
+// Comparar las respuestas
+var mensaje = document.querySelector(".mensaje-envio-respuesta");
+mensaje.style.fontSize = "24px";
+if (respuestaUsuario === respuestaCorrecta) {
+//Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
+mensaje.innerHTML = "¡Respuesta correcta! : " + primeraLetraMayus(respuestaCorrecta);
+mensaje.style.color = "green"; // establecer color verde para acierto
+document.querySelector('.cuadro-busqueda').style.display = 'none';
+//alert("¡Respuesta correcta!");
+//Recorrer todos los botones y mostrarlos
+const botones = [btnImg1, btnImg2, btnImg3, btnImg4, btnImg5, btnImg6];
+for (let i = 0; i < botones.length; i++) { botones[i].style.display='inline-block' ; } } else { //alert("Respuesta incorrecta. Inténtalo de nuevo."); mensaje.innerHTML="Respuesta incorrecta" ; mensaje.style.color="red" ; // establecer color rojo para fallo cantidadFallos++; mostrarEmoji(); // Añade la respuesta al historial var historialIntentos=document.getElementById("historial-intentos"); historialIntentos.innerHTML +=`<p>Intento ${cantidadFallos}: ${primeraLetraMayus(respuestaUsuario)}</p>`;
+
+    // Actualiza los intentos restantes
+    cuentaIntentosRestantes--;
+    }
+    // Verificar si se han agotado los intentos
+    if (cuentaIntentosRestantes == 0) {
+    //alert("Ya has alcanzado el límite de intentos. ¡Inténtalo de nuevo más tarde!");
+    mensaje.innerHTML = "Respuesta correcta: " + primeraLetraMayus(respuestaCorrecta);
+    mensaje.style.color = "white"; // establecer color
+    document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+    }
+    var intentosRestantes = document.getElementById("num-intentos-restantes");
+    intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
+    //Deja el cuadro de respuesta vacío
+    document.querySelector(".input-buscador").value = "";
+    }
+    function mostrarIntentosRestantes(cuentaIntentosRestantes) {
+    // Muestra los intentos restantes al cargar la página
+    var intentosRestantes = document.getElementById("num-intentos-restantes");
+    intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
+    }
+    */
+    */
+
+
+
+    <?php /* ----------------------------------------------Funciones fotogramaSeries----------------------------------------------
+include './estrucInicioSeries.php'; ?><!-- Incluir el contenido base -->
 
 <div class="caja-reto caja-reto-fotogramas" id="caja-reto-series-fotogramas">
 </div>
@@ -294,3 +428,194 @@
     }
     getFotogramas();
     */
+/*
+
+
+----------------------------------------------PERSONAJE----------------------------------------------
+
+let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
+let cuentaIntentosRestantes = 6; //inicio la cantidad de intentos que le quedan al usuario
+
+//FUNCIÓN QUE INTRODUCE LA RESPUESTA CORRECTA EN EL INPUT HIDDEN PARA COMPARAR CON LA RESPUESTA DEL USUARIO
+async function getRespuestaCorrecta() {
+    try {
+        //const response = await fetch(API_URL + '/series');
+        const response = await fetch('http://localhost:81/seriePersonaje');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const array = data.message;
+        const nombre = array[0].nombre; // Obtener valor de la columna "nombre"
+        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+        respuestaInput.value = nombre; // Establecer el valor del input
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+getRespuestaCorrecta();
+async function getPersonaje() {
+    try {
+        const response = await fetch('http://localhost:81/seriePersonaje');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const array = data.message;
+        const cajaReto = document.getElementById('caja-reto-series-personaje');
+        const imgURL = array[0].img; // Obtener URL de la imagen desde la columna "img1"
+        cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
+        cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
+        cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
+        // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
+        cajaReto.style.backgroundColor = 'black';
+        cajaReto.style.filter = 'blur(7px)'; // Aplicar filtro
+        const x = Math.floor(Math.random() * (cajaReto.offsetWidth - cajaReto.offsetWidth * 0.5));
+        const y = Math.floor(Math.random() * (cajaReto.offsetHeight - cajaReto.offsetHeight * 0.5));
+        cajaReto.style.backgroundPosition = `-${x}px -${y}px`;
+        cajaReto.style.backgroundSize = '150%'; // Aumentar el zoom
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+
+getPersonaje();
+
+function zoomImagen() {
+    const cajaReto = $('#caja-reto-series-personaje');
+    const img = cajaReto.css('background-image');
+
+    // Calcular un valor aleatorio para el zoom
+    const maxZoom = 2;
+    const zoom = Math.floor(Math.random() * maxZoom) + 1;
+
+    // Animar el tamaño de la imagen
+    cajaReto.animate({
+        'background-size': `${zoom * 100}%`,
+    }, 1000, 'swing');
+}
+
+let fallos = 0;
+const factorReduccion = 0.8;
+
+function comprobarRespuesta() {
+    // Lógica para comprobar respuesta
+    if (respuestaCorrecta) {
+        // Lógica para respuesta correcta
+    } else {
+        fallos++;
+        const zoomActual = parseInt($('#caja-reto-series-personaje').css('background-size'));
+        const zoomNuevo = Math.floor(zoomActual * factorReduccion);
+        $('#caja-reto-series-personaje').animate({
+            'background-size': `${zoomNuevo}%`,
+        }, 1000, 'swing');
+    }
+}
+
+*/
+//función para poner la primera letra mayúscula
+function primeraLetraMayus(str) {
+    return str.replace(
+        /\w\S*/g,
+        function (txt) {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+        }
+    );
+}
+/*
+
+
+function comprobarRespuesta() {
+    // Verificar si se han agotado los intentos
+
+    if (cuentaIntentosRestantes <= 0) {
+        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+        return;
+    }
+    // Obtener la respuesta del usuario
+    var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase();
+    // Obtener la respuesta correcta
+    var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase();
+    // Comparar las respuestas
+    var mensaje = document.querySelector(".mensaje-envio-respuesta");
+    mensaje.style.fontSize = "24px";
+    if (respuestaUsuario === respuestaCorrecta) {
+        //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
+        mensaje.innerHTML = "¡Respuesta correcta! : " + primeraLetraMayus(respuestaCorrecta);
+        mensaje.style.color = "green"; // establecer color verde para acierto            
+        document.querySelector('.cuadro-busqueda').style.display = 'none';
+        //alert("¡Respuesta correcta!");
+    } else {
+        //alert("Respuesta incorrecta. Inténtalo de nuevo.");
+        mensaje.innerHTML = "Respuesta incorrecta";
+        mensaje.style.color = "red"; // establecer color rojo para fallo
+        cantidadFallos++;
+        // Añade la respuesta al historial
+        var historialIntentos = document.getElementById("historial-intentos");
+        historialIntentos.innerHTML += `<p>Intento ${cantidadFallos}: ${primeraLetraMayus(respuestaUsuario)}</p>`;
+        //cada vez que se falla, se muestra desde el principio hasta cantidad de fallos +1
+        // Actualiza los intentos restantes
+        cuentaIntentosRestantes--;
+    }
+    // Verificar si se han agotado los intentos
+    if (cuentaIntentosRestantes == 0) {
+        //alert("Ya has alcanzado el límite de intentos. ¡Inténtalo de nuevo más tarde!");
+        mensaje.innerHTML = "Respuesta correcta: " + primeraLetraMayus(respuestaCorrecta);
+        mensaje.style.color = "white"; // establecer color 
+        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+    }
+    var intentosRestantes = document.getElementById("num-intentos-restantes");
+    intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
+    //Deja el cuadro de respuesta vacío
+    document.querySelector(".input-buscador").value = "";
+}
+function mostrarIntentosRestantes(cuentaIntentosRestantes) {
+    // Muestra los intentos restantes al cargar la página
+    var intentosRestantes = document.getElementById("num-intentos-restantes");
+    intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
+}
+
+//FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
+function buscarTitulo(textoBusqueda) {
+    if (textoBusqueda.length >= 2) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "buscarTitulopersonaje.php", true);
+        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
+                mostrarResultados(this.responseText);
+            }
+        };
+        xhr.send("textoBusqueda=" + textoBusqueda);
+    } else {
+        document.getElementById("resultados-busqueda").innerHTML = "";
+    }
+}
+
+//FUNCIÓN QUE MUESTRA LOS RESULTADOS DE LOS TÍTULOS QUE COINCIDEN EN UN DESPLEGABLE
+function mostrarResultados(textoRespuesta) {
+    const resultados = JSON.parse(textoRespuesta);
+    let htmlResultados = "";
+    if (resultados.length > 0) {
+        htmlResultados += "<ul>";
+        for (let i = 0; i < resultados.length; i++) {
+            //htmlResultados += "<li><a href=\"#\" onclick=\"seleccionarResultado('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
+            htmlResultados += "<li onclick=\"seleccionarResultado('" + resultados[i] + "')\"><span>" + resultados[i] + "</span></li>";
+
+        }
+        htmlResultados += "</ul>";
+    } else {
+        htmlResultados += "<p>No se encontraron resultados.</p>";
+    }
+    document.getElementById("resultados-busqueda").innerHTML = htmlResultados;
+}
+
+//FUNCIÓN QUE SE EJECUTA AL SELECCIONAR UN RESULTADO
+function seleccionarResultado(tituloSeleccionado) {
+    document.querySelector(".input-buscador").value = tituloSeleccionado;
+    document.getElementById("resultados-busqueda").innerHTML = "";
+}
+
+
+
+*/ 

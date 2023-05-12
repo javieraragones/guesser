@@ -37,7 +37,13 @@
     selectorFotograma('img1'); //Muestro la primera imagen
 </script>
 
+<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-series-fotogramas">
+    <p class="zona-invisible">Texto invisible</p>
+    <p></p>
+</div>
+
 <div class="historial-pistas">
+    <button id="btn-img" class="zona-invisible"></button>
     <button id="btn-img1" class="boton-navegacion">Imagen 1</button>
     <button id="btn-img2" class="boton-navegacion">Imagen 2</button>
     <button id="btn-img3" class="boton-navegacion">Imagen 3</button>
@@ -145,7 +151,6 @@
     function comprobarRespuesta() {
         // Verificar si se han agotado los intentos
         if (cuentaIntentosRestantes <= 0) {
-            alert("Ya has alcanzado el límite de intentos. ¡Inténtalo de nuevo más tarde!");
             document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
             return;
         }
@@ -155,10 +160,23 @@
         // Obtener la respuesta correcta
         var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase();
         // Comparar las respuestas
+        var mensaje = document.querySelector(".mensaje-envio-respuesta");
+        mensaje.style.fontSize = "24px";
         if (respuestaUsuario === respuestaCorrecta) {
-            alert("¡Respuesta correcta!");
+            //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
+            mensaje.innerHTML = "¡Respuesta correcta!";
+            mensaje.style.color = "green"; // establecer color verde para acierto            
+            document.querySelector('.cuadro-busqueda').style.display = 'none';
+            //alert("¡Respuesta correcta!");
+            //Recorrer todos los botones y mostrarlos
+            const botones = [btnImg1, btnImg2, btnImg3, btnImg4, btnImg5, btnImg6];
+            for (let i = 0; i < botones.length; i++) {
+                botones[i].style.display = 'inline-block';
+            }
         } else {
-            alert("Respuesta incorrecta. Inténtalo de nuevo.");
+            //alert("Respuesta incorrecta. Inténtalo de nuevo.");
+            mensaje.innerHTML = "Respuesta incorrecta";
+            mensaje.style.color = "red"; // establecer color rojo para fallo
             cantidadFallos++;
             mostrarBotonDesbloqueado(cantidadFallos);
             mostrarFotograma();
@@ -169,8 +187,15 @@
             // Actualiza los intentos restantes
             cuentaIntentosRestantes--;
         }
+        if (cuentaIntentosRestantes == 0) {
+            //alert("Ya has alcanzado el límite de intentos. ¡Inténtalo de nuevo más tarde!");
+            mensaje.innerHTML = "Respuesta correcta: " + primeraLetraMayus(respuestaCorrecta);
+            mensaje.style.color = "white"; // establecer color 
+        }
         var intentosRestantes = document.getElementById("num-intentos-restantes");
         intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
+        //Deja el cuadro de respuesta vacío
+        document.querySelector(".input-buscador").value = "";
     }
 
     function mostrarIntentosRestantes(cuentaIntentosRestantes) {
@@ -181,7 +206,7 @@
 
     //FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
     function buscarTitulo(textoBusqueda) {
-        if (textoBusqueda.length >= 2) {
+        if (textoBusqueda.length >= 1) {
             const xhr = new XMLHttpRequest();
             xhr.open("POST", "buscar_titulo.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -203,7 +228,9 @@
         if (resultados.length > 0) {
             htmlResultados += "<ul>";
             for (let i = 0; i < resultados.length; i++) {
-                htmlResultados += "<li><a href=\"#\" onclick=\"seleccionarResultado('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
+                //htmlResultados += "<li><a href=\"#\" onclick=\"seleccionarResultado('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
+                htmlResultados += "<li onclick=\"seleccionarResultado('" + resultados[i] + "')\"><span>" + resultados[i] + "</span></li>";
+
             }
             htmlResultados += "</ul>";
         } else {
@@ -235,6 +262,7 @@
 
 </html>
 <script>
+    //envío de respuesta al presionar enter(no funciona)
     document.addEventListener("DOMContentLoaded", function() {
         var input = document.getElementById("input-buscador");
         input.addEventListener("keydown", function(event) {

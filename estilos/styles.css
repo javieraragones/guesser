@@ -346,7 +346,7 @@ header {
 /*-------------------------------------------ESTILOS PÁGINAS JUEGOS/*-------------------------------------------*/
 
 .game-cont {
-    height: 80vh; /* Ajusta la altura a tus necesidades */
+    height: 95vh; /* Ajusta la altura a tus necesidades */
 }
 
 .game-box{
@@ -365,7 +365,7 @@ header {
   height: 250px;
   min-height: 250px;
   background-color: #00ADB5;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
   border-radius: 10px;
   display: flex;
   justify-content: center;
@@ -379,6 +379,11 @@ header {
 .caja-reto-fotogramas{
   background-color: black !important;
 }
+/*
+#caja-reto-series-personaje{
+  min-height: 400px !important;
+  width: auto;
+}*/
 /*Estilo para la caja de reto de modo de juego emojis*/
 .reto-emojis{
   font-size: 80px;
@@ -472,11 +477,27 @@ header {
   left: 14px;
   border-radius: 20px;
 }
+/*Estilos textos acierto/fallo*/
+.mensaje-envio-respuesta{
+  height: 40px;
+  margin-top: 7px;
+  margin-bottom: 7px;
+}
 /*Estilos historial pistas*/
+
 /* Agregamos regla CSS para ocultar los botones */
 .boton-navegacion {
     display: none;
 }
+.zona-invisible{
+  visibility: hidden;
+}
+
+
+/*Estilos textos de acierto o fallo*/
+
+
+
 
 /*---Barra de búsqueda V1---
 .buscador-container {
@@ -536,7 +557,7 @@ header {
 
 .cuadro-busqueda {
   display: flex;
-  justify-content: center;
+  justify-content: left;
   margin: 20px 0;
 }
 
@@ -553,7 +574,13 @@ header {
   padding: 10px;
   box-sizing: border-box;
   outline: none;
+  text-align: left;
 }
+.input-buscador::placeholder {
+  text-align: left;
+  justify-content: left;
+}
+
 
 #resultados-busqueda {
   position: absolute;
@@ -584,7 +611,10 @@ header {
   background-color: #f4f4f4;
 }
 
-
+#resultados-busqueda a{
+  text-decoration: none;
+  color: inherit;
+}
 
 
 
@@ -609,11 +639,20 @@ header {
   background-color: #f00;
 }
 
+
 /*---Fin barra de búsqueda---*/
 
 .historial-intentos{
   color: var(--accent-200);
+  max-height: 600px;
+  
 }
+/*
+.historial-intentos p{
+  justify-content: left;
+  text-align: left ;
+}
+*/
 .intentos-restantes{
   color: var(--accent-200);
 }
@@ -624,9 +663,6 @@ header {
 #historial-intentos{
   max-height: 300px;
 }
-
-
-
 
 /*-----------------------------Media queries-----------------------------*/
 

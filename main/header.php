@@ -52,7 +52,6 @@
         <div id="cuadroTextoInfo" class="cuadroTexto">
           <h2>Acerca de</h2>
           <p> En esta web encontrarás distintos modos de juegos de adivinanzas sobre muchas temáticas.</p>
-          <p> Guesser es una web realizada como proyecto de fin de grado. </p>
           <p style="margin: 0;">Es un juego inspirado en<a href="https://framed.wtf/" target="_blank" rel="noopener noreferrer"> Framed</a>,
             <a href="https://www.gamedle.wtf/" target="_blank" rel="noopener noreferrer"> Gamedle</a> y
             <a href="https://loldle.net/" target="_blank" rel="noopener noreferrer"> Loldle</a> entre
