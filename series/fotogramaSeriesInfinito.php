@@ -21,6 +21,8 @@
     <button id="btn-img6" class="boton-navegacion">6</button>
 </div>
 
+<button id="btn-reto-siguiente-infinito" style="display:none" onclick="mostrarRetoSiguiente()">Mostrar Reto Siguiente</button>
+<button id="btn-reiniciar-modo-infinito" style="display:none">Reiniciar</button>
 <div class="cuadro-busqueda">
     <div class="buscador-container">
         <input type="text" name="buscador" class="input-buscador" placeholder="Buscar..." onkeyup="buscarTitulo(this.value)">
@@ -32,10 +34,14 @@
 <!-- Agregar el input hidden con la respuesta correcta -->
 <input type="hidden" id="respuesta-correcta" value="">
 
-<script src="./fotogramaSeries.js"></script>
+<script src="./fotogramaSeriesInfinito.js"></script>
+
 <div class="historial-intentos" id="historial-intentos">
 
 </div>
+
+
+
 
 <div class="intentos-restantes">
     <p>Intentos restantes: <span id="num-intentos-restantes">

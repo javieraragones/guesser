@@ -6,7 +6,7 @@
 
         <div class="series-menu">
             <div class="series-menu-elem1 series-menu-elementos">
-                <a href="#" id="btn-infinito " class="btn-menu-series"><i class="fas fa-infinity"></i></a>
+                <a href="" id="btn-infinito" class="btn-menu-series"><i class="fas fa-infinity"></i></a>
             </div>
             <div class="series-menu-elem2 series-menu-elementos">
                 <select id="btn-modo-serie" class="btn-menu-series despl-modo-serie">
@@ -26,6 +26,12 @@
                         <option value="/Guesser/series/fotogramaSeries.php">Fotograma</option>
                         <option value="/Guesser/series/emojiSeries.php">Emoji</option>
                         <option value="/Guesser/series/personajeSeries.php" selected>Personaje</option>
+
+                    <?php else : ?>
+                        <option value="/Guesser/series/fotogramaSeries.php">Fotograma</option>
+                        <option value="/Guesser/series/emojiSeries.php">Emoji</option>
+                        <option value="/Guesser/series/personajeSeries.php">Personaje</option>
+
                     <?php endif; ?>
                 </select>
                 <script>

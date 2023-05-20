@@ -3,27 +3,46 @@
 let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
 let cuentaIntentosRestantes = 6; //inicio la cantidad de intentos que le quedan al usuario
 
-/*Función para obtener el día actual*/
-function getDiaActual() {
-    const today = new Date();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
-    const year = today.getFullYear();
-    const date = `${year}-${month}-${day}`;
-    return date;
+let retoId; // Variable para almacenar los objetos retos
+let arrRetos = [];
+
+async function obtenerReto() {
+    try {
+        const response = await fetch('http://localhost:81/serieRandomEmojis');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const array = data.message;
+        console.log(data)
+        const ID = array[0].id;
+        if (ID && !arrRetos.includes(ID)) {
+            retoId = ID;
+            console.log(ID);
+            arrRetos.push(retoId);
+            console.log(arrRetos);
+        } else {
+            console.error(`Error: No se encontró un reto con el ID especificado.`);
+        }
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
 }
-// Función para cambiar el valor de href del enlace con id "btn-infinito"
-function cambiarHref() {
-    var enlace = document.getElementById("btn-infinito");
-    enlace.href = "/Guesser/series/emojiSeriesInfinito.php";
+async function ejecutar() {
+    await obtenerReto();
+    console.log(retoId);
+    arrRetos.push(retoId);
+    console.log(arrRetos);
+    mostrarEmojis(cantidadFallos + 1, retoId);
 }
-cambiarHref();
+
+ejecutar();
 
 //esta función muestra los emojis desde el inicial hasta el que corresponda con la cantidad de fallos +1 para que cada vez que 
 //el usuario falle, se muestre el siguiente emoji y los anteriores
-async function mostrarEmojis(fallos) {
+async function mostrarEmojis(fallos, retoId) {
     try {
-        const dia = getDiaActual();
+
         const response = await fetch('http://localhost:81/serieEmojis');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
@@ -31,51 +50,51 @@ async function mostrarEmojis(fallos) {
         const data = await response.json();
         const array = data.message;
         const cajaReto = document.getElementById('caja-reto-series-emojis');
-
-        const emojisSeriesHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
-        if (emojisSeriesHoy) {
-            const emojis = emojisSeriesHoy.emoji; // Obtén los emojis del objeto encontrado
+        const retoSeleccionado = array.find(prop => prop.id === retoId); // Buscar el objeto con el id especificado
+        //guardar respuesta correcta
+        const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+        respuestaInput.value = nombre; // Establecer el valor del input
+        if (retoSeleccionado && retoSeleccionado.hasOwnProperty('emoji')) {
+            const emojis = retoSeleccionado.emoji; // Obtén los emojis del objeto encontrado
             const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
             const emojiArray = emojis.match(regex);
             console.log(emojiArray); // ['\ud83e\udd91', '\ud83c\udfae']
             cajaReto.innerHTML = emojiArray.splice(0, fallos).join('');
         } else {
-            /*Controlar que del actual disponga de un reto*/
             cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
-            console.error(`Error: No se encontró un objeto con la fecha ${dia}.`);
-        }
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-mostrarEmojis(cantidadFallos + 1);
-
-//FUNCIÓN QUE INTRODUCE LA RESPUESTA CORRECTA EN EL INPUT HIDDEN PARA COMPARAR CON LA RESPUESTA DEL USUARIO
-async function getRespuestaCorrecta() {
-    try {
-        const dia = getDiaActual();
-        //const response = await fetch(API_URL + '/series');
-        const response = await fetch('http://localhost:81/serieEmojis');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-
-        const respuestaCorrectaHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
-        if (respuestaCorrectaHoy) {
-            const nombre = respuestaCorrectaHoy.nombre; // Obtener valor de la columna "nombre" del objeto encontrado
-            const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-            respuestaInput.value = nombre; // Establecer el valor del input
-        } else {
-            console.error(`Error: No se encontró un objeto con la fecha ${dia}.`);
+            console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
         }
     } catch (error) {
         console.error(`Error fetching data: ${error}`);
     }
 }
 
-getRespuestaCorrecta();
+//función que pasa al siguietne reto
+function mostrarRetoSiguiente() {
+    retoId++;
+    ejecutar();
+}
+
+function mostrarPaginaAnterior() {
+    // Restaurar los cambios realizados al acertar el reto
+
+    // Restablecer el estilo y contenido de los mensajes
+    const mensaje = document.querySelector('.mensaje-envio-respuesta');
+    mensaje.style.display = 'none';
+    mensaje.innerHTML = '';
+
+    // Ocultar el botón de "Mostrar Reto Siguiente"
+    const botonSiguiente = document.querySelector('#btn-reto-siguiente-infinito');
+    botonSiguiente.style.display = 'none';
+
+    // Habilitar el campo de entrada de texto
+    document.querySelector(".input-buscador").disabled = false;
+
+    //limpiar historial
+    var historial = document.getElementById("historial-intentos");
+    historial.innerHTML = "";
+}
 
 
 //función para poner la primera letra mayúscula
@@ -90,7 +109,6 @@ function primeraLetraMayus(str) {
 
 function comprobarRespuesta() {
     // Verificar si se han agotado los intentos
-
     if (cuentaIntentosRestantes <= 0) {
         document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
         return;
@@ -108,8 +126,18 @@ function comprobarRespuesta() {
         //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
         mensaje.innerHTML = "¡Respuesta correcta! : " + primeraLetraMayus(respuestaCorrecta);
         mensaje.style.color = "green"; // establecer color verde para acierto            
-        document.querySelector('.cuadro-busqueda').style.display = 'none';
+        //document.querySelector('.cuadro-busqueda').style.display = 'none';
         //alert("¡Respuesta correcta!");
+
+        //reinicio la cantidad de fallos y los intentos restantes
+        cantidadFallos = 0;
+        cuentaIntentosRestantes = 6;
+        //mostrar siguiente reto
+        const botonSiguiente = document.querySelector('#btn-reto-siguiente-infinito');
+        botonSiguiente.style.display = 'inline-block';
+        //se muestra la página inicial de adivinar reto
+        const btnRetoSiguiente = document.getElementById('btn-reto-siguiente-infinito');
+        btnRetoSiguiente.addEventListener('click', mostrarPaginaAnterior);
     } else {
         //alert("Respuesta incorrecta. Inténtalo de nuevo.");
         //mensaje.innerHTML = "Respuesta incorrecta";
@@ -125,7 +153,7 @@ function comprobarRespuesta() {
             historialIntentos.innerHTML += `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
         }
         //cada vez que se falla, se muestra desde el principio hasta cantidad de fallos +1
-        mostrarEmojis(cantidadFallos + 1);
+        mostrarEmojis(cantidadFallos + 1, retoId);
         // Actualiza los intentos restantes
         cuentaIntentosRestantes--;
     }
@@ -137,6 +165,15 @@ function comprobarRespuesta() {
         mensaje.innerHTML = "Respuesta correcta: " + primeraLetraMayus(respuestaCorrecta);
         mensaje.style.color = "white"; // establecer color 
         document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+        //boton para reiniciar 
+        cantidadFallos = 0;
+        cuentaIntentosRestantes = 6;
+        const botonReiniciar = document.querySelector('#btn-reiniciar-modo-infinito');
+        botonReiniciar.style.display = 'inline-block';
+        var btnReiniciar = document.getElementById("btn-reiniciar-modo-infinito");
+        btnReiniciar.addEventListener("click", function () {
+            location.reload();
+        });
     }
     var intentosRestantes = document.getElementById("num-intentos-restantes");
     intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();

@@ -12,9 +12,9 @@
 
 </div>
 
-<div class="historial-pistas">
+<!--div class="historial-pistas">
 
-</div>
+</!--div-->
 
 <div class="cuadro-busqueda">
     <div class="buscador-container">

@@ -7,6 +7,21 @@ class GuesserAPI
     {
         header("Access-Control-Allow-Origin: *");
         header('Content-Type: application/JSON');
+        //Para poder realizar POSTs
+        header("Access-Control-Allow-Origin: http://localhost");
+        header("Access-Control-Allow-Methods: POST");
+        header("Access-Control-Allow-Headers: Content-Type");
+        header("Access-Control-Allow-Origin: *");
+        // Permitir los métodos HTTP especificados
+        header("Access-Control-Allow-Methods: POST");
+        // Permitir los encabezados especificados
+        header("Access-Control-Allow-Headers: Content-Type");
+        // Verificar si la solicitud es una solicitud OPTIONS
+        if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+            // Responder con un código de estado HTTP 200 OK
+            http_response_code(200);
+            exit();
+        }
         $method = $_SERVER['REQUEST_METHOD'];
         $routes = $_SERVER['REQUEST_URI'];
 
@@ -40,6 +55,12 @@ class GuesserAPI
                     case '/serieEmojis':
                         $this->postSerieEmojis();
                         break;
+                    case '/serieFotogramas':
+                        $this->postSerieFotogramas();
+                        break;
+                    case '/seriePersonaje':
+                        $this->postSeriePersonaje();
+                        break;
                     default:
                         $this->response(400, "error", "NO EXISTE ENDPOINT");
                 }
@@ -72,7 +93,7 @@ class GuesserAPI
     {
         try {
             $series = new Series();
-            $response = $series->getAllSeriesFotogramas();
+            $response = $series->getSerieFotogramas();
             $this->response(200, "ok", $response);
         } catch (Exception $e) {
             $this->response(400, "error", $e->getMessage());

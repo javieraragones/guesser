@@ -18,7 +18,7 @@ class Series
 
 
     /*------Funciones para modo de juego Fotograma Serie------*/
-    public function getAllSeriesFotogramas()
+    public function getSerieFotogramas()
     {
         $sql = "SELECT * FROM fotogramas_serie"; // WHERE id = :id"
         $stmt = $this->db->query($sql);
@@ -28,23 +28,24 @@ class Series
 
     public function getSerieRandomFotogramas()
     {
-        $sql = "SELECT * FROM fotogramas_serie ORDER BY RAND() LIMIT 1"; // Seleccionar un elemento aleatorio de la tabla
+        $sql = "SELECT * FROM fotogramas_serie  ORDER BY RAND() LIMIT 1"; //
         $stmt = $this->db->query($sql);
-        $resultado = $stmt->fetch();
+        $resultado = $stmt->fetchAll();
         return $resultado;
     }
 
     public function postSerieFotogramas($datos)
     {
-        $sql = "INSERT INTO fotogramas_serie (nombre, img1, img2, img3, img4, img5, img6) VALUES (:nombre, :img1, :img2, :img3, :img4, :img5, :img6)";
+        $sql = "INSERT INTO fotogramas_serie (nombre, img1, img2, img3, img4, img5, img6, fecha) VALUES (:nombre, :img1, :img2, :img3, :img4, :img5, :img6, :fecha)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':nombre', $datos->nombre);
         $stmt->bindParam(':img1', $datos->img1);
-        $stmt->bindParam(':img1', $datos->img2);
-        $stmt->bindParam(':img1', $datos->img3);
-        $stmt->bindParam(':img1', $datos->img4);
-        $stmt->bindParam(':img1', $datos->img5);
-        $stmt->bindParam(':img1', $datos->img6);
+        $stmt->bindParam(':img2', $datos->img2);
+        $stmt->bindParam(':img3', $datos->img3);
+        $stmt->bindParam(':img4', $datos->img4);
+        $stmt->bindParam(':img5', $datos->img5);
+        $stmt->bindParam(':img6', $datos->img6);
+        $stmt->bindParam(':fecha', $datos->fecha);
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
             return true;
@@ -67,16 +68,17 @@ class Series
     {
         $sql = "SELECT * FROM emojis_serie ORDER BY RAND() LIMIT 1"; // Seleccionar un elemento aleatorio de la tabla
         $stmt = $this->db->query($sql);
-        $resultado = $stmt->fetch();
+        $resultado = $stmt->fetchAll();
         return $resultado;
     }
 
     public function postSerieEmojis($datos)
     {
-        $sql = "INSERT INTO emojis_serie (nombre, emoji) VALUES (:nombre, :emoji)";
+        $sql = "INSERT INTO emojis_serie (nombre, emoji, fecha) VALUES (:nombre, :emoji, :fecha)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':nombre', $datos->nombre);
         $stmt->bindParam(':emoji', $datos->emoji);
+        $stmt->bindParam(':fecha', $datos->fecha);
         $stmt->execute();
         if ($stmt->rowCount() > 0) {
             return true;
@@ -100,7 +102,7 @@ class Series
     {
         $sql = "SELECT * FROM personajes_serie ORDER BY RAND() LIMIT 1"; // Seleccionar un elemento aleatorio de la tabla
         $stmt = $this->db->query($sql);
-        $resultado = $stmt->fetch();
+        $resultado = $stmt->fetchAll();
         return $resultado;
     }
 

@@ -10,7 +10,7 @@
   --complementary-color1: #47404D;
   --complementary-color2: #494C57;
   --complementary-color3: #40474D;
-
+  
   /*Paleta colores azul y morado*/
   --primary-100:#00ADB5;
   --primary-200:#AAE3E2;
@@ -29,7 +29,12 @@
   --primary-100: #5F7ADB;
   --accent-100: #A2B2EE;
   
+
+  --color-fallo: #FF003A;
 }
+
+
+
 *{
     text-align: center;
 }
@@ -379,6 +384,12 @@ header {
 .caja-reto-fotogramas{
   background-color: black !important;
 }
+.caja-reto-personaje{
+  max-height: 600px;
+  max-width: 640px;
+  height: 300px  !important;
+  width: auto !important; 
+}
 /*
 #caja-reto-series-personaje{
   min-height: 400px !important;
@@ -404,6 +415,7 @@ header {
   overflow: hidden;
   position: relative;
   height: 2.8em;
+  min-height: 2.5em;
 }
 
 .series-menu-elem1, .series-menu-elem3 {
@@ -479,22 +491,50 @@ header {
 }
 /*Estilos textos acierto/fallo*/
 .mensaje-envio-respuesta{
-  height: 40px;
+  display: none;
+  height: auto;
   margin-top: 7px;
   margin-bottom: 7px;
+  overflow-wrap: break-word; /* Permite que el texto se ajuste a múltiples líneas */
+  word-break: break-word; /* Permite que el texto se rompa en palabras largas */
+  white-space: normal; /* Permite que el texto se ajuste automáticamente al contenedor */
+  max-width: 100%; /* Establece el ancho máximo para evitar que el elemento se desborde */
 }
 /*Estilos historial pistas*/
+.historial-pistas{
+  margin: 1vh 0 1vh 0;
+  height: 40px;
+}
+/*Estilos botones navegación entre pistas*/
 
 /* Agregamos regla CSS para ocultar los botones */
 .boton-navegacion {
     display: none;
+    font-size: 1.3rem;
+    border-radius: 10px;
+    color: white;
+    width: 40px;
+    height: 40px;
+
+    justify-content: center;
+    align-items: center;
+    border-radius: 100%;
+    border: none;
+    background-color: var(--bg-300);
+}
+.boton-navegacion:hover {
+  background-color: var(--accent-100);
+}
+.boton-navegacion button:active {
+  background-color: var(--primary-200);
 }
 .zona-invisible{
-  visibility: hidden;
+  display: none;
+
+  /*visibility: hidden;*/
 }
 
 
-/*Estilos textos de acierto o fallo*/
 
 
 
@@ -575,6 +615,7 @@ header {
   box-sizing: border-box;
   outline: none;
   text-align: left;
+  border-radius: 10px 0 0 10px;
 }
 .input-buscador::placeholder {
   text-align: left;
@@ -588,7 +629,9 @@ header {
   left: 0;
   width: 100%;
   background-color: #fff;
-  border: 2px solid #ccc;
+  /*border: 2px solid #ccc;*/
+  border-radius: 10px 0 0 10px;
+
   border-top: none;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   z-index: 1;
@@ -618,6 +661,26 @@ header {
 
 
 
+/*Estilos botón enviar*/
+
+.boton-buscar{
+  width: 15%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 16px;
+  padding: 10px;
+  box-sizing: border-box;
+  outline: none;
+  text-align: center;
+  border-radius: 0 10px 10px 0;
+}
+.boton-buscar:hover {
+  background-color: var(--accent-100); 
+}
+
+
+
+
 
 /*Mensajes respuestas*/
 .mensaje {
@@ -640,12 +703,20 @@ header {
 }
 
 
+
+
+
+
 /*---Fin barra de búsqueda---*/
 
 .historial-intentos{
   color: var(--accent-200);
   max-height: 600px;
-  
+ 
+}
+.historial-intentos p {
+  background-color: var(--color-fallo);
+  border-radius: 10px;
 }
 /*
 .historial-intentos p{
@@ -678,7 +749,7 @@ header {
     margin-bottom: 5%;
     padding-bottom: 3%;
   }
-  .header{
+  header{
     max-width: 100%;
   }
 }
@@ -696,7 +767,7 @@ header {
     width: 90%;
     padding-bottom: 30px;
   }
-  .header{
+  header{
     width: 700px;
   }
   body{
@@ -705,27 +776,46 @@ header {
 }
 
 @media screen and (max-width: 768px) {
+  
   .cont-container{
-    margin: auto;
+    margin: 10px auto 10px auto;
+    overflow: auto; /* o overflow: hidden; */
+    width: 90%;
   }
   .container {
     display: flex;
     justify-content: space-between;
-    width: 600px;
+    width: 100%;
   }
   .box {
     width: 90%;
     padding-bottom: 30px;
   }
-  .header{
-    max-width: 500px;
+  .secciones button, .descrip-juego{
+    font-size: 0.9rem;
   }
-  .navbar-item{
-    width: 50px;
+  header{
+    margin: auto;
+    width: 100%;
   }
   body{
     width: 100%;
   }
+
+  /*modos de juego*/
+  .game-cont{
+    width: 100%;
+  }
+
+  .game-box{
+    width: 100%;
+  }
+
+  .mensaje-envio-respuesta {
+    font-size: 0.9rem !important;
+  }
+
+
 }
 
 

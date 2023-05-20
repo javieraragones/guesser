@@ -8,6 +8,7 @@
     </div>
 </div>
 <script>
+    /*
     //Función con la que muestro en el elemento caja reto la imagen del reto
     async function selectorFotograma(columna) {
         try {
@@ -35,6 +36,49 @@
         }
     }
     selectorFotograma('img1'); //Muestro la primera imagen
+    */
+
+    /* función que muestra el reto diario */
+    async function selectorFotograma(columna) {
+        try {
+            // Hacer una func que retorne el día de hoy con esto de aquí
+            const today = new Date();
+            const month = (today.getMonth() + 1).toString().padStart(2, '0');
+            const day = today.getDate().toString().padStart(2, '0');
+            const year = today.getFullYear();
+            const date = `${year}-${month}-${day}`;
+
+            //Llamo a la API que está activa en el puerto 81 de mi ordenador gracias XAMPP
+            const response = await fetch('http://localhost:81/serieFotogramas');
+            //const response = await fetch(API_URL + '/serieFotogramas');
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            const array = data.message;
+            const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+
+            // recogemos del array el que contienen la fecha de hoy
+            // fotogramasSeriesHoy contendrá el objeto con la serie de hoy
+            const fotogramasSeriesHoy = array.find(prop => prop.fecha === date);
+            // Si hay alguna serie
+            if (fotogramasSeriesHoy) {
+                const imgURL = fotogramasSeriesHoy[columna]; // Obtener URL de la imagen desde la columna
+                cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
+                cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
+                cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
+                // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
+                cajaReto.style.backgroundColor = 'black';
+            } else {
+                /*Controlar que del actual disponga de un reto*/
+                cajaReto.style.backgroundImage = `url('https://thumbs.dreamstime.com/b/error-109026446.jpg')`;
+                console.error(`Error: la columna ${columna} no existe en el objeto array.`);
+            }
+        } catch (error) {
+            console.error(`Error fetching data: ${error}`);
+        }
+    }
+    selectorFotograma('img1'); //Muestro la primera imagen
 </script>
 
 <div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-series-fotogramas">
@@ -44,12 +88,12 @@
 
 <div class="historial-pistas">
     <button id="btn-img" class="zona-invisible"></button>
-    <button id="btn-img1" class="boton-navegacion">Imagen 1</button>
-    <button id="btn-img2" class="boton-navegacion">Imagen 2</button>
-    <button id="btn-img3" class="boton-navegacion">Imagen 3</button>
-    <button id="btn-img4" class="boton-navegacion">Imagen 4</button>
-    <button id="btn-img5" class="boton-navegacion">Imagen 5</button>
-    <button id="btn-img6" class="boton-navegacion">Imagen 6</button>
+    <button id="btn-img1" class="boton-navegacion">1</button>
+    <button id="btn-img2" class="boton-navegacion">2</button>
+    <button id="btn-img3" class="boton-navegacion">3</button>
+    <button id="btn-img4" class="boton-navegacion">4</button>
+    <button id="btn-img5" class="boton-navegacion">5</button>
+    <button id="btn-img6" class="boton-navegacion">6</button>
 </div>
 
 <script>
@@ -135,7 +179,7 @@
             await selectorFotograma(`img${cantidadFallos + 1}`);
         } catch (error) {
             console.error(error);
-            document.getElementById('imagen-fallo').src = 'https://thumbs.dreamstime.com/b/error-109026446.jpg'; // cambia la ruta a la imagen que quieras mostrar
+            document.getElementById('imagen-fallo').src = 'https://thumbs.dreamstime.com/b/error-109026446.jpg'; // cambiar la ruta a la imagen que se quiera mostrar
         }
     }
     //función para poner la primera letra mayúscula
@@ -164,6 +208,7 @@
         mensaje.style.fontSize = "24px";
         if (respuestaUsuario === respuestaCorrecta) {
             //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
+            document.querySelector('.mensaje-envio-respuesta').style.display = 'inline-block';
             mensaje.innerHTML = "¡Respuesta correcta!";
             mensaje.style.color = "green"; // establecer color verde para acierto            
             document.querySelector('.cuadro-busqueda').style.display = 'none';
@@ -175,15 +220,20 @@
             }
         } else {
             //alert("Respuesta incorrecta. Inténtalo de nuevo.");
-            mensaje.innerHTML = "Respuesta incorrecta";
-            mensaje.style.color = "red"; // establecer color rojo para fallo
+            //mensaje.innerHTML = "Respuesta incorrecta";
+            mensaje.style.color = "var(--color-fallo)"; // establecer color rojo para fallo
             cantidadFallos++;
             mostrarBotonDesbloqueado(cantidadFallos);
             mostrarFotograma();
             // Añade la respuesta al historial
             var historialIntentos = document.getElementById("historial-intentos");
-            historialIntentos.innerHTML += `<p>Intento ${cantidadFallos}: ${primeraLetraMayus(respuestaUsuario)}</p>`;
-
+            //historialIntentos.innerHTML += `<p>Intento ${cantidadFallos}: ${primeraLetraMayus(respuestaUsuario)}</p>`;
+            //historialIntentos.innerHTML += `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
+            if (respuestaUsuario === "") {
+                historialIntentos.innerHTML += "<p>Respuesta vacía</p>";
+            } else {
+                historialIntentos.innerHTML += `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
+            }
             // Actualiza los intentos restantes
             cuentaIntentosRestantes--;
         }
@@ -205,9 +255,9 @@
     }
 
     //FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
-    function buscarTitulo(textoBusqueda) {
+    async function buscarTitulo(textoBusqueda) {
         if (textoBusqueda.length >= 1) {
-            const xhr = new XMLHttpRequest();
+            /* const xhr = new XMLHttpRequest();
             xhr.open("POST", "buscar_titulo.php", true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
             xhr.onreadystatechange = function() {
@@ -215,15 +265,26 @@
                     mostrarResultados(this.responseText);
                 }
             };
-            xhr.send("textoBusqueda=" + textoBusqueda);
+            xhr.send("textoBusqueda=" + textoBusqueda); */
+            const response = await fetch('http://localhost:81/serieFotogramas');
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            const data = await response.json();
+            const array = data.message;
+            let nombres = []
+            array.map(x => {
+                nombres.push(x.nombre)
+            })
+            mostrarResultados(nombres, textoBusqueda);
         } else {
             document.getElementById("resultados-busqueda").innerHTML = "";
         }
     }
 
     //FUNCIÓN QUE MUESTRA LOS RESULTADOS DE LOS TÍTULOS QUE COINCIDEN EN UN DESPLEGABLE
-    function mostrarResultados(textoRespuesta) {
-        const resultados = JSON.parse(textoRespuesta);
+    function mostrarResultados(textoRespuesta, textoBusqueda) {
+        /* const resultados = JSON.parse(textoRespuesta);
         let htmlResultados = "";
         if (resultados.length > 0) {
             htmlResultados += "<ul>";
@@ -231,6 +292,19 @@
                 //htmlResultados += "<li><a href=\"#\" onclick=\"seleccionarResultado('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
                 htmlResultados += "<li onclick=\"seleccionarResultado('" + resultados[i] + "')\"><span>" + resultados[i] + "</span></li>";
 
+            }
+            htmlResultados += "</ul>";
+        } else {
+            htmlResultados += "<p>No se encontraron resultados.</p>";
+        }
+        document.getElementById("resultados-busqueda").innerHTML = htmlResultados; */
+        const resultados = textoRespuesta.filter(res => res.toLowerCase().includes(textoBusqueda.toLowerCase()));
+        let htmlResultados = "";
+        if (resultados.length > 0) {
+            htmlResultados += "<ul>";
+            for (let i = 0; i < resultados.length; i++) {
+                //htmlResultados += "<li><a href=\"#\" onclick=\"seleccionarResultado('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
+                htmlResultados += "<li onclick=\"seleccionarResultado('" + resultados[i] + "')\"><span>" + resultados[i] + "</span></li>";
             }
             htmlResultados += "</ul>";
         } else {
@@ -244,6 +318,15 @@
         document.querySelector(".input-buscador").value = tituloSeleccionado;
         document.getElementById("resultados-busqueda").innerHTML = "";
     }
+    //Función para que se cierre el desplegable al hacer click fuera de él
+    let contenedorSelector = document.getElementById("resultados-busqueda");
+    // Agregar listener para cerrar selector al hacer clic fuera de él
+    document.addEventListener("click", function(event) {
+        let clicDentroSelector = contenedorSelector.contains(event.target);
+        if (!clicDentroSelector) {
+            contenedorSelector.innerHTML = "";
+        }
+    });
 </script>
 <div class="historial-intentos" id="historial-intentos">
 
@@ -262,6 +345,7 @@
 
 </html>
 <script>
+    /*
     //envío de respuesta al presionar enter(no funciona)
     document.addEventListener("DOMContentLoaded", function() {
         var input = document.getElementById("input-buscador");
@@ -272,4 +356,5 @@
             }
         });
     });
+    */
 </script>

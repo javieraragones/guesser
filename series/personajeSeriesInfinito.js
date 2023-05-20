@@ -1,60 +1,58 @@
 let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
 let cuentaIntentosRestantes = 6; //inicio la cantidad de intentos que le quedan al usuario
-/*Función para obtener el día actual*/
-function getDiaActual() {
-    const today = new Date();
-    const month = (today.getMonth() + 1).toString().padStart(2, '0');
-    const day = today.getDate().toString().padStart(2, '0');
-    const year = today.getFullYear();
-    const date = `${year}-${month}-${day}`;
-    return date;
-}
-// Función para cambiar el valor de href del enlace con id "btn-infinito"
-function cambiarHref() {
-    var enlace = document.getElementById("btn-infinito");
-    enlace.href = "/Guesser/series/personajeSeriesInfinito.php";
-}
-cambiarHref();
-//FUNCIÓN QUE INTRODUCE LA RESPUESTA CORRECTA EN EL INPUT HIDDEN PARA COMPARAR CON LA RESPUESTA DEL USUARIO
-async function getRespuestaCorrecta() {
+
+let retoId; // Variable para almacenar los objetos retos
+let arrRetos = [];
+
+async function obtenerReto() {
     try {
-        const dia = getDiaActual();
-        //const response = await fetch(API_URL + '/series');
-        const response = await fetch('http://localhost:81/seriePersonaje');
+        const response = await fetch('http://localhost:81/serieRandomPersonaje');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
         const array = data.message;
-
-        const respuestaCorrectaHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
-        if (respuestaCorrectaHoy) {
-            const nombre = respuestaCorrectaHoy.nombre; // Obtener valor de la columna "nombre" del objeto encontrado
-            const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-            respuestaInput.value = nombre; // Establecer el valor del input
+        console.log(data)
+        const ID = array[0].id;
+        if (ID && !arrRetos.includes(ID)) {
+            retoId = ID;
+            console.log(ID);
+            arrRetos.push(retoId);
+            console.log(arrRetos);
         } else {
-            console.error(`Error: No se encontró un objeto con la fecha ${dia}.`);
+            console.error(`Error: No se encontró un reto con el ID especificado.`);
         }
     } catch (error) {
         console.error(`Error fetching data: ${error}`);
     }
 }
-getRespuestaCorrecta();
+async function ejecutar() {
+    await obtenerReto();
+    console.log(retoId);
+    arrRetos.push(retoId);
+    console.log(arrRetos);
+    selectorFotograma(retoId);
+}
 
-async function mostrarPersonaje() {
+ejecutar();
+
+/* función que muestra la imagen  del reto  */
+async function selectorFotograma(retoId) {
     try {
-        const dia = getDiaActual();
         const response = await fetch('http://localhost:81/seriePersonaje');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
         const array = data.message;
-
-        const personajeHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
-        if (personajeHoy) {
-            const cajaReto = document.getElementById('caja-reto-series-personaje');
-            const imgURL = personajeHoy.img; // Obtener URL de la imagen desde la columna "img"
+        const cajaReto = document.getElementById('caja-reto-series-personaje');
+        const retoSeleccionado = array.find(prop => prop.id === retoId); // Buscar el objeto con el id especificado
+        //guardar respuesta correcta
+        const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+        respuestaInput.value = nombre; // Establecer el valor del input
+        if (retoSeleccionado && retoSeleccionado.hasOwnProperty('img')) {
+            const imgURL = retoSeleccionado.img; // Obtener URL de la imagen desde la columna del reto seleccionado
             cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
             cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
             cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja
@@ -65,15 +63,20 @@ async function mostrarPersonaje() {
 
             cajaReto.style.backgroundSize = '850%'; // Aumentar el zoom
         } else {
-            console.error(`Error: No se encontró un objeto con la fecha ${dia}.`);
+            cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+            console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
         }
     } catch (error) {
         console.error(`Error fetching data: ${error}`);
     }
 }
+//función que pasa al siguietne reto
+function mostrarRetoSiguiente() {
+    retoId++;
+    ejecutar();
+    $('#caja-reto-series-personaje').css('background-size', '850%');
 
-
-mostrarPersonaje();
+}
 
 function zoomImagen() {
     const cajaReto = $('#caja-reto-series-personaje');
@@ -121,9 +124,25 @@ function reducirZoom() {
     $('#caja-reto-series-personaje').css(
         'background-size', `${zoomNuevo}%`);
 }
+
+
 function imagenCompleta() {
-    $('#caja-reto-series-personaje').css('background-size', '100%');
+    const cajaReto = $('#caja-reto-series-personaje');
+
+    // Establecer el tamaño del contenedor al 100% del tamaño disponible
+    cajaReto.css({
+        'width': '100%',
+        'height': '100%'
+    });
+
+    // Establecer el tamaño de la imagen de fondo para que cubra completamente el contenedor
+    cajaReto.css({
+        'background-size': 'cover',
+        'background-position': 'center' // Centrar la imagen
+    });
 }
+
+
 
 //función para poner la primera letra mayúscula
 function primeraLetraMayus(str) {
@@ -135,6 +154,25 @@ function primeraLetraMayus(str) {
     );
 }
 
+function mostrarPaginaAnterior() {
+    // Restaurar los cambios realizados al acertar el reto
+
+    // Restablecer el estilo de la caja del reto
+    const cajaReto = document.getElementById('caja-reto-series-personaje');
+    cajaReto.style.backgroundImage = 'none';
+    cajaReto.style.backgroundColor = 'transparent';
+
+    // Ocultar el botón de "Mostrar Reto Siguiente"
+    const botonSiguiente = document.querySelector('#btn-reto-siguiente-infinito');
+    botonSiguiente.style.display = 'none';
+
+    // Habilitar el campo de entrada de texto
+    document.querySelector(".input-buscador").disabled = false;
+
+    //limpiar historial
+    var historial = document.getElementById("historial-intentos");
+    historial.innerHTML = "";
+}
 
 function comprobarRespuesta() {
     // Verificar si se han agotado los intentos
@@ -157,10 +195,20 @@ function comprobarRespuesta() {
         //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
         mensaje.innerHTML = "¡Respuesta correcta! : " + primeraLetraMayus(respuestaCorrecta);
         mensaje.style.color = "green"; // establecer color verde para acierto            
-        document.querySelector('.cuadro-busqueda').style.display = 'none';
+        //document.querySelector('.cuadro-busqueda').style.display = 'none';
         //alert("¡Respuesta correcta!");
         //muestra la imagen completa
         imagenCompleta();
+
+        //reinicio la cantidad de fallos y los intentos restantes
+        cantidadFallos = 0;
+        cuentaIntentosRestantes = 6;
+        //mostrar siguiente reto
+        const botonSiguiente = document.querySelector('#btn-reto-siguiente-infinito');
+        botonSiguiente.style.display = 'inline-block';
+        //se muestra la página inicial de adivinar reto
+        const btnRetoSiguiente = document.getElementById('btn-reto-siguiente-infinito');
+        btnRetoSiguiente.addEventListener('click', mostrarPaginaAnterior);
 
     } else {
         //alert("Respuesta incorrecta. Inténtalo de nuevo.");
@@ -192,6 +240,16 @@ function comprobarRespuesta() {
         document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
         //muestra la imagen completa
         imagenCompleta();
+
+        //boton para reiniciar 
+        cantidadFallos = 0;
+        cuentaIntentosRestantes = 6;
+        const botonReiniciar = document.querySelector('#btn-reiniciar-modo-infinito');
+        botonReiniciar.style.display = 'inline-block';
+        var btnReiniciar = document.getElementById("btn-reiniciar-modo-infinito");
+        btnReiniciar.addEventListener("click", function () {
+            location.reload();
+        });
     }
     var intentosRestantes = document.getElementById("num-intentos-restantes");
     intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
@@ -204,6 +262,7 @@ function mostrarIntentosRestantes(cuentaIntentosRestantes) {
     intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
 }
 /*----------------Funciones para buscar títulos que coinciden con la entrada y mostrarlos en un desplegable----------------*/
+
 //FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
 async function buscarTitulo(textoBusqueda) {
     if (textoBusqueda.length >= 1) {
@@ -240,14 +299,12 @@ function mostrarResultados(textoRespuesta, textoBusqueda) {
     document.getElementById("resultados-busqueda").innerHTML = htmlResultados;
 }
 
-
 //FUNCIÓN QUE SE EJECUTA AL SELECCIONAR UN RESULTADO
 function seleccionarResultado(tituloSeleccionado) {
     document.querySelector(".input-buscador").value = tituloSeleccionado;
     document.getElementById("resultados-busqueda").innerHTML = "";
 }
-
-//Para que se cierre el desplegable al hacer click fuera de él
+//Función para que se cierre el desplegable al hacer click fuera de él
 let contenedorSelector = document.getElementById("resultados-busqueda");
 // Agregar listener para cerrar selector al hacer clic fuera de él
 document.addEventListener("click", function (event) {
@@ -258,8 +315,43 @@ document.addEventListener("click", function (event) {
 });
 
 
+
 //funciones antes de incremento 3
 /*
+
+async function mostrarPersonaje(retoId) {
+    try {
+        const response = await fetch('http://localhost:81/seriePersonaje');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const array = data.message;
+
+        const personajeHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
+        if (personajeHoy) {
+            const cajaReto = document.getElementById('caja-reto-series-personaje');
+            const imgURL = personajeHoy.img; // Obtener URL de la imagen desde la columna "img"
+            cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
+            cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
+            cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja
+
+            const x = Math.floor(Math.random() * (cajaReto.offsetWidth - cajaReto.offsetWidth * 0.5));
+            const y = Math.floor(Math.random() * (cajaReto.offsetHeight - cajaReto.offsetHeight * 0.5));
+            cajaReto.style.backgroundPosition = `-${x}px -${y}px`; // Establecer una posición aleatoria para la imagen de fondo
+
+            cajaReto.style.backgroundSize = '850%'; // Aumentar el zoom
+        } else {
+            console.error(`Error: No se encontró un objeto con la fecha ${dia}.`);
+        }
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+
+mostrarPersonaje();
+
+
 async function getRespuestaCorrecta() {
     try {
         //const response = await fetch(API_URL + '/series');
