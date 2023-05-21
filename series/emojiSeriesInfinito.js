@@ -1,10 +1,9 @@
 
-
 let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
 let cuentaIntentosRestantes = 6; //inicio la cantidad de intentos que le quedan al usuario
 
-let retoId; // Variable para almacenar los objetos retos
-let arrRetos = [];
+let arrayEmojis = [];
+let retoCount = 0;
 
 async function obtenerReto() {
     try {
@@ -14,20 +13,24 @@ async function obtenerReto() {
         }
         const data = await response.json();
         const array = data.message;
-        console.log(data)
-        const ID = array[0].id;
-        if (ID && !arrRetos.includes(ID)) {
-            retoId = ID;
-            console.log(ID);
-            arrRetos.push(retoId);
-            console.log(arrRetos);
-        } else {
-            console.error(`Error: No se encontró un reto con el ID especificado.`);
-        }
+
+        array.forEach((emoji) => {
+            arrayEmojis.push(emoji);
+        });
     } catch (error) {
         console.error(`Error fetching data: ${error}`);
     }
 }
+
+
+async function ejecutar() {
+    await obtenerReto();
+    console.log(arrayEmojis);
+    mostrarEmojis(cantidadFallos + 1, retoCount);
+}
+
+ejecutar();
+/*
 async function ejecutar() {
     await obtenerReto();
     console.log(retoId);
@@ -35,46 +38,55 @@ async function ejecutar() {
     console.log(arrRetos);
     mostrarEmojis(cantidadFallos + 1, retoId);
 }
-
-ejecutar();
+*/
 
 //esta función muestra los emojis desde el inicial hasta el que corresponda con la cantidad de fallos +1 para que cada vez que 
 //el usuario falle, se muestre el siguiente emoji y los anteriores
-async function mostrarEmojis(fallos, retoId) {
-    try {
+async function mostrarEmojis(fallos, retoCount) {
+    const retoSeleccionado = arrayEmojis[retoCount];
+    console.log(retoCount);
+    const cajaReto = document.getElementById('caja-reto-series-emojis');
+    //guardar respuesta correcta
+    const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+    const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+    respuestaInput.value = nombre; // Establecer el valor del input
 
-        const response = await fetch('http://localhost:81/serieEmojis');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const cajaReto = document.getElementById('caja-reto-series-emojis');
-        const retoSeleccionado = array.find(prop => prop.id === retoId); // Buscar el objeto con el id especificado
-        //guardar respuesta correcta
-        const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
-        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-        respuestaInput.value = nombre; // Establecer el valor del input
-        if (retoSeleccionado && retoSeleccionado.hasOwnProperty('emoji')) {
-            const emojis = retoSeleccionado.emoji; // Obtén los emojis del objeto encontrado
-            const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
-            const emojiArray = emojis.match(regex);
-            console.log(emojiArray); // ['\ud83e\udd91', '\ud83c\udfae']
-            cajaReto.innerHTML = emojiArray.splice(0, fallos).join('');
-        } else {
-            cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
-            console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
-        }
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
+    if (retoSeleccionado && retoSeleccionado.hasOwnProperty('emoji')) {
+        const emojis = retoSeleccionado.emoji; // Obtén los emojis del objeto encontrado
+        const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+        const emojiArray = emojis.match(regex);
+        console.log(emojiArray); // ['\ud83e\udd91', '\ud83c\udfae']
+        cajaReto.innerHTML = emojiArray.splice(0, fallos).join('');
+    } else {
+        cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+        console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
     }
 }
 
 //función que pasa al siguietne reto
 function mostrarRetoSiguiente() {
-    retoId++;
-    ejecutar();
+    mostrarPaginaAnterior();
+    retoCount++;
+    if (retoCount >= arrayEmojis.length) {
+        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+        document.querySelector('.boton-buscar').disabled = true; // Deshabilitar el botón de envio de respuesta
+        const cajaReto = document.getElementById('caja-reto-series-emojis');
+        cajaReto.innerHTML = '';
+        cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+        cajaReto.style.backgroundSize = 'cover';
+        const mensaje = document.querySelector('.mensaje-envio-respuesta');
+        mensaje.style.display = 'inline-block';
+        mensaje.innerHTML = "Has realizado todos los retos disponibles";
+        mensaje.style.color = "white"; // establecer color 
+        const mensaje2 = document.querySelector('.intentos-restantes');
+        mensaje2.style.display = 'none';
+
+    } else {
+        mostrarEmojis(cantidadFallos + 1, retoCount);
+        console.log(retoCount)
+    }
 }
+
 
 function mostrarPaginaAnterior() {
     // Restaurar los cambios realizados al acertar el reto
@@ -135,9 +147,7 @@ function comprobarRespuesta() {
         //mostrar siguiente reto
         const botonSiguiente = document.querySelector('#btn-reto-siguiente-infinito');
         botonSiguiente.style.display = 'inline-block';
-        //se muestra la página inicial de adivinar reto
-        const btnRetoSiguiente = document.getElementById('btn-reto-siguiente-infinito');
-        btnRetoSiguiente.addEventListener('click', mostrarPaginaAnterior);
+
     } else {
         //alert("Respuesta incorrecta. Inténtalo de nuevo.");
         //mensaje.innerHTML = "Respuesta incorrecta";
@@ -153,7 +163,7 @@ function comprobarRespuesta() {
             historialIntentos.innerHTML += `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
         }
         //cada vez que se falla, se muestra desde el principio hasta cantidad de fallos +1
-        mostrarEmojis(cantidadFallos + 1, retoId);
+        mostrarEmojis(cantidadFallos + 1, retoCount);
         // Actualiza los intentos restantes
         cuentaIntentosRestantes--;
     }
@@ -245,6 +255,91 @@ document.addEventListener("click", function (event) {
 //Función funcional inicial emojis
 /*
 FUNCIONES ANTES DE INCREMENTO 3
+
+
+
+
+let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
+let cuentaIntentosRestantes = 6; //inicio la cantidad de intentos que le quedan al usuario
+
+let retoId; // Variable para almacenar los objetos retos
+let arrRetos = [];
+
+async function obtenerReto() {
+    try {
+        const response = await fetch('http://localhost:81/serieRandomEmojis');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const array = data.message;
+        console.log(data)
+        const ID = array[0].id;
+        if (ID && !arrRetos.includes(ID)) {
+            retoId = ID;
+            console.log(ID);
+            arrRetos.push(retoId);
+            console.log(arrRetos);
+        } else {
+            console.error(`Error: No se encontró un reto con el ID especificado.`);
+        }
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+async function ejecutar() {
+    await obtenerReto();
+    console.log(retoId);
+    arrRetos.push(retoId);
+    console.log(arrRetos);
+    mostrarEmojis(cantidadFallos + 1, retoId);
+}
+
+ejecutar();
+
+//esta función muestra los emojis desde el inicial hasta el que corresponda con la cantidad de fallos +1 para que cada vez que 
+//el usuario falle, se muestre el siguiente emoji y los anteriores
+async function mostrarEmojis(fallos, retoId) {
+    try {
+
+        const response = await fetch('http://localhost:81/serieEmojis');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const array = data.message;
+        const cajaReto = document.getElementById('caja-reto-series-emojis');
+        const retoSeleccionado = array.find(prop => prop.id === retoId); // Buscar el objeto con el id especificado
+        //guardar respuesta correcta
+        const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+        respuestaInput.value = nombre; // Establecer el valor del input
+        if (retoSeleccionado && retoSeleccionado.hasOwnProperty('emoji')) {
+            const emojis = retoSeleccionado.emoji; // Obtén los emojis del objeto encontrado
+            const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
+            const emojiArray = emojis.match(regex);
+            console.log(emojiArray); // ['\ud83e\udd91', '\ud83c\udfae']
+            cajaReto.innerHTML = emojiArray.splice(0, fallos).join('');
+        } else {
+            cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+            console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
+        }
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+
+//función que pasa al siguietne reto
+function mostrarRetoSiguiente() {
+    retoId++;
+    ejecutar();
+}
+
+
+
+
+
+
 //esta función muestra los emojis desde el inicial hasta el que corresponda con la cantidad de fallos +1 para que cada vez que 
 //el usuario falle, se muestre el siguiente emoji y los anteriores
 async function mostrarEmojis(fallos) {

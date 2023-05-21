@@ -1,6 +1,6 @@
+let arrayFotogramas = [];
+let retoCount = 0;
 
-let retoId; // Variable para almacenar los objetos retos
-let arrRetos = [];
 
 async function obtenerReto() {
     try {
@@ -10,61 +10,72 @@ async function obtenerReto() {
         }
         const data = await response.json();
         const array = data.message;
-        console.log(data)
-        const ID = array[0].id;
-        if (ID && !arrRetos.includes(ID)) {
-            retoId = ID;
-            console.log(ID);
-            arrRetos.push(retoId);
-            console.log(arrRetos);
-        } else {
-            console.error(`Error: No se encontró un reto con el ID especificado.`);
-        }
+
+        array.forEach((fotograma) => {
+            arrayFotogramas.push(fotograma);
+        });
     } catch (error) {
         console.error(`Error fetching data: ${error}`);
     }
 }
+
 async function ejecutar() {
     await obtenerReto();
-    console.log(retoId);
-    arrRetos.push(retoId);
-    console.log(arrRetos);
-    selectorFotograma('img1', retoId);
+    console.log(arrayFotogramas);
+    selectorFotograma('img1', retoCount);
 }
 
 ejecutar();
 
-/* función que muestra la imagen 1 del reto diario */
-async function selectorFotograma(columna, retoId) {
-    try {
-        const response = await fetch('http://localhost:81/serieFotogramas');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const cajaReto = document.getElementById('caja-reto-series-fotogramas');
-        const retoSeleccionado = array.find(prop => prop.id === retoId); // Buscar el objeto con el id especificado
-        //guardar respuesta correcta
-        const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
-        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-        respuestaInput.value = nombre; // Establecer el valor del input
-        if (retoSeleccionado && retoSeleccionado.hasOwnProperty(columna)) {
-            const imgURL = retoSeleccionado[columna]; // Obtener URL de la imagen desde la columna del reto seleccionado
-            cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
-            cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
-            cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
-            cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
-        } else {
-            cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
-            console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
-        }
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
+// función que muestra la imagen 1 del reto diario 
+async function selectorFotograma(columna, retoCount) {
+
+    const retoSeleccionado = arrayFotogramas[retoCount];
+    console.log(retoCount);
+    const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+    //guardar respuesta correcta
+    const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+    const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+    respuestaInput.value = nombre; // Establecer el valor del input
+
+    if (retoSeleccionado && retoSeleccionado.hasOwnProperty(columna)) {
+        const imgURL = retoSeleccionado[columna]; // Obtener URL de la imagen desde la columna del reto seleccionado
+        cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
+        cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
+        cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
+        cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
+    } else {
+        cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+        console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
     }
+
 }
 //selectorFotograma('img1'); //Muestro la primera imagen
 
+//función que pasa al siguietne reto
+function mostrarRetoSiguiente() {
+    mostrarPaginaAnterior();
+    retoCount++;
+    if (retoCount >= arrayFotogramas.length) {
+        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+        document.querySelector('.boton-buscar').disabled = true; // Deshabilitar el botón de envio de respuesta
+        const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+        cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+        cajaReto.style.backgroundSize = 'cover';
+        const mensaje = document.querySelector('.mensaje-envio-respuesta');
+        mensaje.style.display = 'inline-block';
+        mensaje.innerHTML = "Has realizado todos los retos disponibles";
+        mensaje.style.color = "white"; // establecer color 
+        const mensaje2 = document.querySelector('.intentos-restantes');
+        mensaje2.style.display = 'none';
+        const mensaje3 = document.querySelector('.historial-pistas');
+        mensaje3.style.display = 'none';
+    } else {
+        selectorFotograma('img1', retoCount);
+        console.log(retoCount)
+    }
+}
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 //Función para realizar la navegación entre las imágenes de los retos
 const nombresColumnasImagenes = ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'];
@@ -79,22 +90,22 @@ const btnImg5 = document.getElementById('btn-img5');
 const btnImg6 = document.getElementById('btn-img6');
 // Agregar evento click a cada botón de navegación
 btnImg1.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[0], retoId);
+    selectorFotograma(nombresColumnasImagenes[0], retoCount);
 });
 btnImg2.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[1], retoId);
+    selectorFotograma(nombresColumnasImagenes[1], retoCount);
 });
 btnImg3.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[2], retoId);
+    selectorFotograma(nombresColumnasImagenes[2], retoCount);
 });
 btnImg4.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[3], retoId);
+    selectorFotograma(nombresColumnasImagenes[3], retoCount);
 });
 btnImg5.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[4], retoId);
+    selectorFotograma(nombresColumnasImagenes[4], retoCount);
 });
 btnImg6.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[5], retoId);
+    selectorFotograma(nombresColumnasImagenes[5], retoCount);
 });
 
 
@@ -112,18 +123,13 @@ function mostrarBotonDesbloqueado(fallos) {
 //Función que muestra la siguiente imagen al cometer un fallo
 async function mostrarFotograma() {
     try {
-        await selectorFotograma(`img${cantidadFallos + 1}`, retoId);
+        await selectorFotograma(`img${cantidadFallos + 1}`, retoCount);
     } catch (error) {
         console.error(error);
         document.getElementById('imagen-fallo').src = 'https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg'; // cambia la ruta a la imagen que quieras mostrar
     }
 }
 
-//función que pasa al siguietne reto
-function mostrarRetoSiguiente() {
-    retoId++;
-    ejecutar();
-}
 
 function mostrarPaginaAnterior() {
     // Restaurar los cambios realizados al acertar el reto
@@ -150,6 +156,7 @@ function mostrarPaginaAnterior() {
 
     // Habilitar el campo de entrada de texto
     document.querySelector(".input-buscador").disabled = false;
+    document.querySelector('.boton-buscar').disabled = false; // Deshabilitar el botón de envio de respuesta 
 
     //limpiar historial
     var historial = document.getElementById("historial-intentos");
@@ -200,10 +207,6 @@ function comprobarRespuesta() {
         //mostrar siguiente reto
         const botonSiguiente = document.querySelector('#btn-reto-siguiente-infinito');
         botonSiguiente.style.display = 'inline-block';
-        //se muestra la página inicial de adivinar reto
-        const btnRetoSiguiente = document.getElementById('btn-reto-siguiente-infinito');
-        btnRetoSiguiente.addEventListener('click', mostrarPaginaAnterior);
-
     } else {
         //alert("Respuesta incorrecta. Inténtalo de nuevo.");
         //mensaje.innerHTML = "Respuesta incorrecta";
@@ -259,7 +262,7 @@ function mostrarIntentosRestantes(cuentaIntentosRestantes) {
 //FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
 async function buscarTitulo(textoBusqueda) {
     if (textoBusqueda.length >= 1) {
-        const response = await fetch('http://localhost:81/serieFotogramas');
+        const response = await fetch('http://localhost:81/serieRandomFotogramas');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -312,6 +315,81 @@ document.addEventListener("click", function (event) {
 
 
 /*
+//v1 reto infinito pre incremento 3
+let retoId; // Variable para almacenar los objetos retos
+let arrRetos = [];
+
+async function obtenerReto() {
+    try {
+        const response = await fetch('http://localhost:81/serieRandomFotogramas');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const array = data.message;
+        console.log(data)
+        const ID = array[0].id;
+        if (ID && !arrRetos.includes(ID)) {
+            retoId = ID;
+            console.log(ID);
+            arrRetos.push(retoId);
+            console.log(arrRetos);
+        } else {
+            console.error(`Error: No se encontró un reto con el ID especificado.`);
+        }
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+async function ejecutar() {
+    await obtenerReto();
+    console.log(retoId);
+    arrRetos.push(retoId);
+    console.log(arrRetos);
+    selectorFotograma('img1', retoId);
+}
+
+ejecutar();
+
+// función que muestra la imagen 1 del reto diario 
+async function selectorFotograma(columna, retoId) {
+    try {
+        const response = await fetch('http://localhost:81/serieFotogramas');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const array = data.message;
+        const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+        const retoSeleccionado = array.find(prop => prop.id === retoId); // Buscar el objeto con el id especificado
+        //guardar respuesta correcta
+        const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+        respuestaInput.value = nombre; // Establecer el valor del input
+        if (retoSeleccionado && retoSeleccionado.hasOwnProperty(columna)) {
+            const imgURL = retoSeleccionado[columna]; // Obtener URL de la imagen desde la columna del reto seleccionado
+            cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
+            cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
+            cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
+            cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
+        } else {
+            cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+            console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
+        }
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+//selectorFotograma('img1'); //Muestro la primera imagen
+
+//función que pasa al siguietne reto
+function mostrarRetoSiguiente() {
+    retoId++;
+    ejecutar();
+}
+
+
+
 
 //Código funcional de reto aleatorio 
 /*

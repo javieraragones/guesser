@@ -28,7 +28,7 @@ class Series
 
     public function getSerieRandomFotogramas()
     {
-        $sql = "SELECT * FROM fotogramas_serie  ORDER BY RAND() LIMIT 1"; //
+        $sql = "SELECT * FROM fotogramas_serie  ORDER BY RAND() /* LIMIT 1*/"; //
         $stmt = $this->db->query($sql);
         $resultado = $stmt->fetchAll();
         return $resultado;
@@ -66,7 +66,7 @@ class Series
 
     public function getSerieRandomEmojis()
     {
-        $sql = "SELECT * FROM emojis_serie ORDER BY RAND() LIMIT 1"; // Seleccionar un elemento aleatorio de la tabla
+        $sql = "SELECT * FROM emojis_serie ORDER BY RAND() /* LIMIT 1*/"; // Seleccionar un elemento aleatorio de la tabla
         $stmt = $this->db->query($sql);
         $resultado = $stmt->fetchAll();
         return $resultado;
@@ -100,7 +100,7 @@ class Series
 
     public function getSerieRandomPersonaje()
     {
-        $sql = "SELECT * FROM personajes_serie ORDER BY RAND() LIMIT 1"; // Seleccionar un elemento aleatorio de la tabla
+        $sql = "SELECT * FROM personajes_serie ORDER BY RAND() /* LIMIT 1*/"; // Seleccionar un elemento aleatorio de la tabla
         $stmt = $this->db->query($sql);
         $resultado = $stmt->fetchAll();
         return $resultado;

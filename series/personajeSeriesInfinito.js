@@ -1,8 +1,8 @@
 let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
 let cuentaIntentosRestantes = 6; //inicio la cantidad de intentos que le quedan al usuario
 
-let retoId; // Variable para almacenar los objetos retos
-let arrRetos = [];
+let arrayPersonajes = [];
+let retoCount = 0;
 
 async function obtenerReto() {
     try {
@@ -12,80 +12,81 @@ async function obtenerReto() {
         }
         const data = await response.json();
         const array = data.message;
-        console.log(data)
-        const ID = array[0].id;
-        if (ID && !arrRetos.includes(ID)) {
-            retoId = ID;
-            console.log(ID);
-            arrRetos.push(retoId);
-            console.log(arrRetos);
-        } else {
-            console.error(`Error: No se encontró un reto con el ID especificado.`);
-        }
+
+        array.forEach((personaje) => {
+            arrayPersonajes.push(personaje);
+        });
     } catch (error) {
         console.error(`Error fetching data: ${error}`);
     }
 }
+
+
 async function ejecutar() {
     await obtenerReto();
-    console.log(retoId);
-    arrRetos.push(retoId);
-    console.log(arrRetos);
-    selectorFotograma(retoId);
+    console.log(arrayPersonajes);
+    selectorFotograma(retoCount);
 }
 
 ejecutar();
 
 /* función que muestra la imagen  del reto  */
-async function selectorFotograma(retoId) {
-    try {
-        const response = await fetch('http://localhost:81/seriePersonaje');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const cajaReto = document.getElementById('caja-reto-series-personaje');
-        const retoSeleccionado = array.find(prop => prop.id === retoId); // Buscar el objeto con el id especificado
-        //guardar respuesta correcta
-        const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
-        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-        respuestaInput.value = nombre; // Establecer el valor del input
-        if (retoSeleccionado && retoSeleccionado.hasOwnProperty('img')) {
-            const imgURL = retoSeleccionado.img; // Obtener URL de la imagen desde la columna del reto seleccionado
-            cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
-            cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
-            cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja
+async function selectorFotograma(retoCount) {
 
-            const x = Math.floor(Math.random() * (cajaReto.offsetWidth - cajaReto.offsetWidth * 0.5));
-            const y = Math.floor(Math.random() * (cajaReto.offsetHeight - cajaReto.offsetHeight * 0.5));
-            cajaReto.style.backgroundPosition = `-${x}px -${y}px`; // Establecer una posición aleatoria para la imagen de fondo
+    const retoSeleccionado = arrayPersonajes[retoCount];
+    console.log(retoCount);
+    const cajaReto = document.getElementById('caja-reto-series-personaje');
+    //guardar respuesta correcta
+    const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+    const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+    respuestaInput.value = nombre; // Establecer el valor del input
 
-            cajaReto.style.backgroundSize = '850%'; // Aumentar el zoom
-        } else {
-            cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
-            console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
-        }
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
+    if (retoSeleccionado && retoSeleccionado.hasOwnProperty('img')) {
+        const imgURL = retoSeleccionado.img; // Obtener URL de la imagen desde la columna del reto seleccionado
+        cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
+        cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
+        cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja
+        const x = Math.floor(Math.random() * (cajaReto.offsetWidth - cajaReto.offsetWidth * 0.5));
+        const y = Math.floor(Math.random() * (cajaReto.offsetHeight - cajaReto.offsetHeight * 0.5));
+        cajaReto.style.backgroundPosition = `-${x}px -${y}px`; // Establecer una posición aleatoria para la imagen de fondo
+        cajaReto.style.backgroundSize = '850%'; // Aumentar el zoom
+    } else {
+        cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+        console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
     }
 }
+
 //función que pasa al siguietne reto
 function mostrarRetoSiguiente() {
-    retoId++;
-    ejecutar();
-    $('#caja-reto-series-personaje').css('background-size', '850%');
-
+    mostrarPaginaAnterior();
+    retoCount++;
+    if (retoCount >= arrayPersonajes.length) {
+        mostrarPaginaAnterior();
+        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+        document.querySelector('.boton-buscar').disabled = true; // Deshabilitar el botón de envio de respuesta
+        const cajaReto = document.getElementById('caja-reto-series-personaje');
+        cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+        cajaReto.style.backgroundSize = 'cover';
+        const mensaje = document.querySelector('.mensaje-envio-respuesta');
+        mensaje.style.display = 'inline-block';
+        mensaje.innerHTML = "Has realizado todos los retos disponibles";
+        mensaje.style.color = "white"; // establecer color 
+        const mensaje2 = document.querySelector('.intentos-restantes');
+        mensaje2.style.display = 'none';
+    } else {
+        selectorFotograma(retoCount);
+        console.log(retoCount)
+        $('#caja-reto-series-personaje').css('background-size', '850%');
+    }
 }
 
 function zoomImagen() {
     const cajaReto = $('#caja-reto-series-personaje');
-    const img = cajaReto.css('background-image');
+    //const img = cajaReto.css('background-image');
 
     // Calcular un valor aleatorio para el zoom
     const maxZoom = 10;
     const zoom = maxZoom;
-
     // Aplicar el tamaño de la imagen
     cajaReto.css({
         'background-size': `${zoom * 100}%`,
@@ -93,10 +94,8 @@ function zoomImagen() {
         "background-position-x": `50%`,
         "background-position-y": `50%`
     });
-
     // Agregar propiedad image-rendering a la imagen
     cajaReto.css('image-rendering', 'pixelated');
-
     // Animar el tamaño de la imagen
     cajaReto.animate({
         "background-size": `${zoom * 100}%`,
@@ -156,6 +155,8 @@ function primeraLetraMayus(str) {
 
 function mostrarPaginaAnterior() {
     // Restaurar los cambios realizados al acertar el reto
+    const mensaje = document.querySelector('.mensaje-envio-respuesta');
+    mensaje.style.display = 'none';
 
     // Restablecer el estilo de la caja del reto
     const cajaReto = document.getElementById('caja-reto-series-personaje');
@@ -168,10 +169,12 @@ function mostrarPaginaAnterior() {
 
     // Habilitar el campo de entrada de texto
     document.querySelector(".input-buscador").disabled = false;
-
+    document.querySelector('.boton-buscar').disabled = false; // Deshabilitar el botón de envio de respuesta 
     //limpiar historial
     var historial = document.getElementById("historial-intentos");
     historial.innerHTML = "";
+
+
 }
 
 function comprobarRespuesta() {
@@ -194,9 +197,12 @@ function comprobarRespuesta() {
         mensaje.style.display = 'inline-block';
         //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
         mensaje.innerHTML = "¡Respuesta correcta! : " + primeraLetraMayus(respuestaCorrecta);
-        mensaje.style.color = "green"; // establecer color verde para acierto            
+        mensaje.style.color = "green"; // establecer color verde para acierto  
+        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+        document.querySelector('.boton-buscar').disabled = true; // Deshabilitar el botón de envio de respuesta          
         //document.querySelector('.cuadro-busqueda').style.display = 'none';
         //alert("¡Respuesta correcta!");
+
         //muestra la imagen completa
         imagenCompleta();
 
@@ -206,20 +212,10 @@ function comprobarRespuesta() {
         //mostrar siguiente reto
         const botonSiguiente = document.querySelector('#btn-reto-siguiente-infinito');
         botonSiguiente.style.display = 'inline-block';
-        //se muestra la página inicial de adivinar reto
-        const btnRetoSiguiente = document.getElementById('btn-reto-siguiente-infinito');
-        btnRetoSiguiente.addEventListener('click', mostrarPaginaAnterior);
-
     } else {
-        //alert("Respuesta incorrecta. Inténtalo de nuevo.");
-        //mensaje.innerHTML = "Respuesta incorrecta";
-        //mensaje.style.color = "var(--color-fallo)"; // establecer color rojo para fallo
         cantidadFallos++;
         // Añade la respuesta al historial
         var historialIntentos = document.getElementById("historial-intentos");
-        //historialIntentos.innerHTML += `<p>Intento ${cantidadFallos}: ${primeraLetraMayus(respuestaUsuario)}</p>`;
-        //historialIntentos.innerHTML += `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
-        //cada vez que se falla, se muestra desde el principio hasta cantidad de fallos +1
         // Actualiza los intentos restantes
         if (respuestaUsuario === "") {
             historialIntentos.innerHTML += "<p>Respuesta vacía</p>";
@@ -232,12 +228,12 @@ function comprobarRespuesta() {
     }
     // Verificar si se han agotado los intentos
     if (cuentaIntentosRestantes == 0) {
-        //alert("Ya has alcanzado el límite de intentos. ¡Inténtalo de nuevo más tarde!");
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
         mensaje.style.display = 'inline-block';
         mensaje.innerHTML = "Respuesta correcta: " + primeraLetraMayus(respuestaCorrecta);
         mensaje.style.color = "white"; // establecer color 
         document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+        document.querySelector('.boton-buscar').disabled = true; // Deshabilitar el botón de envio de respuesta
         //muestra la imagen completa
         imagenCompleta();
 
@@ -256,6 +252,7 @@ function comprobarRespuesta() {
     //Deja el cuadro de respuesta vacío
     document.querySelector(".input-buscador").value = "";
 }
+
 function mostrarIntentosRestantes(cuentaIntentosRestantes) {
     // Muestra los intentos restantes al cargar la página
     var intentosRestantes = document.getElementById("num-intentos-restantes");
@@ -318,6 +315,120 @@ document.addEventListener("click", function (event) {
 
 //funciones antes de incremento 3
 /*
+
+
+let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
+let cuentaIntentosRestantes = 6; //inicio la cantidad de intentos que le quedan al usuario
+
+let retoId; // Variable para almacenar los objetos retos
+let arrRetos = [];
+// solución óptima
+// Se debe traer un arr completo de todos los personajes
+// let arrayPersonajes = []; el array de obj tiene que venir ordernado aleatoriamente
+// let retoCount = 0; se pìlla el primero (retoCount); retoCount++
+// cuando se termina
+
+// arrayPersonajes[retoCount].image
+
+//solución 1
+async function getPersonajeRandom() {
+    const response = await fetch('http://localhost:81/serieRandomPersonaje');
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data = await response.json();
+    const array = data.message;
+    return array
+}
+
+async function obtenerReto() {
+    try {
+        let ID
+        do {
+            const personaje = await getPersonajeRandom()
+            ID = personaje[0].id;
+        } while (arrRetos.includes(ID))
+        retoId = ID;
+        //console.log(ID);
+        arrRetos.push(retoId);
+        //console.log(arrRetos);
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+/*
+async function obtenerReto() {
+    try {
+        const response = await fetch('http://localhost:81/serieRandomPersonaje');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const array = data.message;
+        //console.log(data)
+        const ID = array[0].id;
+        if (ID && !arrRetos.includes(ID)) {
+            retoId = ID;
+            //console.log(ID);
+            arrRetos.push(retoId);
+            //console.log(arrRetos);
+        } else {
+            console.error(`Error: No se encontró un reto con el ID especificado.`);
+        }
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+
+async function ejecutar() {
+    await obtenerReto();
+    //console.log(retoId);
+    // arrRetos.push(retoId);
+    //console.log(arrRetos);
+    selectorFotograma(retoId);
+}
+
+ejecutar();
+
+/función que muestra la imagen  del reto  
+async function selectorFotograma(retoId) {
+    try {
+        const response = await fetch('http://localhost:81/seriePersonaje');
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const data = await response.json();
+        const array = data.message;
+        const cajaReto = document.getElementById('caja-reto-series-personaje');
+        const retoSeleccionado = array.find(prop => prop.id === retoId); // Buscar el objeto con el id especificado
+        console.log(retoSeleccionado)
+        //guardar respuesta correcta
+        const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+        respuestaInput.value = nombre; // Establecer el valor del input
+        if (retoSeleccionado && retoSeleccionado.hasOwnProperty('img')) {
+            const imgURL = retoSeleccionado.img; // Obtener URL de la imagen desde la columna del reto seleccionado
+            cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
+            cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
+            cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja
+
+            const x = Math.floor(Math.random() * (cajaReto.offsetWidth - cajaReto.offsetWidth * 0.5));
+            const y = Math.floor(Math.random() * (cajaReto.offsetHeight - cajaReto.offsetHeight * 0.5));
+            cajaReto.style.backgroundPosition = `-${x}px -${y}px`; // Establecer una posición aleatoria para la imagen de fondo
+
+            cajaReto.style.backgroundSize = '850%'; // Aumentar el zoom
+        } else {
+            cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+            console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
+        }
+    } catch (error) {
+        console.error(`Error fetching data: ${error}`);
+    }
+}
+
+*/
+/*
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 async function mostrarPersonaje(retoId) {
     try {
@@ -393,4 +504,4 @@ async function mostrarPersonaje() {
         console.error(`Error fetching data: ${error}`);
     }
 }
- */
+*/
