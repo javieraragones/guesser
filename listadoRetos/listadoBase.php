@@ -4,38 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Listado de Fotogramas de Serie</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .table-container {
-            max-width: 100%;
-            overflow-x: auto;
-        }
-
-        .small-image {
-            max-width: 100px;
-            max-height: 100px;
-        }
-
-        .add-button {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="../../Guesser/estilos/styles_listadoRetos.css">
 </head>
 
 <body>

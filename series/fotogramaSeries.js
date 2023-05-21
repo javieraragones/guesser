@@ -1,3 +1,7 @@
+//Iniciamos las variables cantidadFallos y cuentaIntentosRestantes
+let cantidadFallos = 0; // Contador para llevar el registro de la cantidad de fallos ocurridos
+let cuentaIntentosRestantes = 6; // Cantidad de intentos restantes para el usuario
+
 /*Función para obtener el día actual*/
 function getDiaActual() {
     const today = new Date();
@@ -14,32 +18,33 @@ function cambiarHref() {
 }
 cambiarHref();
 
-/* función que muestra la imagen 1 del reto diario */
+// Función que muestra la que se le pasa como parámetro del reto diario 
 async function selectorFotograma(columna) {
     try {
         const dia = getDiaActual();
-        //Llamo a la API que está activa en el puerto 81 de mi ordenador gracias XAMPP
+        //Llamo a la API que está activa en el puerto 81 de mi ordenador gracias a XAMPP
         const response = await fetch('http://localhost:81/serieFotogramas');
-        //const response = await fetch(API_URL + '/serieFotogramas');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
         const array = data.message;
         const cajaReto = document.getElementById('caja-reto-series-fotogramas');
-        // recogemos del array el que contienen la fecha de hoy
-        // fotogramasSeriesHoy contendrá el objeto con la serie de hoy
-        const fotogramasSeriesHoy = array.find(prop => prop.fecha === dia);
-        // Si hay alguna serie
+        // Recogemos del array el que contiene la fecha de hoy
+        const fotogramasSeriesHoy = array.find(prop => prop.fecha === dia); // fotogramasSeriesHoy contendrá el objeto con la serie de hoy 
+        // Guardamos la respuesta correcta
+        const nombre = fotogramasSeriesHoy.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+        respuestaInput.value = nombre; // Establecer el valor del input
+        // Si hay alguna serie...
         if (fotogramasSeriesHoy) {
             const imgURL = fotogramasSeriesHoy[columna]; // Obtener URL de la imagen desde la columna
             cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
             cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
             cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
-            // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
-            cajaReto.style.backgroundColor = 'black';
+            cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
         } else {
-            /*Controlar que del actual disponga de un reto*/
+            //Si no hay reto disponible, se muestra una imagen de error
             cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
             console.error(`Error: la columna ${columna} no existe en el objeto array.`);
         }
@@ -47,35 +52,11 @@ async function selectorFotograma(columna) {
         console.error(`Error fetching data: ${error}`);
     }
 }
-selectorFotograma('img1'); //Muestro la primera imagen
-
-//FUNCIÓN QUE INTRODUCE LA RESPUESTA CORRECTA EN EL INPUT HIDDEN PARA COMPARAR CON LA RESPUESTA DEL USUARIO
-async function getRespuestaCorrecta() {
-    try {
-        const date = getDiaActual(); // Obtener el día actual
-        //const response = await fetch(API_URL + '/series');
-        const response = await fetch('http://localhost:81/serieFotogramas');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-
-        const fotogramasSeriesHoy = array.find((prop) => prop.fecha === date);
-        const nombre = fotogramasSeriesHoy.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
-        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-        respuestaInput.value = nombre; // Establecer el valor del input
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-getRespuestaCorrecta();
-
+selectorFotograma('img1'); //Se llama a la función para mostrar la primera pista
 
 //Función para realizar la navegación entre las imágenes de los retos
 const nombresColumnasImagenes = ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'];
 let indiceImagenActual = 0;
-//let cantidadFallos = 0; // Llevar registro de la cantidad de fallos
 // Obtener los botones de navegación
 const btnImg1 = document.getElementById('btn-img1');
 const btnImg2 = document.getElementById('btn-img2');
@@ -103,11 +84,6 @@ btnImg6.addEventListener('click', () => {
     selectorFotograma(nombresColumnasImagenes[5]);
 });
 
-
-
-let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
-let cuentaIntentosRestantes = 6;
-
 // Función para mostrar el botón correspondiente según la cantidad de fallos
 function mostrarBotonDesbloqueado(fallos) {
     const botones = [btnImg1, btnImg2, btnImg3, btnImg4, btnImg5, btnImg6];
@@ -116,16 +92,16 @@ function mostrarBotonDesbloqueado(fallos) {
     }
 }
 
-//Función que muestra la siguiente imagen al cometer un fallo
+// Función que muestra la siguiente imagen al cometer un fallo
 async function mostrarFotograma() {
     try {
         await selectorFotograma(`img${cantidadFallos + 1}`);
     } catch (error) {
         console.error(error);
-        document.getElementById('imagen-fallo').src = 'https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg'; // cambia la ruta a la imagen que quieras mostrar
+        document.getElementById('imagen-fallo').src = 'https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg';
     }
 }
-//función para poner la primera letra mayúscula
+// Función para poner la primera letra mayúscula
 function primeraLetraMayus(str) {
     return str.replace(
         /\w\S*/g,
@@ -135,94 +111,101 @@ function primeraLetraMayus(str) {
     );
 }
 
+// Función con la que comprobamos si la respuesta introducida por el usuario coincide con la respuesta correcta 
 function comprobarRespuesta() {
     // Verificar si se han agotado los intentos
-
     if (cuentaIntentosRestantes <= 0) {
         document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
         return;
     }
     mostrarBotonDesbloqueado(cantidadFallos);
-    // Obtener la respuesta del usuario
-    var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase();
-    // Obtener la respuesta correcta
-    var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase();
-    // Comparar las respuestas
+    var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase(); // Obtener la respuesta del usuario
+    var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase(); // Obtener la respuesta correcta
+    // Mensaje que se muestra al usuario cuando acierta o se han agotado los intentos
     var mensaje = document.querySelector(".mensaje-envio-respuesta");
     mensaje.style.fontSize = "24px";
+
+    // Comparar las respuestas
     if (respuestaUsuario === respuestaCorrecta) {
+        // El elemento que contiene el mensaje se muestra
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
         mensaje.style.display = 'inline-block';
         //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
-        mensaje.innerHTML = "¡Respuesta correcta! : " + primeraLetraMayus(respuestaCorrecta);
-        mensaje.style.color = "green"; // establecer color verde para acierto            
+        mensaje.innerHTML = "¡Respuesta correcta! <br> <span class='respuesta-acertada-mensaje'>" + primeraLetraMayus(respuestaCorrecta) + "</span>"; // Mensaje de respuesta correcta
+        mensaje.style.color = "green"; // Establecer color verde para acierto 
+        mensaje.style.fontSize = "22px"; // Establecer tamaño fuente             
         document.querySelector('.cuadro-busqueda').style.display = 'none';
-        //alert("¡Respuesta correcta!");
         //Recorrer todos los botones y mostrarlos
         const botones = [btnImg1, btnImg2, btnImg3, btnImg4, btnImg5, btnImg6];
         for (let i = 0; i < botones.length; i++) {
             botones[i].style.display = 'inline-block';
         }
+        document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
     } else {
-        //alert("Respuesta incorrecta. Inténtalo de nuevo.");
-        //mensaje.innerHTML = "Respuesta incorrecta";
-        //mensaje.style.color = "var(--color-fallo)"; // establecer color rojo para fallo
-        cantidadFallos++;
-        mostrarBotonDesbloqueado(cantidadFallos);
+        cantidadFallos++; // Aumentamos la cuenta de fallos
+        mostrarBotonDesbloqueado(cantidadFallos); // Se muestra el botón correspondiente al número de fallo
+        // Se llama a la función que pasa al siguiente fograma en caso de que queden intentos
         if (cantidadFallos < 6) {
             mostrarFotograma();
         }
         // Añade la respuesta al historial
         var historialIntentos = document.getElementById("historial-intentos");
-        //historialIntentos.innerHTML += `<p>Intento ${cantidadFallos}: ${primeraLetraMayus(respuestaUsuario)}</p>`;
-        //historialIntentos.innerHTML += `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
         var respuestaHTML = "";
         if (respuestaUsuario === "") {
-            respuestaHTML = "<p>Respuesta vacía</p>";
+            respuestaHTML = "<p>Respuesta vacía</p>"; // En caso de que el usuario no introduzca texto, se muestra "Respuesta vacía" en el historial
         } else {
-            respuestaHTML = `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
+            respuestaHTML = `<p>${primeraLetraMayus(respuestaUsuario)}</p>`; // Respuesta introducida errónea
         }
-        // Inserta la respuesta al principio del historial
-        historialIntentos.insertAdjacentHTML("afterbegin", respuestaHTML);
-        // Actualiza los intentos restantes
-        cuentaIntentosRestantes--;
+        historialIntentos.insertAdjacentHTML("afterbegin", respuestaHTML); // Inserta la respuesta al principio del historial
+        cuentaIntentosRestantes--; // Actualiza los intentos restantes
     }
+    // Verificar si se han agotado los intentos
     if (cuentaIntentosRestantes == 0) {
+        // El elemento que contiene el mensaje se muestra
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
         mensaje.style.display = 'inline-block';
-        //alert("Ya has alcanzado el límite de intentos. ¡Inténtalo de nuevo más tarde!");
-        mensaje.innerHTML = "Respuesta correcta: " + primeraLetraMayus(respuestaCorrecta);
+        mensaje.innerHTML = "Respuesta correcta: <br> <span class='respuesta-correcta-mensaje'>" + primeraLetraMayus(respuestaCorrecta) + "</span>"; //Mensaje que indica la respuesta correcta
         mensaje.style.color = "white"; // establecer color 
-        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+        mensaje.style.fontSize = "22px"; // establecer tamaño fuente 
+        document.querySelector('.cuadro-busqueda').style.display = 'none'; //Desactivamos cuadro de búsqueda
+        document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
+
     }
-    var intentosRestantes = document.getElementById("num-intentos-restantes");
-    intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
-    //Deja el cuadro de respuesta vacío
-    document.querySelector(".input-buscador").value = "";
+    mostrarIntentosRestantes(cuentaIntentosRestantes); //Se muestran al usuario los intentos restantes
+    document.querySelector(".input-buscador").value = ""; //Deja el cuadro de respuesta vacío
 }
 
+// Función que muestra al usuario los intentos restantes
 function mostrarIntentosRestantes(cuentaIntentosRestantes) {
     // Muestra los intentos restantes al cargar la página
     var intentosRestantes = document.getElementById("num-intentos-restantes");
     intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
 }
+
+
 /*----------------Funciones para buscar títulos que coinciden con la entrada y mostrarlos en un desplegable----------------*/
 
 //FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
 async function buscarTitulo(textoBusqueda) {
+    // Si la respuesta no es exitosa, lanzar un error con el estado de la respuesta HTTP
     if (textoBusqueda.length >= 1) {
         const response = await fetch('http://localhost:81/serieFotogramas');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        // Obtener los datos de la respuesta como JSON
         const data = await response.json();
         const array = data.message;
+        // Crear un nuevo array para almacenar los nombres de las series o películas
         let nombres = []
+        // Recorrer el array de datos y extraer los nombres de las series o películas, agregándolos al nuevo array "nombres"
         array.map(x => {
             nombres.push(x.nombre)
         })
+        // Llamar a la función "mostrarResultados" para mostrar los resultados de la búsqueda en base a los nombres obtenidos y el texto de búsqueda
         mostrarResultados(nombres, textoBusqueda);
     } else {
+        // Si el texto de búsqueda tiene una longitud menor a 1, vaciar el contenido del elemento con ID "resultados-busqueda"
         document.getElementById("resultados-busqueda").innerHTML = "";
     }
 }
@@ -232,297 +215,35 @@ function mostrarResultados(textoRespuesta, textoBusqueda) {
     const resultados = textoRespuesta.filter(res => res.toLowerCase().includes(textoBusqueda.toLowerCase()));
     let htmlResultados = "";
     if (resultados.length > 0) {
+        // Si se encontraron resultados, generar una lista con los resultados
         htmlResultados += "<ul>";
         for (let i = 0; i < resultados.length; i++) {
-            //htmlResultados += "<li><a href=\"#\" onclick=\"seleccionarResultado('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
+            // Agregar cada resultado como un elemento de lista con un enlace que llama a la función "seleccionarResultado"
             htmlResultados += "<li onclick=\"seleccionarResultado('" + resultados[i] + "')\"><span>" + resultados[i] + "</span></li>";
         }
         htmlResultados += "</ul>";
     } else {
+        // Si no se encontraron resultados, mostrar un mensaje indicando que no hay resultados disponibles
         htmlResultados += "<p>No se encontraron resultados.</p>";
     }
+    // Establecer el contenido HTML generado en el elemento con ID "resultados-busqueda"
     document.getElementById("resultados-busqueda").innerHTML = htmlResultados;
 }
 
 //FUNCIÓN QUE SE EJECUTA AL SELECCIONAR UN RESULTADO
 function seleccionarResultado(tituloSeleccionado) {
     document.querySelector(".input-buscador").value = tituloSeleccionado;
+    // Limpiar el contenido del elemento con ID "resultados-busqueda"
     document.getElementById("resultados-busqueda").innerHTML = "";
 }
-//Función para que se cierre el desplegable al hacer click fuera de él
+
+//Para que se cierre el desplegable al hacer click fuera de él
 let contenedorSelector = document.getElementById("resultados-busqueda");
 // Agregar listener para cerrar selector al hacer clic fuera de él
 document.addEventListener("click", function (event) {
     let clicDentroSelector = contenedorSelector.contains(event.target);
+    // Si el clic se realizó fuera del contenedor del selector, se procede a cerrar el desplegable
     if (!clicDentroSelector) {
-        contenedorSelector.innerHTML = "";
+        contenedorSelector.innerHTML = ""; // Limpiar el contenido del contenedor para cerrar el desplegable
     }
 });
-
-
-/*
-//envío de respuesta al presionar enter(no funciona-solucionar)
-document.addEventListener("DOMContentLoaded", function () {
-    var input = document.getElementById("input-buscador");
-    input.addEventListener("keydown", function (event) {
-        if (event.keyCode === 13) {
-            event.preventDefault();
-            comprobarRespuesta();
-        }
-    });
-});
-*/
-
-
-
-
-
-/*--------------------------------------Función selectorFotograma incremento2--------------------------------------
-//Función con la que muestro en el elemento caja reto la imagen del reto
-async function selectorFotograma(columna) {
-    try {
-        //Llamo a la API que está activa en el puerto 81 de mi ordenador gracias XAMPP
-        const response = await fetch('http://localhost:81/serieFotogramas');
-        //const response = await fetch(API_URL + '/serieFotogramas');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const cajaReto = document.getElementById('caja-reto-series-fotogramas');
-        if (array[0].hasOwnProperty(columna)) { // Verificar si la columna existe en el objeto array
-            const imgURL = array[0][columna]; // Obtener URL de la imagen desde la columna
-            cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
-            cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
-            cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
-            // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
-            cajaReto.style.backgroundColor = 'black';
-        } else {
-            console.error(`Error: la columna ${columna} no existe en el objeto array.`);
-        }
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-selectorFotograma('img1'); //Muestro la primera imagen
-*/
-
-
-/*--------------------------------------Función buscar títulos y mostrar en desplegable incremento2
-
-
-//FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
-function buscarTitulo(textoBusqueda) {
-    if (textoBusqueda.length >= 1) {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "buscarTituloFotograma.php", true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function () {
-            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                mostrarResultados(this.responseText);
-            }
-        };
-        xhr.send("textoBusqueda=" + textoBusqueda);
-    } else {
-        document.getElementById("resultados-busqueda").innerHTML = "";
-    }
-}
-
-//FUNCIÓN QUE MUESTRA LOS RESULTADOS DE LOS TÍTULOS QUE COINCIDEN EN UN DESPLEGABLE
-function mostrarResultados(textoRespuesta) {
-    const resultados = JSON.parse(textoRespuesta);
-    let htmlResultados = "";
-    if (resultados.length > 0) {
-        htmlResultados += "<ul>";
-        for (let i = 0; i < resultados.length; i++) {
-            //htmlResultados += "<li><a href=\"#\" onclick=\"seleccionarResultado('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
-            htmlResultados += "<li onclick=\"seleccionarResultado('" + resultados[i] + "')\"><span>" + resultados[i] + "</span></li>";
-
-        }
-        htmlResultados += "</ul>";
-    } else {
-        htmlResultados += "<p>No se encontraron resultados.</p>";
-    }
-    document.getElementById("resultados-busqueda").innerHTML = htmlResultados;
-}
-
-//FUNCIÓN QUE SE EJECUTA AL SELECCIONAR UN RESULTADO
-function seleccionarResultado(tituloSeleccionado) {
-    document.querySelector(".input-buscador").value = tituloSeleccionado;
-    document.getElementById("resultados-busqueda").innerHTML = "";
-}
-*/
-
-
-
-
-
-
-
-
-
-
-/* -------------------Versión 1 modo de juego  series fotogramas funcional-------------------
-
-//Función con la que muestro en el elemento caja reto la imagen del reto
-async function selectorFotograma(columna) {
-    try {
-        //Llamo a la API que está activa en el puerto 81 de mi ordenador gracias XAMPP
-        const response = await fetch('http://localhost:81/serieFotogramas');
-        //const response = await fetch(API_URL + '/serieFotogramas');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const cajaReto = document.getElementById('caja-reto-series-fotogramas');
-        if (array[0].hasOwnProperty(columna)) { // Verificar si la columna existe en el objeto array
-            const imgURL = array[0][columna]; // Obtener URL de la imagen desde la columna
-            cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
-            cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
-            cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
-            // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
-            cajaReto.style.backgroundColor = 'black';
-        } else {
-            console.error(`Error: la columna ${columna} no existe en el objeto array.`);
-        }
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-//Función para realizar la navegación entre las imágenes de los retos
-const nombresColumnasImagenes = ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'];
-// Obtener los botones de navegación
-const btnImg1 = document.getElementById('btn-img1');
-const btnImg2 = document.getElementById('btn-img2');
-const btnImg3 = document.getElementById('btn-img3');
-const btnImg4 = document.getElementById('btn-img4');
-const btnImg5 = document.getElementById('btn-img5');
-const btnImg6 = document.getElementById('btn-img6');
-const imagenFotograma = document.getElementById("imagen-fotograma");
-let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
-// Agregar evento click a cada botón de navegación
-btnImg1.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[0]);
-});
-btnImg2.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[1]);
-});
-btnImg3.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[2]);
-});
-btnImg4.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[3]);
-});
-btnImg5.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[4]);
-});
-btnImg6.addEventListener('click', () => {
-    selectorFotograma(nombresColumnasImagenes[5]);
-});
-// Función para mostrar la imagen correspondiente según la cantidad de fallos
-function mostrarImagenBoton(fallos) {
-    const imagenes = ["url('https://i.imgur.com/rP3ZI5K.png')", "url('https://i.imgur.com/70VWYjC.png')", "url('https://i.imgur.com/lmJhG6R.png')", "url('https://i.imgur.com/l4aUz3q.png')", "url('https://i.imgur.com/IRH6sOv.png')", "url('https://i.imgur.com/NzHDoJp.png')"];
-    // Establecer la imagen correspondiente
-    if (fallos >= 0 && fallos < imagenes.length) {
-        imagenFotograma.style.backgroundImage = imagenes[fallos];
-    }
-}
-// Función para mostrar el botón correspondiente según la cantidad de fallos
-function mostrarBotonDesbloqueado(fallos) {
-    const botones = [btnImg1, btnImg2, btnImg3, btnImg4, btnImg5, btnImg6];
-    if (fallos >= 0 && fallos < botones.length) {
-        botones[fallos].style.display = 'inline-block';
-    }
-}
-// Función para seleccionar el fotograma correspondiente según la cantidad de fallos
-function selectorFotograma(fallos) {
-    const fotogramas = document.querySelectorAll(".fotogramas");
-    if (fallos >= 0 && fallos < fotogramas.length) {
-        fotogramas.forEach(function (fotograma) {
-            fotograma.style.display = 'none';
-        });
-        fotogramas[fallos].style.display = 'block';
-    }
-}
-//FUNCIÓN QUE INTRODUCE LA RESPUESTA CORRECTA EN EL INPUT HIDDEN PARA COMPARAR CON LA RESPUESTA DEL USUARIO
-async function getRespuestaCorrecta() {
-    try {
-        //const response = await fetch(API_URL + '/series');
-        const response = await fetch('http://localhost:81/serieFotogramas');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const nombre = array[0].nombre; // Obtener valor de la columna "nombre"
-        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-        respuestaInput.value = nombre; // Establecer el valor del input
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-getRespuestaCorrecta();
-
-//let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
-// Función para mostrar el botón correspondiente según la cantidad de fallos
-function mostrarBotonDesbloqueado(fallos) {
-    const botones = [btnImg1, btnImg2, btnImg3, btnImg4, btnImg5, btnImg6];
-    if (fallos >= 0 && fallos < botones.length) {
-        botones[fallos].style.display = 'inline-block';
-    }
-}
-function comprobarRespuesta() {
-    mostrarBotonDesbloqueado(cantidadFallos);
-    // Obtener la respuesta del usuario
-    var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase();
-    // Obtener la respuesta correcta
-    var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase();
-    // Comparar las respuestas
-    if (respuestaUsuario === respuestaCorrecta) {
-        alert("¡Respuesta correcta!");
-    } else {
-        alert("Respuesta incorrecta. Inténtalo de nuevo.");
-        cantidadFallos++;
-        mostrarBotonDesbloqueado(cantidadFallos);
-        mostrarImagenBoton(cantidadFallos);
-        selectorFotograma(cantidadFallos + 1);
-    }
-}
-//FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
-function buscarTitulo(textoBusqueda) {
-    if (textoBusqueda.length >= 2) {
-        const xhr = new XMLHttpRequest();
-        xhr.open("POST", "buscar_titulo.php", true);
-        xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function () {
-            if (this.readyState === XMLHttpRequest.DONE && this.status === 200) {
-                mostrarResultados(this.responseText);
-            }
-        };
-        xhr.send("textoBusqueda=" + textoBusqueda);
-    } else {
-        document.getElementById("resultados-busqueda").innerHTML = "";
-    }
-}
-//FUNCIÓN QUE MUESTRA LOS RESULTADOS DE LOS TÍTULOS QUE COINCIDEN EN UN DESPLEGABLE
-function mostrarResultados(textoRespuesta) {
-    const resultados = JSON.parse(textoRespuesta);
-    let htmlResultados = "";
-    if (resultados.length > 0) {
-        htmlResultados += "<ul>";
-        for (let i = 0; i < resultados.length; i++) {
-            htmlResultados += "<li><a href=\"#\" onclick=\"seleccionarResultado('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
-        }
-        htmlResultados += "</ul>";
-    } else {
-        htmlResultados += "<p>No se encontraron resultados.</p>";
-    }
-    document.getElementById("resultados-busqueda").innerHTML = htmlResultados;
-}
-//FUNCIÓN QUE SE EJECUTA AL SELECCIONAR UN RESULTADO
-function seleccionarResultado(tituloSeleccionado) {
-    document.querySelector(".input-buscador").value = tituloSeleccionado;
-    document.getElementById("resultados-busqueda").innerHTML = "";
-}
-*/

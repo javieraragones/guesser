@@ -1,9 +1,8 @@
+//Iniciamos las variables cantidadFallos y cuentaIntentosRestantes
+let cantidadFallos = 0; // Contador para llevar el registro de la cantidad de fallos ocurridos
+let cuentaIntentosRestantes = 6; // Cantidad de intentos restantes para el usuario
 
-
-let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
-let cuentaIntentosRestantes = 6; //inicio la cantidad de intentos que le quedan al usuario
-
-/*Función para obtener el día actual*/
+//Función para obtener el día actual
 function getDiaActual() {
     const today = new Date();
     const month = (today.getMonth() + 1).toString().padStart(2, '0');
@@ -12,15 +11,16 @@ function getDiaActual() {
     const date = `${year}-${month}-${day}`;
     return date;
 }
-// Función para cambiar el valor de href del enlace con id "btn-infinito"
+// Función para cambiar el valor de href del enlace con id "btn-infinito" para que al darle click al botón lleve a este modo de juego en infinito
 function cambiarHref() {
     var enlace = document.getElementById("btn-infinito");
     enlace.href = "/Guesser/series/emojiSeriesInfinito.php";
 }
 cambiarHref();
 
-//esta función muestra los emojis desde el inicial hasta el que corresponda con la cantidad de fallos +1 para que cada vez que 
-//el usuario falle, se muestre el siguiente emoji y los anteriores
+
+// Muestra los emojis desde el inicial hasta el que corresponda con la cantidad de fallos.
+// Cada vez que el usuario falle, se mostrará el siguiente emoji y los anteriores.
 async function mostrarEmojis(fallos) {
     try {
         const dia = getDiaActual();
@@ -31,16 +31,20 @@ async function mostrarEmojis(fallos) {
         const data = await response.json();
         const array = data.message;
         const cajaReto = document.getElementById('caja-reto-series-emojis');
-
         const emojisSeriesHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
+        // Guardar respuesta correcta
+        const nombre = emojisSeriesHoy.nombre; // Obtener valor de la columna "nombre" del objeto encontrado
+        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+        respuestaInput.value = nombre; // Establecer el valor del input
+        // Si hay alguna serie...
         if (emojisSeriesHoy) {
-            const emojis = emojisSeriesHoy.emoji; // Obtén los emojis del objeto encontrado
-            const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
-            const emojiArray = emojis.match(regex);
-            console.log(emojiArray); // ['\ud83e\udd91', '\ud83c\udfae']
-            cajaReto.innerHTML = emojiArray.splice(0, fallos).join('');
+            const emojis = emojisSeriesHoy.emoji; // Obtener los emojis del objeto encontrado
+            const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g; // Expresión regular para buscar pares de sustitutos que representan emojis en una cadena Unicode
+            const emojiArray = emojis.match(regex); // Extrae todos los emojis presentes en la cadena 'emojis' y los guarda en un array
+            console.log(emojiArray); // Muestra en la consola el array de emojis encontrados ['\ud83e\udd91', '\ud83c\udfae']
+            cajaReto.innerHTML = emojiArray.splice(0, fallos).join(''); // Asigna el contenido HTML al elemento con el id "cajaReto"
         } else {
-            /*Controlar que del actual disponga de un reto*/
+            //Si no hay reto disponible, se muestra una imagen de error
             cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
             console.error(`Error: No se encontró un objeto con la fecha ${dia}.`);
         }
@@ -48,37 +52,9 @@ async function mostrarEmojis(fallos) {
         console.error(`Error fetching data: ${error}`);
     }
 }
-mostrarEmojis(cantidadFallos + 1);
+mostrarEmojis(cantidadFallos + 1); //Se llama a la función para mostrar la primera pista
 
-//FUNCIÓN QUE INTRODUCE LA RESPUESTA CORRECTA EN EL INPUT HIDDEN PARA COMPARAR CON LA RESPUESTA DEL USUARIO
-async function getRespuestaCorrecta() {
-    try {
-        const dia = getDiaActual();
-        //const response = await fetch(API_URL + '/series');
-        const response = await fetch('http://localhost:81/serieEmojis');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-
-        const respuestaCorrectaHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
-        if (respuestaCorrectaHoy) {
-            const nombre = respuestaCorrectaHoy.nombre; // Obtener valor de la columna "nombre" del objeto encontrado
-            const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-            respuestaInput.value = nombre; // Establecer el valor del input
-        } else {
-            console.error(`Error: No se encontró un objeto con la fecha ${dia}.`);
-        }
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-
-getRespuestaCorrecta();
-
-
-//función para poner la primera letra mayúscula
+//Función para poner la primera letra mayúscula
 function primeraLetraMayus(str) {
     return str.replace(
         /\w\S*/g,
@@ -87,67 +63,68 @@ function primeraLetraMayus(str) {
         }
     );
 }
-
+//Función con la que se comprueba la respuesta introducida por el usuario
 function comprobarRespuesta() {
     // Verificar si se han agotado los intentos
-
     if (cuentaIntentosRestantes <= 0) {
-        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto en caso de que no queden más intentos
         return;
     }
-    // Obtener la respuesta del usuario
-    var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase();
-    // Obtener la respuesta correcta
-    var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase();
-    // Comparar las respuestas
+    var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase(); // Obtener la respuesta del usuario
+    var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase(); // Obtener la respuesta correcta
+    // Mensaje que se muestra al usuario cuando acierta o se han agotado los intentos
     var mensaje = document.querySelector(".mensaje-envio-respuesta");
     mensaje.style.fontSize = "24px";
+
+    // Comparar las respuestas
     if (respuestaUsuario === respuestaCorrecta) {
+        // El elemento que contiene el mensaje se muestra
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
         mensaje.style.display = 'inline-block';
         //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
-        mensaje.innerHTML = "¡Respuesta correcta! : " + primeraLetraMayus(respuestaCorrecta);
-        mensaje.style.color = "green"; // establecer color verde para acierto            
-        document.querySelector('.cuadro-busqueda').style.display = 'none';
-        //alert("¡Respuesta correcta!");
+        mensaje.innerHTML = "¡Respuesta correcta! <br> <span class='respuesta-acertada-mensaje'>" + primeraLetraMayus(respuestaCorrecta) + "</span>"; //Mensaje de respuesta correcta
+        mensaje.style.color = "green"; // establecer color verde para acierto 
+        mensaje.style.fontSize = "22px"; // establecer tamaño fuente 
+        document.querySelector('.cuadro-busqueda').style.display = 'none'; //Desactivamos cuadro de búsqueda
+        document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
     } else {
-        //alert("Respuesta incorrecta. Inténtalo de nuevo.");
-        //mensaje.innerHTML = "Respuesta incorrecta";
-        //mensaje.style.color = "var(--color-fallo)"; // establecer color rojo para fallo
-        cantidadFallos++;
+        cantidadFallos++; //Aumentamos la cuenta de fallos
         // Añade la respuesta al historial
         var historialIntentos = document.getElementById("historial-intentos");
-        //historialIntentos.innerHTML += `<p>Intento ${cantidadFallos}: ${primeraLetraMayus(respuestaUsuario)}</p>`;
-        //historialIntentos.innerHTML += `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
+        var respuestaHTML = "";
         if (respuestaUsuario === "") {
-            historialIntentos.innerHTML += "<p>Respuesta vacía</p>";
+            respuestaHTML = "<p>Respuesta vacía</p>"; // En caso de que el usuario no introduzca texto, se muestra "Respuesta vacía" en el historial
         } else {
-            historialIntentos.innerHTML += `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
+            respuestaHTML = `<p>${primeraLetraMayus(respuestaUsuario)}</p>`; // Respuesta introducida errónea
         }
-        //cada vez que se falla, se muestra desde el principio hasta cantidad de fallos +1
-        mostrarEmojis(cantidadFallos + 1);
-        // Actualiza los intentos restantes
-        cuentaIntentosRestantes--;
+        historialIntentos.insertAdjacentHTML("afterbegin", respuestaHTML); // Inserta la respuesta al principio del historial
+        mostrarEmojis(cantidadFallos + 1); // Cada vez que se falla, se muestra desde el principio hasta cantidad de fallos +1
+        cuentaIntentosRestantes--; // Actualiza los intentos restantes
     }
     // Verificar si se han agotado los intentos
     if (cuentaIntentosRestantes == 0) {
+        // El elemento que contiene el mensaje se muestra
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
         mensaje.style.display = 'inline-block';
-        //alert("Ya has alcanzado el límite de intentos. ¡Inténtalo de nuevo más tarde!");
-        mensaje.innerHTML = "Respuesta correcta: " + primeraLetraMayus(respuestaCorrecta);
+        mensaje.innerHTML = "Respuesta correcta: <br> <span class='respuesta-correcta-mensaje'>" + primeraLetraMayus(respuestaCorrecta) + "</span>"; //Mensaje que indica la respuesta correcta
         mensaje.style.color = "white"; // establecer color 
-        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
+        mensaje.style.fontSize = "22px"; // establecer tamaño fuente 
+        document.querySelector('.cuadro-busqueda').style.display = 'none'; // Desactivamos cuadro de búsqueda
+        document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
+
     }
-    var intentosRestantes = document.getElementById("num-intentos-restantes");
-    intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
-    //Deja el cuadro de respuesta vacío
-    document.querySelector(".input-buscador").value = "";
+    mostrarIntentosRestantes(cuentaIntentosRestantes); //Se muestran al usuario los intentos restantes
+    document.querySelector(".input-buscador").value = ""; //Deja el cuadro de respuesta vacío
 }
+
+// Función que muestra al usuario los intentos restantes
 function mostrarIntentosRestantes(cuentaIntentosRestantes) {
     // Muestra los intentos restantes al cargar la página
     var intentosRestantes = document.getElementById("num-intentos-restantes");
     intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
 }
+
+
 /*----------------Funciones para buscar títulos que coinciden con la entrada y mostrarlos en un desplegable----------------*/
 
 //FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
@@ -186,7 +163,6 @@ function mostrarResultados(textoRespuesta, textoBusqueda) {
     document.getElementById("resultados-busqueda").innerHTML = htmlResultados;
 }
 
-
 //FUNCIÓN QUE SE EJECUTA AL SELECCIONAR UN RESULTADO
 function seleccionarResultado(tituloSeleccionado) {
     document.querySelector(".input-buscador").value = tituloSeleccionado;
@@ -202,98 +178,3 @@ document.addEventListener("click", function (event) {
         contenedorSelector.innerHTML = "";
     }
 });
-
-
-
-//Función funcional inicial emojis
-/*
-FUNCIONES ANTES DE INCREMENTO 3
-//esta función muestra los emojis desde el inicial hasta el que corresponda con la cantidad de fallos +1 para que cada vez que 
-//el usuario falle, se muestre el siguiente emoji y los anteriores
-async function mostrarEmojis(fallos) {
-    try {
-        const response = await fetch('http://localhost:81/serieEmojis')
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const cajaReto = document.getElementById('caja-reto-series-emojis');
-        // const serieRandom = getSerieRandom(data.series);
-        let emojis = array[0].emoji; // cadena con dos emojis
-        // regex es un formateo de datos
-        const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
-        const emojiArray = emojis.match(regex);
-        console.log(emojiArray); // ['\ud83e\udd91', '\ud83c\udfae']
-        cajaReto.innerHTML = emojiArray.splice(0, fallos).join('');
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-
-//FUNCIÓN QUE INTRODUCE LA RESPUESTA CORRECTA EN EL INPUT HIDDEN PARA COMPARAR CON LA RESPUESTA DEL USUARIO
-async function getRespuestaCorrecta() {
-    try {
-        //const response = await fetch(API_URL + '/series');
-        const response = await fetch('http://localhost:81/serieEmojis');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const nombre = array[0].nombre; // Obtener valor de la columna "nombre"
-        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-        respuestaInput.value = nombre; // Establecer el valor del input
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-
-async function getEmojis(posicion) {
-    try {
-        // ARREGLAR RUTAS, PARA QUE LUEGO ESTÉ ASÍ
-        // const response = await fetch(API_URL + '/series')
-        const response = await fetch('http://localhost:81/serieEmojis')
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const cajaReto = document.getElementById('caja-reto-series-emojis');
-        // const serieRandom = getSerieRandom(data.series);
-        let emojis = array[0].emoji; // cadena con dos emojis
-        // regex es un formateo de datos
-        const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
-        const emojiArray = emojis.match(regex);
-        console.log(emojiArray); // ['\ud83e\udd91', '\ud83c\udfae']
-        cajaReto.innerHTML = emojiArray[posicion];
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-getEmojis(1);
-    /*
-    async function getEmojis() {
-        try {
-            // ARREGLAR RUTAS, PARA QUE LUEGO ESTÉ ASÍ
-            // const response = await fetch(API_URL + '/series')
-            const response = await fetch('http://localhost:81/serieEmojis')
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const data = await response.json();
-            const array = data.message;
-            const cajaReto = document.getElementById('caja-reto-series-emojis');
-            // const serieRandom = getSerieRandom(data.series);
-            let emojis = array[0].emoji; // cadena con dos emojis
-            // regex es un formateo de datos
-            const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g;
-            const emojiArray = emojis.match(regex);
-            console.log(emojiArray); // ['\ud83e\udd91', '\ud83c\udfae']
-            cajaReto.innerHTML = emojiArray[0];
-        } catch (error) {
-            console.error(`Error fetching data: ${error}`);
-        }
-    }
-    getEmojis()
-    */

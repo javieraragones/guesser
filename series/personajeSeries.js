@@ -1,6 +1,8 @@
-let cantidadFallos = 0; // Cuento la cantidad de fallos para ir mostrando las imágenes
-let cuentaIntentosRestantes = 6; //inicio la cantidad de intentos que le quedan al usuario
-/*Función para obtener el día actual*/
+//Iniciamos las variables cantidadFallos y cuentaIntentosRestantes
+let cantidadFallos = 0; // Contador para llevar el registro de la cantidad de fallos ocurridos
+let cuentaIntentosRestantes = 6; // Cantidad de intentos restantes para el usuario
+
+//Función para obtener el día actual
 function getDiaActual() {
     const today = new Date();
     const month = (today.getMonth() + 1).toString().padStart(2, '0');
@@ -9,38 +11,14 @@ function getDiaActual() {
     const date = `${year}-${month}-${day}`;
     return date;
 }
-// Función para cambiar el valor de href del enlace con id "btn-infinito"
+// Función para cambiar el valor de href del enlace con id "btn-infinito" para que al darle click al botón lleve a este modo de juego en infinito
 function cambiarHref() {
     var enlace = document.getElementById("btn-infinito");
     enlace.href = "/Guesser/series/personajeSeriesInfinito.php";
 }
 cambiarHref();
-//FUNCIÓN QUE INTRODUCE LA RESPUESTA CORRECTA EN EL INPUT HIDDEN PARA COMPARAR CON LA RESPUESTA DEL USUARIO
-async function getRespuestaCorrecta() {
-    try {
-        const dia = getDiaActual();
-        //const response = await fetch(API_URL + '/series');
-        const response = await fetch('http://localhost:81/seriePersonaje');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
 
-        const respuestaCorrectaHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
-        if (respuestaCorrectaHoy) {
-            const nombre = respuestaCorrectaHoy.nombre; // Obtener valor de la columna "nombre" del objeto encontrado
-            const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-            respuestaInput.value = nombre; // Establecer el valor del input
-        } else {
-            console.error(`Error: No se encontró un objeto con la fecha ${dia}.`);
-        }
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-getRespuestaCorrecta();
-
+// Muestra una imagen de un personaje con aumento realizado
 async function mostrarPersonaje() {
     try {
         const dia = getDiaActual();
@@ -50,31 +28,34 @@ async function mostrarPersonaje() {
         }
         const data = await response.json();
         const array = data.message;
-
         const personajeHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
+        // Guardar respuesta correcta
+        const nombre = personajeHoy.nombre; // Obtener valor de la columna "nombre" del objeto encontrado
+        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+        respuestaInput.value = nombre; // Establecer el valor del input
+        // Si hay algún personaje de serie...
         if (personajeHoy) {
             const cajaReto = document.getElementById('caja-reto-series-personaje');
             const imgURL = personajeHoy.img; // Obtener URL de la imagen desde la columna "img"
             cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
             cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
             cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja
-
+            // Genera coordenadas aleatorias dentro de los límites de la caja de reto
             const x = Math.floor(Math.random() * (cajaReto.offsetWidth - cajaReto.offsetWidth * 0.5));
             const y = Math.floor(Math.random() * (cajaReto.offsetHeight - cajaReto.offsetHeight * 0.5));
             cajaReto.style.backgroundPosition = `-${x}px -${y}px`; // Establecer una posición aleatoria para la imagen de fondo
-
             cajaReto.style.backgroundSize = '850%'; // Aumentar el zoom
         } else {
+            //Si no hay reto disponible, se muestra una imagen de error
             console.error(`Error: No se encontró un objeto con la fecha ${dia}.`);
         }
     } catch (error) {
         console.error(`Error fetching data: ${error}`);
     }
 }
+mostrarPersonaje(); //Se llama a la función para mostrar la primera pista
 
-
-mostrarPersonaje();
-
+// Función con la que aplicamos modificaciones a la imagen del reto
 function zoomImagen() {
     const cajaReto = $('#caja-reto-series-personaje');
     const img = cajaReto.css('background-image');
@@ -105,27 +86,23 @@ function zoomImagen() {
         cajaReto.css('image-rendering', '');
     });
 }
-
-
 zoomImagen();
-const factorReduccion = 0.7;
 
+const factorReduccion = 0.7; // Indicamos el factor de reducción
+// Función con la que reducimos el zoom
 function reducirZoom() {
     const zoomActual = parseInt($('#caja-reto-series-personaje').css('background-size'));
     const zoomNuevo = (zoomActual * factorReduccion);
-    /*
-    $('#caja-reto-series-personaje').animate({
-        'background-size': `${zoomNuevo}%`,
-    }, 1000, 'swing');
-    */
     $('#caja-reto-series-personaje').css(
         'background-size', `${zoomNuevo}%`);
 }
+
+// Función con la que hacemos que la imagen se ajuste al cuadro para verla lo mejor posible, manteniendo la relación de aspecto
 function imagenCompleta() {
     $('#caja-reto-series-personaje').css('background-size', '100%');
 }
 
-//función para poner la primera letra mayúscula
+// Función para poner la primera letra mayúscula
 function primeraLetraMayus(str) {
     return str.replace(
         /\w\S*/g,
@@ -135,90 +112,94 @@ function primeraLetraMayus(str) {
     );
 }
 
-
+//Función con la que se comprueba la respuesta introducida por el usuario
 function comprobarRespuesta() {
     // Verificar si se han agotado los intentos
-
     if (cuentaIntentosRestantes <= 0) {
         document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
-        cajaReto.style.backgroundImage = `url('${imgURL}')`;
+        imagenCompleta(); // Se muestra la imagen completa
         return;
     }
-    // Obtener la respuesta del usuario
-    var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase();
-    // Obtener la respuesta correcta
-    var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase();
-    // Comparar las respuestas
+    var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase(); // Obtener la respuesta del usuario
+    var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase(); // Obtener la respuesta correcta
     var mensaje = document.querySelector(".mensaje-envio-respuesta");
     mensaje.style.fontSize = "24px";
+
+    // Comparar las respuestas
     if (respuestaUsuario === respuestaCorrecta) {
+        // El elemento que contiene el mensaje se muestra
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
         mensaje.style.display = 'inline-block';
         //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
-        mensaje.innerHTML = "¡Respuesta correcta! : " + primeraLetraMayus(respuestaCorrecta);
-        mensaje.style.color = "green"; // establecer color verde para acierto            
-        document.querySelector('.cuadro-busqueda').style.display = 'none';
-        //alert("¡Respuesta correcta!");
-        //muestra la imagen completa
-        imagenCompleta();
-
+        mensaje.innerHTML = "¡Respuesta correcta! <br> <span class='respuesta-acertada-mensaje'>" + primeraLetraMayus(respuestaCorrecta) + "</span>"; //Mensaje de respuesta correcta
+        mensaje.style.color = "green"; // establecer color verde para acierto 
+        mensaje.style.fontSize = "22px"; // establecer tamaño fuente            
+        document.querySelector('.cuadro-busqueda').style.display = 'none'; //Desactivamos cuadro de búsqueda
+        imagenCompleta(); // Una vez terminado el intento, se muestra la imagen completa
+        document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
     } else {
-        //alert("Respuesta incorrecta. Inténtalo de nuevo.");
-        //mensaje.innerHTML = "Respuesta incorrecta";
-        //mensaje.style.color = "var(--color-fallo)"; // establecer color rojo para fallo
-        cantidadFallos++;
+        cantidadFallos++; //Aumentamos la cuenta de fallos
         // Añade la respuesta al historial
         var historialIntentos = document.getElementById("historial-intentos");
-        //historialIntentos.innerHTML += `<p>Intento ${cantidadFallos}: ${primeraLetraMayus(respuestaUsuario)}</p>`;
-        //historialIntentos.innerHTML += `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
-        //cada vez que se falla, se muestra desde el principio hasta cantidad de fallos +1
         // Actualiza los intentos restantes
+        var historialIntentos = document.getElementById("historial-intentos");
+        var respuestaHTML = "";
         if (respuestaUsuario === "") {
-            historialIntentos.innerHTML += "<p>Respuesta vacía</p>";
+            respuestaHTML = "<p>Respuesta vacía</p>"; // En caso de que el usuario no introduzca texto, se muestra "Respuesta vacía" en el historial
         } else {
-            historialIntentos.innerHTML += `<p>${primeraLetraMayus(respuestaUsuario)}</p>`;
+            respuestaHTML = `<p>${primeraLetraMayus(respuestaUsuario)}</p>`; // Respuesta introducida errónea
         }
-        cuentaIntentosRestantes--;
-        //se reduce el zoom
-        reducirZoom();
+        historialIntentos.insertAdjacentHTML("afterbegin", respuestaHTML); // Inserta la respuesta al principio del historial
+        cuentaIntentosRestantes--; // Reducimos los intentos restantes
+        reducirZoom(); // Se llama a función que reduce el zoom (esta es la siguiente pista)
     }
     // Verificar si se han agotado los intentos
     if (cuentaIntentosRestantes == 0) {
-        //alert("Ya has alcanzado el límite de intentos. ¡Inténtalo de nuevo más tarde!");
+        // El elemento que contiene el mensaje se muestra
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
         mensaje.style.display = 'inline-block';
-        mensaje.innerHTML = "Respuesta correcta: " + primeraLetraMayus(respuestaCorrecta);
+        mensaje.innerHTML = "Respuesta correcta: <br> <span class='respuesta-correcta-mensaje'>" + primeraLetraMayus(respuestaCorrecta) + "</span>"; //Mensaje que indica la respuesta correcta
         mensaje.style.color = "white"; // establecer color 
-        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
-        //muestra la imagen completa
-        imagenCompleta();
+        mensaje.style.fontSize = "22px"; // establecer tamaño fuente 
+        document.querySelector('.cuadro-busqueda').style.display = 'none'; //Desactivamos cuadro de búsqueda
+        imagenCompleta(); // Una vez terminado el intento, se muestra la imagen completa
+        document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
     }
-    var intentosRestantes = document.getElementById("num-intentos-restantes");
-    intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
-    //Deja el cuadro de respuesta vacío
-    document.querySelector(".input-buscador").value = "";
+    mostrarIntentosRestantes(cuentaIntentosRestantes); //Se muestran al usuario los intentos restantes
+    document.querySelector(".input-buscador").value = ""; //Deja el cuadro de respuesta vacío
 }
+
+// Función que muestra al usuario los intentos restantes
 function mostrarIntentosRestantes(cuentaIntentosRestantes) {
     // Muestra los intentos restantes al cargar la página
     var intentosRestantes = document.getElementById("num-intentos-restantes");
     intentosRestantes.innerHTML = cuentaIntentosRestantes.toString();
 }
+
+
 /*----------------Funciones para buscar títulos que coinciden con la entrada y mostrarlos en un desplegable----------------*/
+
 //FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
 async function buscarTitulo(textoBusqueda) {
+    // Si la respuesta no es exitosa, lanzar un error con el estado de la respuesta HTTP
     if (textoBusqueda.length >= 1) {
         const response = await fetch('http://localhost:81/seriePersonaje');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
+        // Obtener los datos de la respuesta como JSON
         const data = await response.json();
         const array = data.message;
+        // Crear un nuevo array para almacenar los nombres de las series o películas
         let nombres = []
+        // Recorrer el array de datos y extraer los nombres de las series o películas, agregándolos al nuevo array "nombres"
         array.map(x => {
             nombres.push(x.nombre)
         })
+        // Llamar a la función "mostrarResultados" para mostrar los resultados de la búsqueda en base a los nombres obtenidos y el texto de búsqueda
         mostrarResultados(nombres, textoBusqueda);
     } else {
+        // Si el texto de búsqueda tiene una longitud menor a 1, vaciar el contenido del elemento con ID "resultados-busqueda"
         document.getElementById("resultados-busqueda").innerHTML = "";
     }
 }
@@ -228,22 +209,25 @@ function mostrarResultados(textoRespuesta, textoBusqueda) {
     const resultados = textoRespuesta.filter(res => res.toLowerCase().includes(textoBusqueda.toLowerCase()));
     let htmlResultados = "";
     if (resultados.length > 0) {
+        // Si se encontraron resultados, generar una lista con los resultados
         htmlResultados += "<ul>";
         for (let i = 0; i < resultados.length; i++) {
-            //htmlResultados += "<li><a href=\"#\" onclick=\"seleccionarResultado('" + resultados[i] + "')\">" + resultados[i] + "</a></li>";
+            // Agregar cada resultado como un elemento de lista con un enlace que llama a la función "seleccionarResultado"
             htmlResultados += "<li onclick=\"seleccionarResultado('" + resultados[i] + "')\"><span>" + resultados[i] + "</span></li>";
         }
         htmlResultados += "</ul>";
     } else {
+        // Si no se encontraron resultados, mostrar un mensaje indicando que no hay resultados disponibles
         htmlResultados += "<p>No se encontraron resultados.</p>";
     }
+    // Establecer el contenido HTML generado en el elemento con ID "resultados-busqueda"
     document.getElementById("resultados-busqueda").innerHTML = htmlResultados;
 }
-
 
 //FUNCIÓN QUE SE EJECUTA AL SELECCIONAR UN RESULTADO
 function seleccionarResultado(tituloSeleccionado) {
     document.querySelector(".input-buscador").value = tituloSeleccionado;
+    // Limpiar el contenido del elemento con ID "resultados-busqueda"
     document.getElementById("resultados-busqueda").innerHTML = "";
 }
 
@@ -252,53 +236,8 @@ let contenedorSelector = document.getElementById("resultados-busqueda");
 // Agregar listener para cerrar selector al hacer clic fuera de él
 document.addEventListener("click", function (event) {
     let clicDentroSelector = contenedorSelector.contains(event.target);
+    // Si el clic se realizó fuera del contenedor del selector, se procede a cerrar el desplegable
     if (!clicDentroSelector) {
-        contenedorSelector.innerHTML = "";
+        contenedorSelector.innerHTML = ""; // Limpiar el contenido del contenedor para cerrar el desplegable
     }
 });
-
-
-//funciones antes de incremento 3
-/*
-async function getRespuestaCorrecta() {
-    try {
-        //const response = await fetch(API_URL + '/series');
-        const response = await fetch('http://localhost:81/seriePersonaje');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const nombre = array[0].nombre; // Obtener valor de la columna "nombre"
-        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-        respuestaInput.value = nombre; // Establecer el valor del input
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
-getRespuestaCorrecta();
-async function mostrarPersonaje() {
-    try {
-        const response = await fetch('http://localhost:81/seriePersonaje');
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const array = data.message;
-        const cajaReto = document.getElementById('caja-reto-series-personaje');
-        const imgURL = array[0].img; // Obtener URL de la imagen desde la columna "img1"
-        cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
-        cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
-        //cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
-        // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
-        cajaReto.style.backgroundColor = 'black';
-        cajaReto.style.backgroundFilter = 'blur(7px)'; // Aplicar filtro
-        const x = Math.floor(Math.random() * (cajaReto.offsetWidth - cajaReto.offsetWidth * 0.5));
-        const y = Math.floor(Math.random() * (cajaReto.offsetHeight - cajaReto.offsetHeight * 0.5));
-        cajaReto.style.backgroundPosition = `-${x}px -${y}px`;
-        cajaReto.style.backgroundSize = '850%'; // Aumentar el zoom
-    } catch (error) {
-        console.error(`Error fetching data: ${error}`);
-    }
-}
- */

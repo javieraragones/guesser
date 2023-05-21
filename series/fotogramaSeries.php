@@ -1,7 +1,6 @@
 <?php include './estrucInicioSeries.php'; ?><!-- Incluir el contenido base -->
 
 
-
 <div class="caja-reto caja-reto-fotogramas" id="caja-reto-series-fotogramas">
     <div id="imagen">
         <!-- Agregar imagen por defecto -->
@@ -9,7 +8,6 @@
     </div>
 </div>
 <div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-series-fotogramas">
-
 </div>
 
 <div class="historial-pistas">
@@ -29,12 +27,12 @@
     <button class="boton-buscar" onclick="comprobarRespuesta()">Enviar</button>
 </div>
 
-<!-- Agregar el input hidden con la respuesta correcta -->
+<!-- Input hidden con la respuesta correcta -->
 <input type="hidden" id="respuesta-correcta" value="">
 
 <script src="./fotogramaSeries.js"></script>
-<div class="historial-intentos" id="historial-intentos">
 
+<div class="historial-intentos" id="historial-intentos">
 </div>
 
 <div class="intentos-restantes">

@@ -31,6 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <title>Iniciar sesión</title>
+    <link rel="stylesheet" href="../../Guesser/estilos/styles_listadoRetos.css">
+
 </head>
 
 <body>
@@ -40,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p><?php echo $error; ?></p>
     <?php endif; ?>
 
-    <form method="POST" action="">
+    <form method="POST" action="" id="formulario-login">
         <label for="username">Usuario:</label>
         <input type="text" id="username" name="username" required>
 

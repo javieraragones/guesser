@@ -1,4 +1,6 @@
 <?php
+require_once './header.php';
+
 session_start();
 
 // Verificar si el administrador está logueado
@@ -17,77 +19,44 @@ if (isset($_GET['logout'])) {
 }
 ?>
 
-<!DOCTYPE html>
-<html>
+<div id="categorias-indice">
+    <a href="listadoFotogramasSeries.php" class="category-box">
+        Fotogramas Series
+    </a>
 
-<head>
-    <meta charset="UTF-8">
-    <title>Índice de Categorías</title>
-    <style>
-        .category-box {
-            width: 200px;
-            height: 200px;
-            background-color: #e0e0e0;
-            border: 1px solid #ccc;
-            display: inline-block;
-            margin: 10px;
-            text-align: center;
-            padding: 20px;
-        }
+    <a href="series.php" class="category-box">
+        Emojis Series
+    </a>
 
-        .category-box a {
-            color: #333;
-            text-decoration: none;
-        }
+    <a href="peliculas.php" class="category-box">
+        Personajes Series
+    </a>
 
-        .logout-button {
-            margin-top: 20px;
-        }
-    </style>
-</head>
+    <a href="documentales.php" class="category-box">
+        Fotogramas Películas
+    </a>
 
-<body>
-    <h1>Índice de Categorías</h1>
+    <a href="musica.php" class="category-box">
+        Emojis Películas
+    </a>
 
-    <div class="category-box">
-        <a href="listadoFotogramasSeries.php">Listado Fotogramas Series</a>
-    </div>
+    <a href="libros.php" class="category-box">
+        Personajes Películas
+    </a>
 
-    <div class="category-box">
-        <a href="series.php">Series</a>
-    </div>
+    <a href="videojuegos.php" class="category-box">
+        Fotogramas Juegos
+    </a>
 
-    <div class="category-box">
-        <a href="peliculas.php">Películas</a>
-    </div>
+    <a href="teatro.php" class="category-box">
+        Emojis Juegos
+    </a>
 
-    <div class="category-box">
-        <a href="documentales.php">Documentales</a>
-    </div>
+    <a href="arte.php" class="category-box">
+        Personajes Juegos
+    </a>
+</div>
 
-    <div class="category-box">
-        <a href="musica.php">Música</a>
-    </div>
-
-    <div class="category-box">
-        <a href="libros.php">Libros</a>
-    </div>
-
-    <div class="category-box">
-        <a href="videojuegos.php">Videojuegos</a>
-    </div>
-
-    <div class="category-box">
-        <a href="teatro.php">Teatro</a>
-    </div>
-
-    <div class="category-box">
-        <a href="arte.php">Arte</a>
-    </div>
-
-    <div class="logout-button">
-        <a href="?logout=true">Desloguearse</a>
-    </div>
 </body>
 
 </html>

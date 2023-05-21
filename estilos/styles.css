@@ -702,9 +702,23 @@ header {
   background-color: #f00;
 }
 
+/* Botones modos de juego infinitos*/
+.botones-modo-infinito{
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 16px;
+  padding: 10px;
+  box-sizing: border-box;
+  outline: none;
+  text-align: center;
+  border-radius: 10px;
+  margin: 20px auto 20px auto; 
+}
 
-
-
+.botones-modo-infinito:hover {
+  background-color: var(--accent-100); 
+}
 
 
 /*---Fin barra de búsqueda---*/
@@ -815,7 +829,9 @@ header {
     font-size: 0.9rem !important;
   }
 
-
+  .boton-buscar{
+    font-size: 0.8rem !important;
+  }
 }
 
 
