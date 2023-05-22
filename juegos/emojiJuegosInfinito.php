@@ -1,23 +1,13 @@
-<?php include './estrucInicioSeries.php'; ?><!-- Incluir el contenido base -->
+<?php include './estrucInicioJuegos.php'; ?><!-- Incluir el contenido base -->
 
 
-<div class="caja-reto caja-reto-fotogramas" id="caja-reto-series-fotogramas">
-    <div id="imagen">
-        <!-- Agregar imagen por defecto -->
-        <img id="imagen-fallo" src="">
-    </div>
+<div class="caja-reto reto-emojis" id="caja-reto-juegos-emojis" style="font-size: 80px">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
 </div>
-
-<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-series-fotogramas">
-</div>
-
-<div class="historial-pistas">
-    <button id="btn-img1" class="boton-navegacion">1</button>
-    <button id="btn-img2" class="boton-navegacion">2</button>
-    <button id="btn-img3" class="boton-navegacion">3</button>
-    <button id="btn-img4" class="boton-navegacion">4</button>
-    <button id="btn-img5" class="boton-navegacion">5</button>
-    <button id="btn-img6" class="boton-navegacion">6</button>
+<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-juegos-emojis">
 </div>
 
 <button id="btn-reto-siguiente-infinito" class="botones-modo-infinito" style="display:none" onclick="mostrarRetoSiguiente()">Mostrar Reto Siguiente</button>
@@ -34,7 +24,7 @@
 <!-- Input hidden con la respuesta correcta -->
 <input type="hidden" id="respuesta-correcta" value="">
 
-<script src="./fotogramaSeriesInfinito.js"></script>
+<script src="./emojiJuegosInfinito.js"></script>
 
 <div class="historial-intentos" id="historial-intentos">
 </div>

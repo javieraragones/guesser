@@ -9,7 +9,7 @@ let retoCount = 0; // Contador de retos actualmente mostrados, inicia en 0
 // Función asíncrona para llenar el arrayPersonajes de retos. Se obtienen todos los retos ordenados aleatoriamente de la API
 async function obtenerReto() {
     try {
-        const response = await fetch('http://localhost:81/serieRandomPersonaje');
+        const response = await fetch('http://localhost:81/peliculaRandomPersonaje');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -37,12 +37,12 @@ ejecutar(); // Llamamos a la función para que se muestre la primera pista
 async function selectorFotograma(retoCount) {
     const retoSeleccionado = arrayPersonajes[retoCount];
     console.log(retoCount);
-    const cajaReto = document.getElementById('caja-reto-series-personaje');
+    const cajaReto = document.getElementById('caja-reto-peliculas-personaje');
     // Guardar respuesta correcta
     const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
     const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
     respuestaInput.value = nombre; // Establecer el valor del input
-    // Si hay alguna serie y el reto seleccionado tiene la propiedad 'img'...
+    // Si hay alguna pelicula y el reto seleccionado tiene la propiedad 'img'...
     if (retoSeleccionado && retoSeleccionado.hasOwnProperty('img')) {
         const imgURL = retoSeleccionado.img; // Obtener URL de la imagen desde la columna del reto seleccionado
         cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
@@ -69,7 +69,7 @@ function mostrarRetoSiguiente() {
         mostrarPaginaAnterior();
         document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
         document.querySelector('.boton-buscar').disabled = true; // Deshabilitar el botón de envio de respuesta
-        const cajaReto = document.getElementById('caja-reto-series-personaje');
+        const cajaReto = document.getElementById('caja-reto-peliculas-personaje');
         cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
         cajaReto.style.backgroundSize = 'cover';
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
@@ -82,7 +82,7 @@ function mostrarRetoSiguiente() {
         // Mientras queden retos disponibles, se muestra el siguiente reto
         selectorFotograma(retoCount);
         console.log(retoCount)
-        $('#caja-reto-series-personaje').css('background-size', '850%');
+        $('#caja-reto-peliculas-personaje').css('background-size', '850%');
     }
 }
 
@@ -94,7 +94,7 @@ function mostrarPaginaAnterior() {
     mensaje.style.display = 'none';
 
     // Restablecer el estilo de la caja del reto
-    const cajaReto = document.getElementById('caja-reto-series-personaje');
+    const cajaReto = document.getElementById('caja-reto-peliculas-personaje');
     cajaReto.style.backgroundImage = 'none';
     cajaReto.style.backgroundColor = 'transparent';
 
@@ -114,7 +114,7 @@ function mostrarPaginaAnterior() {
 
 // Función con la que aplicamos modificaciones a la imagen del reto
 function zoomImagen() {
-    const cajaReto = $('#caja-reto-series-personaje');
+    const cajaReto = $('#caja-reto-peliculas-personaje');
     //const img = cajaReto.css('background-image');
 
     // Calcular un valor aleatorio para el zoom
@@ -145,15 +145,15 @@ zoomImagen();
 const factorReduccion = 0.7; // Indicamos el factor de reducción
 // Función con la que reducimos el zoom 
 function reducirZoom() {
-    const zoomActual = parseInt($('#caja-reto-series-personaje').css('background-size'));
+    const zoomActual = parseInt($('#caja-reto-peliculas-personaje').css('background-size'));
     const zoomNuevo = (zoomActual * factorReduccion);
-    $('#caja-reto-series-personaje').css(
+    $('#caja-reto-peliculas-personaje').css(
         'background-size', `${zoomNuevo}%`);
 }
 
 // Función con la que hacemos que la imagen se ajuste al cuadro para verla lo mejor posible, manteniendo la relación de aspecto
 function imagenCompleta() {
-    const cajaReto = $('#caja-reto-series-personaje');
+    const cajaReto = $('#caja-reto-peliculas-personaje');
 
     // Establecer el tamaño del contenedor al 100% del tamaño disponible
     cajaReto.css({
@@ -264,16 +264,16 @@ function mostrarIntentosRestantes(cuentaIntentosRestantes) {
 async function buscarTitulo(textoBusqueda) {
     // Si la respuesta no es exitosa, lanzar un error con el estado de la respuesta HTTP
     if (textoBusqueda.length >= 1) {
-        const response = await fetch('http://localhost:81/serieRandomPersonaje');
+        const response = await fetch('http://localhost:81/peliculaRandomPersonaje');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         // Obtener los datos de la respuesta como JSON
         const data = await response.json();
         const array = data.message;
-        // Crear un nuevo array para almacenar los nombres de las series o películas
+        // Crear un nuevo array para almacenar los nombres de las peliculas o películas
         let nombres = []
-        // Recorrer el array de datos y extraer los nombres de las series o películas, agregándolos al nuevo array "nombres"
+        // Recorrer el array de datos y extraer los nombres de las peliculas o películas, agregándolos al nuevo array "nombres"
         array.map(x => {
             nombres.push(x.nombre)
         })

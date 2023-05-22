@@ -45,7 +45,7 @@ require_once './main/header.php';
       <h2>Películas</h2>
       <div class="secciones">
 
-        <a href="/pelicula-fotograma">
+        <a href="./peliculas/fotogramaPeliculas.php">
           <button class="modo-juego-btn btn-pelicula" id="gotopeliculafotograma" type="button" name="Pelicula-Fotograma">
             <i class="fa fa-camera-retro"></i>
             &nbsp; Fotograma
@@ -54,7 +54,7 @@ require_once './main/header.php';
           </button>
         </a>
 
-        <a href="/pelicula-emojis">
+        <a href="./peliculas/emojiPeliculas.php">
           <button class="modo-juego-btn btn-pelicula" id="gotopeliculaemoji" type="button" name="Serie-Emojis">
             <i class="fas fa-face-grin"></i>
             &nbsp; Emoji
@@ -63,7 +63,7 @@ require_once './main/header.php';
           </button>
         </a>
 
-        <a href="/pelicula-personaje">
+        <a href="./peliculas/personajePeliculas.php">
           <button class="modo-juego-btn btn-pelicula" id="gotopeliculapersonaje" type="button" name="Serie-Personaje">
             <i class="fas fa-user"></i>
             &nbsp; Personaje
@@ -81,7 +81,7 @@ require_once './main/header.php';
       <h2>Juegos</h2>
       <div class="secciones">
 
-        <a href="/juego-fotograma">
+        <a href="./juegos/fotogramaJuegos.php">
           <button class="modo-juego-btn btn-juego" id="gotojuegofotograma" type="button" name="juego-Fotograma">
             <i class="fa fa-camera-retro"></i>
             &nbsp; Fotograma
@@ -90,7 +90,7 @@ require_once './main/header.php';
           </button>
         </a>
 
-        <a href="/juego-emojis">
+        <a href="./juegos/emojiJuegos.php">
           <button class="modo-juego-btn btn-juego" id="gotojuegoemoji" type="button" name="Serie-Emojis">
             <i class="fas fa-face-grin"></i>
             &nbsp; Emoji
@@ -99,7 +99,7 @@ require_once './main/header.php';
           </button>
         </a>
 
-        <a href="/juego-personaje">
+        <a href="./juegos/personajeJuegos.php">
           <button class="modo-juego-btn btn-juego" id="gotojuegopersonaje" type="button" name="Serie-Personaje">
             <i class="fas fa-user"></i>
             &nbsp; Personaje

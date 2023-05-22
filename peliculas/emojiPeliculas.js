@@ -14,7 +14,7 @@ function getDiaActual() {
 // Función para cambiar el valor de href del enlace con id "btn-infinito" para que al darle click al botón lleve a este modo de juego en infinito
 function cambiarHref() {
     var enlace = document.getElementById("btn-infinito");
-    enlace.href = "/Guesser/series/emojiSeriesInfinito.php";
+    enlace.href = "/Guesser/peliculas/emojiPeliculasInfinito.php";
 }
 cambiarHref();
 
@@ -24,21 +24,21 @@ cambiarHref();
 async function mostrarEmojis(fallos) {
     try {
         const dia = getDiaActual();
-        const response = await fetch('http://localhost:81/serieEmojis');
+        const response = await fetch('http://localhost:81/peliculaEmojis');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
         const array = data.message;
-        const cajaReto = document.getElementById('caja-reto-series-emojis');
-        const emojisSeriesHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
+        const cajaReto = document.getElementById('caja-reto-peliculas-emojis');
+        const emojisPeliculasHoy = array.find(prop => prop.fecha === dia); // Encuentra el objeto con fecha igual al día de hoy
         // Guardar respuesta correcta
-        const nombre = emojisSeriesHoy.nombre; // Obtener valor de la columna "nombre" del objeto encontrado
+        const nombre = emojisPeliculasHoy.nombre; // Obtener valor de la columna "nombre" del objeto encontrado
         const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
         respuestaInput.value = nombre; // Establecer el valor del input
-        // Si hay alguna serie...
-        if (emojisSeriesHoy) {
-            const emojis = emojisSeriesHoy.emoji; // Obtener los emojis del objeto encontrado
+        // Si hay alguna pelicula...
+        if (emojisPeliculasHoy) {
+            const emojis = emojisPeliculasHoy.emoji; // Obtener los emojis del objeto encontrado
             const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g; // Expresión regular para buscar pares de sustitutos que representan emojis en una cadena Unicode
             const emojiArray = emojis.match(regex); // Extrae todos los emojis presentes en la cadena 'emojis' y los guarda en un array
             console.log(emojiArray); // Muestra en la consola el array de emojis encontrados ['\ud83e\udd91', '\ud83c\udfae']
@@ -130,7 +130,7 @@ function mostrarIntentosRestantes(cuentaIntentosRestantes) {
 //FUNCIÓN PARA BUSCAR TÍTULO (SE VA BUSCANDO EL TÍTULO QUE COINCIDA CON LO QUE INTRODUCE EL USUARIO)
 async function buscarTitulo(textoBusqueda) {
     if (textoBusqueda.length >= 1) {
-        const response = await fetch('http://localhost:81/serieEmojis');
+        const response = await fetch('http://localhost:81/peliculaEmojis');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }

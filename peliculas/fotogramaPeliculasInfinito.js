@@ -9,7 +9,7 @@ let retoCount = 0; // Contador de retos actualmente mostrados, inicia en 0
 // Función asíncrona para llenar el arrayFotogramas de retos. Se obtienen todos los retos ordenados aleatoriamente de la API
 async function obtenerReto() {
     try {
-        const response = await fetch('http://localhost:81/serieRandomFotogramas');
+        const response = await fetch('http://localhost:81/peliculaRandomFotogramas');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -39,12 +39,12 @@ async function selectorFotograma(columna, retoCount) {
 
     const retoSeleccionado = arrayFotogramas[retoCount];
     console.log(retoCount);
-    const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+    const cajaReto = document.getElementById('caja-reto-peliculas-fotogramas');
     // Guardar respuesta correcta
     const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
     const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
     respuestaInput.value = nombre; // Establecer el valor del input
-    // Si hay alguna serie y el reto seleccionado tiene la propiedad 'columna'...
+    // Si hay alguna pelicula y el reto seleccionado tiene la propiedad 'columna'...
     if (retoSeleccionado && retoSeleccionado.hasOwnProperty(columna)) {
         const imgURL = retoSeleccionado[columna]; // Obtener URL de la imagen desde la columna del reto seleccionado
         cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
@@ -67,7 +67,7 @@ function mostrarRetoSiguiente() {
     if (retoCount >= arrayFotogramas.length) {
         document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
         document.querySelector('.boton-buscar').disabled = true; // Deshabilitar el botón de envio de respuesta
-        const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+        const cajaReto = document.getElementById('caja-reto-peliculas-fotogramas');
         cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
         cajaReto.style.backgroundSize = 'cover';
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
@@ -138,7 +138,7 @@ async function mostrarFotograma() {
 function mostrarPaginaAnterior() {
 
     // Restablecer el estilo de la caja del reto
-    const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+    const cajaReto = document.getElementById('caja-reto-peliculas-fotogramas');
     cajaReto.style.backgroundImage = 'none';
     cajaReto.style.backgroundColor = 'transparent';
 
@@ -271,16 +271,16 @@ function mostrarIntentosRestantes(cuentaIntentosRestantes) {
 async function buscarTitulo(textoBusqueda) {
     // Si la respuesta no es exitosa, lanzar un error con el estado de la respuesta HTTP
     if (textoBusqueda.length >= 1) {
-        const response = await fetch('http://localhost:81/serieRandomFotogramas');
+        const response = await fetch('http://localhost:81/peliculaRandomFotogramas');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         // Obtener los datos de la respuesta como JSON
         const data = await response.json();
         const array = data.message;
-        // Crear un nuevo array para almacenar los nombres de las series o películas
+        // Crear un nuevo array para almacenar los nombres de las peliculas o películas
         let nombres = []
-        // Recorrer el array de datos y extraer los nombres de las series o películas, agregándolos al nuevo array "nombres"
+        // Recorrer el array de datos y extraer los nombres de las peliculas o películas, agregándolos al nuevo array "nombres"
         array.map(x => {
             nombres.push(x.nombre)
         })

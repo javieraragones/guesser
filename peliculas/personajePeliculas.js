@@ -14,7 +14,7 @@ function getDiaActual() {
 // Función para cambiar el valor de href del enlace con id "btn-infinito" para que al darle click al botón lleve a este modo de juego en infinito
 function cambiarHref() {
     var enlace = document.getElementById("btn-infinito");
-    enlace.href = "/Guesser/series/personajeSeriesInfinito.php";
+    enlace.href = "/Guesser/peliculas/personajePeliculasInfinito.php";
 }
 cambiarHref();
 
@@ -22,7 +22,7 @@ cambiarHref();
 async function mostrarPersonaje() {
     try {
         const dia = getDiaActual();
-        const response = await fetch('http://localhost:81/seriePersonaje');
+        const response = await fetch('http://localhost:81/peliculaPersonaje');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -33,9 +33,9 @@ async function mostrarPersonaje() {
         const nombre = personajeHoy.nombre; // Obtener valor de la columna "nombre" del objeto encontrado
         const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
         respuestaInput.value = nombre; // Establecer el valor del input
-        // Si hay algún personaje de serie...
+        // Si hay algún personaje de pelicula...
         if (personajeHoy) {
-            const cajaReto = document.getElementById('caja-reto-series-personaje');
+            const cajaReto = document.getElementById('caja-reto-peliculas-personaje');
             const imgURL = personajeHoy.img; // Obtener URL de la imagen desde la columna "img"
             cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
             cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
@@ -57,7 +57,7 @@ mostrarPersonaje(); //Se llama a la función para mostrar la primera pista
 
 // Función con la que aplicamos modificaciones a la imagen del reto
 function zoomImagen() {
-    const cajaReto = $('#caja-reto-series-personaje');
+    const cajaReto = $('#caja-reto-peliculas-personaje');
     const img = cajaReto.css('background-image');
 
     // Calcular un valor aleatorio para el zoom
@@ -91,15 +91,15 @@ zoomImagen();
 const factorReduccion = 0.7; // Indicamos el factor de reducción
 // Función con la que reducimos el zoom
 function reducirZoom() {
-    const zoomActual = parseInt($('#caja-reto-series-personaje').css('background-size'));
+    const zoomActual = parseInt($('#caja-reto-peliculas-personaje').css('background-size'));
     const zoomNuevo = (zoomActual * factorReduccion);
-    $('#caja-reto-series-personaje').css(
+    $('#caja-reto-peliculas-personaje').css(
         'background-size', `${zoomNuevo}%`);
 }
 
 // Función con la que hacemos que la imagen se ajuste al cuadro para verla lo mejor posible, manteniendo la relación de aspecto
 function imagenCompleta() {
-    $('#caja-reto-series-personaje').css('background-size', '100%');
+    $('#caja-reto-peliculas-personaje').css('background-size', '100%');
 }
 
 // Función para poner la primera letra mayúscula
@@ -183,16 +183,16 @@ function mostrarIntentosRestantes(cuentaIntentosRestantes) {
 async function buscarTitulo(textoBusqueda) {
     // Si la respuesta no es exitosa, lanzar un error con el estado de la respuesta HTTP
     if (textoBusqueda.length >= 1) {
-        const response = await fetch('http://localhost:81/seriePersonaje');
+        const response = await fetch('http://localhost:81/peliculaPersonaje');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         // Obtener los datos de la respuesta como JSON
         const data = await response.json();
         const array = data.message;
-        // Crear un nuevo array para almacenar los nombres de las series o películas
+        // Crear un nuevo array para almacenar los nombres de las peliculas o películas
         let nombres = []
-        // Recorrer el array de datos y extraer los nombres de las series o películas, agregándolos al nuevo array "nombres"
+        // Recorrer el array de datos y extraer los nombres de las peliculas o películas, agregándolos al nuevo array "nombres"
         array.map(x => {
             nombres.push(x.nombre)
         })

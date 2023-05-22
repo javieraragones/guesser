@@ -1,13 +1,13 @@
-<?php include './estrucInicioPeliculas.php'; ?><!-- Incluir el contenido base -->
+<?php include './estrucInicioJuegos.php'; ?><!-- Incluir el contenido base -->
 
 
-<div class="caja-reto caja-reto-fotogramas" id="caja-reto-peliculas-fotogramas">
+<div class="caja-reto caja-reto-fotogramas" id="caja-reto-juegos-fotogramas">
     <div id="imagen">
         <!-- Agregar imagen por defecto -->
         <img id="imagen-fallo" src="">
     </div>
 </div>
-<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-peliculas-fotogramas">
+<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-juegos-fotogramas">
 </div>
 
 <div class="historial-pistas">
@@ -30,7 +30,7 @@
 <!-- Input hidden con la respuesta correcta -->
 <input type="hidden" id="respuesta-correcta" value="">
 
-<script src="./fotogramaPeliculas.js"></script>
+<script src="./fotogramaJuegos.js"></script>
 
 <div class="historial-intentos" id="historial-intentos">
 </div>

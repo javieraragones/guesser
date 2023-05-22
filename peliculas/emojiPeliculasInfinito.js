@@ -10,7 +10,7 @@ let retoCount = 0; // Contador de retos actualmente mostrados, inicia en 0
 // Función asíncrona para llenar el arrayEmojis de retos. Se obtienen todos los retos ordenados aleatoriamente de la API
 async function obtenerReto() {
     try {
-        const response = await fetch('http://localhost:81/serieRandomEmojis');
+        const response = await fetch('http://localhost:81/peliculaRandomEmojis');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -37,12 +37,12 @@ ejecutar(); // Llamamos a la función para que se muestre la primera pista
 // Cada vez que el usuario falle, se mostrará el siguiente emoji y los anteriores.
 async function mostrarEmojis(fallos, retoCount) {
     const retoSeleccionado = arrayEmojis[retoCount];
-    const cajaReto = document.getElementById('caja-reto-series-emojis');
+    const cajaReto = document.getElementById('caja-reto-peliculas-emojis');
     // Guardar respuesta correcta
     const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
     const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
     respuestaInput.value = nombre; // Establecer el valor del input
-    // Si hay alguna serie y el reto seleccionado tiene la propiedad 'emoji'...
+    // Si hay alguna pelicula y el reto seleccionado tiene la propiedad 'emoji'...
     if (retoSeleccionado && retoSeleccionado.hasOwnProperty('emoji')) {
         const emojis = retoSeleccionado.emoji; // Obtener los emojis del objeto
         const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g; // Expresión regular para buscar pares de sustitutos que representan emojis en una cadena Unicode
@@ -64,7 +64,7 @@ function mostrarRetoSiguiente() {
     if (retoCount >= arrayEmojis.length) {
         document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
         document.querySelector('.boton-buscar').disabled = true; // Deshabilitar el botón de envio de respuesta
-        const cajaReto = document.getElementById('caja-reto-series-emojis');
+        const cajaReto = document.getElementById('caja-reto-peliculas-emojis');
         cajaReto.innerHTML = '';
         cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
         cajaReto.style.backgroundSize = 'cover';
@@ -196,16 +196,16 @@ function mostrarIntentosRestantes(cuentaIntentosRestantes) {
 async function buscarTitulo(textoBusqueda) {
     // Si la respuesta no es exitosa, lanzar un error con el estado de la respuesta HTTP
     if (textoBusqueda.length >= 1) {
-        const response = await fetch('http://localhost:81/serieRandomEmojis');
+        const response = await fetch('http://localhost:81/peliculaRandomEmojis');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         // Obtener los datos de la respuesta como JSON
         const data = await response.json();
         const array = data.message;
-        // Crear un nuevo array para almacenar los nombres de las series o películas
+        // Crear un nuevo array para almacenar los nombres de las peliculas o películas
         let nombres = []
-        // Recorrer el array de datos y extraer los nombres de las series o películas, agregándolos al nuevo array "nombres"
+        // Recorrer el array de datos y extraer los nombres de las peliculas o películas, agregándolos al nuevo array "nombres"
         array.map(x => {
             nombres.push(x.nombre)
         })

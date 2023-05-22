@@ -1,10 +1,10 @@
-<?php include './estrucInicioSeries.php'; ?><!-- Incluir el contenido base -->
+<?php include './estrucInicioPeliculas.php'; ?><!-- Incluir el contenido base -->
 
 
-<div class="caja-reto caja-reto-personaje" id="caja-reto-series-personaje" style="font-size: 80px">
+<div class="caja-reto caja-reto-personaje" id="caja-reto-peliculas-personaje" style="font-size: 80px">
 </div>
 
-<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-series-personaje">
+<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-peliculas-personaje">
 </div>
 
 <div class="cuadro-busqueda">
@@ -18,7 +18,7 @@
 <!-- Input hidden con la respuesta correcta -->
 <input type="hidden" id="respuesta-correcta" value="">
 
-<script src="./personajeSeries.js"></script>
+<script src="./personajePeliculas.js"></script>
 
 <div class="historial-intentos" id="historial-intentos">
 </div>

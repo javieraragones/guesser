@@ -4,39 +4,39 @@
 <div class="game-cont">
     <div class="game-box">
 
-        <div class="series-menu">
-            <div class="series-menu-elem1 series-menu-elementos">
-                <a href="" id="btn-infinito" class="btn-menu-series"><i class="fas fa-infinity"></i></a>
+        <div class="peliculas-menu">
+            <div class="peliculas-menu-elem1 peliculas-menu-elementos">
+                <a href="" id="btn-infinito" class="btn-menu-peliculas"><i class="fas fa-infinity"></i></a>
             </div>
-            <div class="series-menu-elem2 series-menu-elementos">
-                <select id="btn-modo-serie" class="btn-menu-series despl-modo-serie">
+            <div class="peliculas-menu-elem2 peliculas-menu-elementos">
+                <select id="btn-modo-pelicula" class="btn-menu-peliculas despl-modo-pelicula">
                     <?php
                     // Obtener el nombre de la página actual
                     $currentPage = basename($_SERVER['PHP_SELF']);
                     ?>
-                    <?php if ($currentPage == "fotogramaSeries.php") : ?>
-                        <option value="/Guesser/series/fotogramaSeries.php" selected>Fotograma</option>
-                        <option value="/Guesser/series/emojiSeries.php">Emoji</option>
-                        <option value="/Guesser/series/personajeSeries.php">Personaje</option>
-                    <?php elseif ($currentPage == "emojiSeries.php") : ?>
-                        <option value="/Guesser/series/fotogramaSeries.php">Fotograma</option>
-                        <option value="/Guesser/series/emojiSeries.php" selected>Emoji</option>
-                        <option value="/Guesser/series/personajeSeries.php">Personaje</option>
-                    <?php elseif ($currentPage == "personajeSeries.php") : ?>
-                        <option value="/Guesser/series/fotogramaSeries.php">Fotograma</option>
-                        <option value="/Guesser/series/emojiSeries.php">Emoji</option>
-                        <option value="/Guesser/series/personajeSeries.php" selected>Personaje</option>
+                    <?php if ($currentPage == "fotogramaPeliculas.php") : ?>
+                        <option value="/Guesser/peliculas/fotogramaPeliculas.php" selected>Fotograma</option>
+                        <option value="/Guesser/peliculas/emojiPeliculas.php">Emoji</option>
+                        <option value="/Guesser/peliculas/personajePeliculas.php">Personaje</option>
+                    <?php elseif ($currentPage == "emojiPeliculas.php") : ?>
+                        <option value="/Guesser/peliculas/fotogramaPeliculas.php">Fotograma</option>
+                        <option value="/Guesser/peliculas/emojiPeliculas.php" selected>Emoji</option>
+                        <option value="/Guesser/peliculas/personajePeliculas.php">Personaje</option>
+                    <?php elseif ($currentPage == "personajePeliculas.php") : ?>
+                        <option value="/Guesser/peliculas/fotogramaPeliculas.php">Fotograma</option>
+                        <option value="/Guesser/peliculas/emojiPeliculas.php">Emoji</option>
+                        <option value="/Guesser/peliculas/personajePeliculas.php" selected>Personaje</option>
 
                     <?php else : ?>
-                        <option value="/Guesser/series/fotogramaSeries.php">Fotograma</option>
-                        <option value="/Guesser/series/emojiSeries.php">Emoji</option>
-                        <option value="/Guesser/series/personajeSeries.php">Personaje</option>
+                        <option value="/Guesser/peliculas/fotogramaPeliculas.php">Fotograma</option>
+                        <option value="/Guesser/peliculas/emojiPeliculas.php">Emoji</option>
+                        <option value="/Guesser/peliculas/personajePeliculas.php">Personaje</option>
 
                     <?php endif; ?>
                 </select>
                 <script>
                     // Obtener el elemento select
-                    var selectElement = document.getElementById('btn-modo-serie');
+                    var selectElement = document.getElementById('btn-modo-pelicula');
                     // Agregar un evento de cambio al select
                     selectElement.addEventListener('change', function() {
                         // Obtener la opción seleccionada
@@ -48,7 +48,7 @@
                     });
                 </script>
             </div>
-            <div class="series-menu-elem3 series-menu-elementos">
-                <a href="#" id="btn-calendario" class="btn-menu-series"><i class="fas fa-calendar"></i></a>
+            <div class="peliculas-menu-elem3 peliculas-menu-elementos">
+                <a href="#" id="btn-calendario" class="btn-menu-peliculas"><i class="fas fa-calendar"></i></a>
             </div>
         </div>

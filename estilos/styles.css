@@ -493,6 +493,191 @@ header {
   left: 14px;
   border-radius: 20px;
 }
+
+/*-------------------------------------Pelicula-------------------------------------*/
+
+.peliculas-menu{
+  margin-top: -20px;
+  margin-bottom: 20px;
+  padding-right: 10px;
+  padding-left: 10px;
+  background: var(--bg-300);
+  border-radius: 0.9em;
+  border: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  height: 2.8em;
+  min-height: 2.5em;
+}
+
+.peliculas-menu-elem1, .peliculas-menu-elem3 {
+  flex: 1;
+}
+.peliculas-menu-elem1{
+  text-align: left;
+}
+.peliculas-menu-elem3{
+  text-align: right;
+}
+
+.peliculas-menu-elem2{
+  flex: 0 0 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*estilos botones menu navegacion*/
+.btn-menu-peliculas {
+  font-size: 18px;
+  color: #e1e1e1;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  position: relative;
+  border: none;
+  background: none;
+  text-transform: uppercase;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: color;
+  text-decoration: none;
+}
+
+.btn-menu-peliculas:focus,
+.btn-menu-peliculas:hover {
+  color: #fff;
+}
+
+.btn-menu-peliculas:focus:after,
+.btn-menu-peliculas:hover:after {
+  width: 100%;
+  left: 0%;
+}
+
+.btn-menu-peliculas:after {
+  content: "";
+  pointer-events: none;
+  bottom: -2px;
+  left: 50%;
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background-color: #fff;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: width, left;
+}
+
+
+.despl-modo-pelicula option{
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-300);
+  border: 1px solid var(--primary-300);
+  box-shadow: 0px 1px 10px rgba(0,0,0, 0.2);
+  position: absolute;
+  top: 35px;
+  left: 14px;
+  border-radius: 20px;
+}
+/*-------------------------------------Juego-------------------------------------*/
+
+
+.juegos-menu{
+  margin-top: -20px;
+  margin-bottom: 20px;
+  padding-right: 10px;
+  padding-left: 10px;
+  background: var(--bg-300);
+  border-radius: 0.9em;
+  border: none;
+  letter-spacing: 0.05em;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  height: 2.8em;
+  min-height: 2.5em;
+}
+
+.juegos-menu-elem1, .juegos-menu-elem3 {
+  flex: 1;
+}
+.juegos-menu-elem1{
+  text-align: left;
+}
+.juegos-menu-elem3{
+  text-align: right;
+}
+
+.juegos-menu-elem2{
+  flex: 0 0 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/*estilos botones menu navegacion*/
+.btn-menu-juegos {
+  font-size: 18px;
+  color: #e1e1e1;
+  font-family: inherit;
+  font-weight: 800;
+  cursor: pointer;
+  position: relative;
+  border: none;
+  background: none;
+  text-transform: uppercase;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: color;
+  text-decoration: none;
+}
+
+.btn-menu-juegos:focus,
+.btn-menu-juegos:hover {
+  color: #fff;
+}
+
+.btn-menu-juegos:focus:after,
+.btn-menu-juegos:hover:after {
+  width: 100%;
+  left: 0%;
+}
+
+.btn-menu-juegos:after {
+  content: "";
+  pointer-events: none;
+  bottom: -2px;
+  left: 50%;
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  background-color: #fff;
+  transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition-duration: 400ms;
+  transition-property: width, left;
+}
+
+
+.despl-modo-juego option{
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-300);
+  border: 1px solid var(--primary-300);
+  box-shadow: 0px 1px 10px rgba(0,0,0, 0.2);
+  position: absolute;
+  top: 35px;
+  left: 14px;
+  border-radius: 20px;
+}
+
+
+
 /*Estilos textos acierto/fallo*/
 .mensaje-envio-respuesta{
   display: none;

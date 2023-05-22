@@ -1,13 +1,13 @@
-<?php include './estrucInicioSeries.php'; ?><!-- Incluir el contenido base -->
+<?php include './estrucInicioPeliculas.php'; ?><!-- Incluir el contenido base -->
 
 
-<div class="caja-reto reto-emojis" id="caja-reto-series-emojis" style="font-size: 80px">
+<div class="caja-reto reto-emojis" id="caja-reto-peliculas-emojis" style="font-size: 80px">
     <span></span>
     <span></span>
     <span></span>
     <span></span>
 </div>
-<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-series-emojis">
+<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-peliculas-emojis">
 </div>
 
 <div class="cuadro-busqueda">
@@ -21,7 +21,7 @@
 <!-- Input hidden con la respuesta correcta -->
 <input type="hidden" id="respuesta-correcta" value="">
 
-<script src="./emojiSeries.js"></script>
+<script src="./emojiPeliculas.js"></script>
 
 <div class="historial-intentos" id="historial-intentos">
 </div>

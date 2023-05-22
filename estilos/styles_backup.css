@@ -364,7 +364,7 @@ header {
 }
 
 /*---BARRA NAVEGACION SERIES---*/
-.series-menu{
+.categorias-menu{
   margin-top: -20px;
   margin-bottom: 20px;
   padding-right: 10px;
@@ -380,17 +380,17 @@ header {
   height: 2.8em;
 }
 
-.series-menu-elem1, .series-menu-elem3 {
+.categorias-menu-elem1, .categorias-menu-elem3 {
   flex: 1;
 }
-.series-menu-elem1{
+.categorias-menu-elem1{
   text-align: left;
 }
-.series-menu-elem3{
+.categorias-menu-elem3{
   text-align: right;
 }
 
-.series-menu-elem2{
+.categorias-menu-elem2{
   flex: 0 0 40%;
   display: flex;
   justify-content: center;

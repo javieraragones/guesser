@@ -1,108 +1,106 @@
-
 //Iniciamos las variables cantidadFallos y cuentaIntentosRestantes
 let cantidadFallos = 0; // Contador para llevar el registro de la cantidad de fallos ocurridos
 let cuentaIntentosRestantes = 6; // Cantidad de intentos restantes para el usuario
 
-let arrayEmojis = []; // Array que contendrá los retos de emojis en un orden aleatorio
-let retoCount = 0; // Contador de retos actualmente mostrados, inicia en 0
+/*Función para obtener el día actual*/
+function getDiaActual() {
+    const today = new Date();
+    const month = (today.getMonth() + 1).toString().padStart(2, '0');
+    const day = today.getDate().toString().padStart(2, '0');
+    const year = today.getFullYear();
+    const date = `${year}-${month}-${day}`;
+    return date;
+}
+// Función para cambiar el valor de href del enlace con id "btn-infinito"
+function cambiarHref() {
+    var enlace = document.getElementById("btn-infinito");
+    enlace.href = "/Guesser/juegos/fotogramaJuegosInfinito.php";
+}
+cambiarHref();
 
-
-// Función asíncrona para llenar el arrayEmojis de retos. Se obtienen todos los retos ordenados aleatoriamente de la API
-async function obtenerReto() {
+// Función que muestra la que se le pasa como parámetro del reto diario 
+async function selectorFotograma(columna) {
     try {
-        const response = await fetch('http://localhost:81/serieRandomEmojis');
+        const dia = getDiaActual();
+        //Llamo a la API que está activa en el puerto 81 de mi ordenador gracias a XAMPP
+        const response = await fetch('http://localhost:81/juegoFotogramas');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
         const array = data.message;
-
-        array.forEach((emoji) => {
-            arrayEmojis.push(emoji);
-        });
+        const cajaReto = document.getElementById('caja-reto-juegos-fotogramas');
+        // Recogemos del array el que contiene la fecha de hoy
+        const fotogramasJuegosHoy = array.find(prop => prop.fecha === dia); // fotogramasJuegosHoy contendrá el objeto con la juego de hoy 
+        // Guardamos la respuesta correcta
+        const nombre = fotogramasJuegosHoy.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+        const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
+        respuestaInput.value = nombre; // Establecer el valor del input
+        // Si hay alguna juego...
+        if (fotogramasJuegosHoy) {
+            const imgURL = fotogramasJuegosHoy[columna]; // Obtener URL de la imagen desde la columna
+            cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
+            cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
+            cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
+            cajaReto.style.backgroundColor = 'black'; // Establecer un fondo negro para la caja si la imagen es más pequeña que la caja
+        } else {
+            //Si no hay reto disponible, se muestra una imagen de error
+            cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
+            console.error(`Error: la columna ${columna} no existe en el objeto array.`);
+        }
     } catch (error) {
         console.error(`Error fetching data: ${error}`);
     }
 }
-// Función asincrónica que coordina la ejecución de otras funciones
-// Como trabajamos con funciones asíncronas, en esta función se espera a que se ejecute la función obtenerReto() y después de ejecuta mostrarEmojis()
-async function ejecutar() {
-    await obtenerReto();
-    mostrarEmojis(cantidadFallos + 1, retoCount);
-}
-ejecutar(); // Llamamos a la función para que se muestre la primera pista
+selectorFotograma('img1'); //Se llama a la función para mostrar la primera pista
 
+//Función para realizar la navegación entre las imágenes de los retos
+const nombresColumnasImagenes = ['img1', 'img2', 'img3', 'img4', 'img5', 'img6'];
+let indiceImagenActual = 0;
+// Obtener los botones de navegación
+const btnImg1 = document.getElementById('btn-img1');
+const btnImg2 = document.getElementById('btn-img2');
+const btnImg3 = document.getElementById('btn-img3');
+const btnImg4 = document.getElementById('btn-img4');
+const btnImg5 = document.getElementById('btn-img5');
+const btnImg6 = document.getElementById('btn-img6');
+// Agregar evento click a cada botón de navegación
+btnImg1.addEventListener('click', () => {
+    selectorFotograma(nombresColumnasImagenes[0]);
+});
+btnImg2.addEventListener('click', () => {
+    selectorFotograma(nombresColumnasImagenes[1]);
+});
+btnImg3.addEventListener('click', () => {
+    selectorFotograma(nombresColumnasImagenes[2]);
+});
+btnImg4.addEventListener('click', () => {
+    selectorFotograma(nombresColumnasImagenes[3]);
+});
+btnImg5.addEventListener('click', () => {
+    selectorFotograma(nombresColumnasImagenes[4]);
+});
+btnImg6.addEventListener('click', () => {
+    selectorFotograma(nombresColumnasImagenes[5]);
+});
 
-// Muestra los emojis desde el inicial hasta el que corresponda con la cantidad de fallos.
-// Cada vez que el usuario falle, se mostrará el siguiente emoji y los anteriores.
-async function mostrarEmojis(fallos, retoCount) {
-    const retoSeleccionado = arrayEmojis[retoCount];
-    const cajaReto = document.getElementById('caja-reto-series-emojis');
-    // Guardar respuesta correcta
-    const nombre = retoSeleccionado.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
-    const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
-    respuestaInput.value = nombre; // Establecer el valor del input
-    // Si hay alguna serie y el reto seleccionado tiene la propiedad 'emoji'...
-    if (retoSeleccionado && retoSeleccionado.hasOwnProperty('emoji')) {
-        const emojis = retoSeleccionado.emoji; // Obtener los emojis del objeto
-        const regex = /[\uD800-\uDBFF][\uDC00-\uDFFF]/g; // Expresión regular para buscar pares de sustitutos que representan emojis en una cadena Unicode
-        const emojiArray = emojis.match(regex); // Extrae todos los emojis presentes en la cadena 'emojis' y los guarda en un array
-        console.log(emojiArray); // Muestra en la consola el array de emojis encontrados ['\ud83e\udd91', '\ud83c\udfae']
-        cajaReto.innerHTML = emojiArray.splice(0, fallos).join(''); // Asigna el contenido HTML al elemento con el id "cajaReto"
-    } else {
-        //Si no hay reto disponible, se muestra una imagen de error
-        cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
-        console.error(`Error: la columna ${columna} no existe en el objeto reto seleccionado.`);
+// Función para mostrar el botón correspondiente según la cantidad de fallos
+function mostrarBotonDesbloqueado(fallos) {
+    const botones = [btnImg1, btnImg2, btnImg3, btnImg4, btnImg5, btnImg6];
+    if (fallos >= 0 && fallos < botones.length) {
+        botones[fallos].style.display = 'inline-block';
     }
 }
 
-// Función con la que se pasa al siguiente reto
-function mostrarRetoSiguiente() {
-    mostrarPaginaAnterior();
-    retoCount++;
-    // Si ya no quedan más retos disponibles, se muestra una imagen de error y un mensaje indicando que no quedan más retos disponibles
-    if (retoCount >= arrayEmojis.length) {
-        document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
-        document.querySelector('.boton-buscar').disabled = true; // Deshabilitar el botón de envio de respuesta
-        const cajaReto = document.getElementById('caja-reto-series-emojis');
-        cajaReto.innerHTML = '';
-        cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
-        cajaReto.style.backgroundSize = 'cover';
-        const mensaje = document.querySelector('.mensaje-envio-respuesta');
-        mensaje.style.display = 'inline-block';
-        mensaje.innerHTML = "Has realizado todos los retos disponibles";
-        mensaje.style.color = "white";
-        const mensaje2 = document.querySelector('.intentos-restantes');
-        mensaje2.style.display = 'none';
-    } else {
-        // Mientras queden retos disponibles, se muestra el siguiente reto
-        mostrarEmojis(cantidadFallos + 1, retoCount);
-        console.log(retoCount)
+// Función que muestra la siguiente imagen al cometer un fallo
+async function mostrarFotograma() {
+    try {
+        await selectorFotograma(`img${cantidadFallos + 1}`);
+    } catch (error) {
+        console.error(error);
+        document.getElementById('imagen-fallo').src = 'https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg';
     }
 }
-
-// Función que restaura los cambios realizados para cuando mostramos un nuevo reto
-function mostrarPaginaAnterior() {
-
-    // Restablecer el estilo y contenido de los mensajes
-    const mensaje = document.querySelector('.mensaje-envio-respuesta');
-    mensaje.style.display = 'none';
-    mensaje.innerHTML = '';
-
-    // Ocultar el botón de "Mostrar Reto Siguiente"
-    const botonSiguiente = document.querySelector('#btn-reto-siguiente-infinito');
-    botonSiguiente.style.display = 'none';
-
-    // Habilitar el campo de entrada de texto
-    document.querySelector(".input-buscador").disabled = false;
-    document.querySelector('.cuadro-busqueda').style.display = 'flex'; //Volvemos a mostrar el cuadro de búsqueda
-
-    // Limpiar historial
-    var historial = document.getElementById("historial-intentos");
-    historial.innerHTML = "";
-}
-
-
 // Función para poner la primera letra mayúscula
 function primeraLetraMayus(str) {
     return str.replace(
@@ -112,6 +110,7 @@ function primeraLetraMayus(str) {
         }
     );
 }
+
 // Función con la que comprobamos si la respuesta introducida por el usuario coincide con la respuesta correcta 
 function comprobarRespuesta() {
     // Verificar si se han agotado los intentos
@@ -119,8 +118,10 @@ function comprobarRespuesta() {
         document.querySelector(".input-buscador").disabled = true; // Deshabilitar campo de entrada de texto
         return;
     }
+    mostrarBotonDesbloqueado(cantidadFallos);
     var respuestaUsuario = document.querySelector(".input-buscador").value.toLowerCase(); // Obtener la respuesta del usuario
     var respuestaCorrecta = document.getElementById("respuesta-correcta").value.toLowerCase(); // Obtener la respuesta correcta
+    // Mensaje que se muestra al usuario cuando acierta o se han agotado los intentos
     var mensaje = document.querySelector(".mensaje-envio-respuesta");
     mensaje.style.fontSize = "24px";
 
@@ -130,20 +131,23 @@ function comprobarRespuesta() {
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
         mensaje.style.display = 'inline-block';
         //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
-        mensaje.innerHTML = "¡Respuesta correcta! <br> <span class='respuesta-acertada-mensaje'>" + primeraLetraMayus(respuestaCorrecta) + "</span>"; //Mensaje de respuesta correcta
-        mensaje.style.color = "green"; // establecer color verde para acierto 
-        mensaje.style.fontSize = "22px"; // establecer tamaño fuente 
-        document.querySelector('.cuadro-busqueda').style.display = 'none'; //Desactivamos cuadro de búsqueda
-
-        //Reinicio la cantidad de fallos y los intentos restantes
-        cantidadFallos = 0;
-        cuentaIntentosRestantes = 6;
-        //Mostrar botón para pasar al siguiente reto
-        const botonSiguiente = document.querySelector('#btn-reto-siguiente-infinito');
-        botonSiguiente.style.display = 'inline-block';
+        mensaje.innerHTML = "¡Respuesta correcta! <br> <span class='respuesta-acertada-mensaje'>" + primeraLetraMayus(respuestaCorrecta) + "</span>"; // Mensaje de respuesta correcta
+        mensaje.style.color = "green"; // Establecer color verde para acierto 
+        mensaje.style.fontSize = "22px"; // Establecer tamaño fuente             
+        document.querySelector('.cuadro-busqueda').style.display = 'none';
+        //Recorrer todos los botones y mostrarlos
+        const botones = [btnImg1, btnImg2, btnImg3, btnImg4, btnImg5, btnImg6];
+        for (let i = 0; i < botones.length; i++) {
+            botones[i].style.display = 'inline-block';
+        }
         document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
     } else {
         cantidadFallos++; // Aumentamos la cuenta de fallos
+        mostrarBotonDesbloqueado(cantidadFallos); // Se muestra el botón correspondiente al número de fallo
+        // Se llama a la función que pasa al siguiente fograma en caso de que queden intentos
+        if (cantidadFallos < 6) {
+            mostrarFotograma();
+        }
         // Añade la respuesta al historial
         var historialIntentos = document.getElementById("historial-intentos");
         var respuestaHTML = "";
@@ -153,7 +157,6 @@ function comprobarRespuesta() {
             respuestaHTML = `<p>${primeraLetraMayus(respuestaUsuario)}</p>`; // Respuesta introducida errónea
         }
         historialIntentos.insertAdjacentHTML("afterbegin", respuestaHTML); // Inserta la respuesta al principio del historial
-        mostrarEmojis(cantidadFallos + 1, retoCount); // Cada vez que se falla, se muestra desde el principio hasta cantidad de fallos +1
         cuentaIntentosRestantes--; // Actualiza los intentos restantes
     }
     // Verificar si se han agotado los intentos
@@ -167,16 +170,6 @@ function comprobarRespuesta() {
         document.querySelector('.cuadro-busqueda').style.display = 'none'; //Desactivamos cuadro de búsqueda
         document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
 
-        // Reiniciamos la cuenta de los fallos y los intentos restantes
-        cantidadFallos = 0;
-        cuentaIntentosRestantes = 6;
-        // Boton para reiniciar 
-        const botonReiniciar = document.querySelector('#btn-reiniciar-modo-infinito');
-        botonReiniciar.style.display = 'inline-block';
-        var btnReiniciar = document.getElementById("btn-reiniciar-modo-infinito");
-        btnReiniciar.addEventListener("click", function () {
-            location.reload();
-        });
     }
     mostrarIntentosRestantes(cuentaIntentosRestantes); //Se muestran al usuario los intentos restantes
     document.querySelector(".input-buscador").value = ""; //Deja el cuadro de respuesta vacío
@@ -196,16 +189,16 @@ function mostrarIntentosRestantes(cuentaIntentosRestantes) {
 async function buscarTitulo(textoBusqueda) {
     // Si la respuesta no es exitosa, lanzar un error con el estado de la respuesta HTTP
     if (textoBusqueda.length >= 1) {
-        const response = await fetch('http://localhost:81/serieRandomEmojis');
+        const response = await fetch('http://localhost:81/juegoFotogramas');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         // Obtener los datos de la respuesta como JSON
         const data = await response.json();
         const array = data.message;
-        // Crear un nuevo array para almacenar los nombres de las series o películas
+        // Crear un nuevo array para almacenar los nombres de las juegos o películas
         let nombres = []
-        // Recorrer el array de datos y extraer los nombres de las series o películas, agregándolos al nuevo array "nombres"
+        // Recorrer el array de datos y extraer los nombres de las juegos o películas, agregándolos al nuevo array "nombres"
         array.map(x => {
             nombres.push(x.nombre)
         })

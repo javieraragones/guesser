@@ -14,7 +14,7 @@ function getDiaActual() {
 // Función para cambiar el valor de href del enlace con id "btn-infinito"
 function cambiarHref() {
     var enlace = document.getElementById("btn-infinito");
-    enlace.href = "/Guesser/series/fotogramaSeriesInfinito.php";
+    enlace.href = "/Guesser/peliculas/fotogramaPeliculasInfinito.php";
 }
 cambiarHref();
 
@@ -23,22 +23,22 @@ async function selectorFotograma(columna) {
     try {
         const dia = getDiaActual();
         //Llamo a la API que está activa en el puerto 81 de mi ordenador gracias a XAMPP
-        const response = await fetch('http://localhost:81/serieFotogramas');
+        const response = await fetch('http://localhost:81/peliculaFotogramas');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
         const array = data.message;
-        const cajaReto = document.getElementById('caja-reto-series-fotogramas');
+        const cajaReto = document.getElementById('caja-reto-peliculas-fotogramas');
         // Recogemos del array el que contiene la fecha de hoy
-        const fotogramasSeriesHoy = array.find(prop => prop.fecha === dia); // fotogramasSeriesHoy contendrá el objeto con la serie de hoy 
+        const fotogramasPeliculasHoy = array.find(prop => prop.fecha === dia); // fotogramasPeliculasHoy contendrá el objeto con la pelicula de hoy 
         // Guardamos la respuesta correcta
-        const nombre = fotogramasSeriesHoy.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
+        const nombre = fotogramasPeliculasHoy.nombre; // Obtener el valor de la columna "nombre" del objeto correspondiente al día actual
         const respuestaInput = document.getElementById('respuesta-correcta'); // Obtener el input
         respuestaInput.value = nombre; // Establecer el valor del input
-        // Si hay alguna serie...
-        if (fotogramasSeriesHoy) {
-            const imgURL = fotogramasSeriesHoy[columna]; // Obtener URL de la imagen desde la columna
+        // Si hay alguna pelicula...
+        if (fotogramasPeliculasHoy) {
+            const imgURL = fotogramasPeliculasHoy[columna]; // Obtener URL de la imagen desde la columna
             cajaReto.style.backgroundImage = `url('${imgURL}')`; // Establecer la imagen como fondo del elemento
             cajaReto.style.backgroundSize = 'contain'; // Ajustar el tamaño de la imagen sin distorsionar la relación de aspecto
             cajaReto.style.backgroundPosition = 'center'; // Centrar la imagen en la caja
@@ -189,16 +189,16 @@ function mostrarIntentosRestantes(cuentaIntentosRestantes) {
 async function buscarTitulo(textoBusqueda) {
     // Si la respuesta no es exitosa, lanzar un error con el estado de la respuesta HTTP
     if (textoBusqueda.length >= 1) {
-        const response = await fetch('http://localhost:81/serieFotogramas');
+        const response = await fetch('http://localhost:81/peliculaFotogramas');
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
         // Obtener los datos de la respuesta como JSON
         const data = await response.json();
         const array = data.message;
-        // Crear un nuevo array para almacenar los nombres de las series o películas
+        // Crear un nuevo array para almacenar los nombres de las peliculas o películas
         let nombres = []
-        // Recorrer el array de datos y extraer los nombres de las series o películas, agregándolos al nuevo array "nombres"
+        // Recorrer el array de datos y extraer los nombres de las peliculas o películas, agregándolos al nuevo array "nombres"
         array.map(x => {
             nombres.push(x.nombre)
         })

@@ -3,11 +3,11 @@
 <div class="game-cont">
     <div class="game-box">
 
-        <div class="series-menu">
-            <div class="series-menu-elem1 series-menu-elementos">
+        <div class="categorias-menu">
+            <div class="categorias-menu-elem1 categorias-menu-elementos">
                 <a href="#" id="btn-infinito " class="btn-menu-series"><i class="fas fa-infinity"></i></a>
             </div>
-            <div class="series-menu-elem2 series-menu-elementos">
+            <div class="categorias-menu-elem2 categorias-menu-elementos">
                 <select id="btn-modo-serie" class="btn-menu-series despl-modo-serie">
                     <option value="/Guesser/series/fotogramaSeries.php">Fotograma</option>
                     <option value="/Guesser/series/emojiSeries.php">Emoji</option>
@@ -28,7 +28,7 @@
                     });
                 </script>
             </div>
-            <div class="series-menu-elem3 series-menu-elementos">
+            <div class="categorias-menu-elem3 categorias-menu-elementos">
                 <a href="#" id="btn-calendario" class="btn-menu-series"><i class="fas fa-calendar"></i></a>
             </div>
         </div>
@@ -73,11 +73,11 @@
 <div class="game-cont">
     <div class="game-box">
         
-        <div class="series-menu">
-        <div class="series-menu-elem1 series-menu-elementos">
+        <div class="categorias-menu">
+        <div class="categorias-menu-elem1 categorias-menu-elementos">
             <a href="#" id="btn-infinito "class="btn-menu-series"><i class="fas fa-infinity"></i></a>
         </div>
-        <div class="series-menu-elem2 series-menu-elementos">
+        <div class="categorias-menu-elem2 categorias-menu-elementos">
             <select id="btn-modo-serie" class="btn-menu-series despl-modo-serie">
             <option value="#" selected>Seleccionar modo</option>
                 <option value="/Guesser/series/fotogramaSeries.php">Fotograma</option>
@@ -99,7 +99,7 @@
                     });
             </script>
         </div>
-        <div class="series-menu-elem3 series-menu-elementos">
+        <div class="categorias-menu-elem3 categorias-menu-elementos">
             <a href="#" id="btn-calendario" class="btn-menu-series"><i class="fas fa-calendar"></i></a>
         </div>
         </div>
