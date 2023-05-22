@@ -24,35 +24,35 @@ if (isset($_GET['logout'])) {
         Fotogramas Series
     </a>
 
-    <a href="series.php" class="category-box">
+    <a href="listadoEmojisSeries.php" class="category-box">
         Emojis Series
     </a>
 
-    <a href="peliculas.php" class="category-box">
+    <a href="listadoPersonajesSeries.php" class="category-box">
         Personajes Series
     </a>
 
-    <a href="documentales.php" class="category-box">
+    <a href="listadoFotogramasPeliculas.php" class="category-box">
         Fotogramas Películas
     </a>
 
-    <a href="musica.php" class="category-box">
+    <a href="listadoEmojisPeliculas.php" class="category-box">
         Emojis Películas
     </a>
 
-    <a href="libros.php" class="category-box">
+    <a href="listadoPersonajesPeliculas.php" class="category-box">
         Personajes Películas
     </a>
 
-    <a href="videojuegos.php" class="category-box">
+    <a href="listadoFotogramasJuegos.php" class="category-box">
         Fotogramas Juegos
     </a>
 
-    <a href="teatro.php" class="category-box">
+    <a href="listadoEmojisJuegos.php" class="category-box">
         Emojis Juegos
     </a>
 
-    <a href="arte.php" class="category-box">
+    <a href="listadoFotogramasJuegos.php" class="category-box">
         Personajes Juegos
     </a>
 </div>

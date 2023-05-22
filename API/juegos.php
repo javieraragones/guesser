@@ -1,7 +1,7 @@
 <?php
 require_once 'conexion.php';
 
-class Series
+class Juegos
 {
     private $db;
 
@@ -17,26 +17,26 @@ class Series
     }
 
 
-    /*------Funciones para modo de juego Fotograma Serie------*/
-    public function getSerieFotogramas()
+    /*------Funciones para modo de juego Fotograma Juego------*/
+    public function getJuegoFotogramas()
     {
-        $sql = "SELECT * FROM fotogramas_serie"; // WHERE id = :id"
+        $sql = "SELECT * FROM fotogramas_juego"; // WHERE id = :id"
         $stmt = $this->db->query($sql);
         $resultado = $stmt->fetchAll();
         return $resultado;
     }
 
-    public function getSerieRandomFotogramas()
+    public function getJuegoRandomFotogramas()
     {
-        $sql = "SELECT * FROM fotogramas_serie  ORDER BY RAND() /* LIMIT 1*/"; //
+        $sql = "SELECT * FROM fotogramas_juego  ORDER BY RAND() /* LIMIT 1*/"; //
         $stmt = $this->db->query($sql);
         $resultado = $stmt->fetchAll();
         return $resultado;
     }
 
-    public function postSerieFotogramas($datos)
+    public function postJuegoFotogramas($datos)
     {
-        $sql = "INSERT INTO fotogramas_serie (nombre, img1, img2, img3, img4, img5, img6, fecha) VALUES (:nombre, :img1, :img2, :img3, :img4, :img5, :img6, :fecha)";
+        $sql = "INSERT INTO fotogramas_juego (nombre, img1, img2, img3, img4, img5, img6, fecha) VALUES (:nombre, :img1, :img2, :img3, :img4, :img5, :img6, :fecha)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':nombre', $datos->nombre);
         $stmt->bindParam(':img1', $datos->img1);
@@ -55,26 +55,26 @@ class Series
     }
 
 
-    /*------Funciones para modo de juego Emoji Serie------*/
-    public function getAllSeriesEmojis()
+    /*------Funciones para modo de juego Emoji Juego------*/
+    public function getAllJuegosEmojis()
     {
-        $sql = "SELECT * FROM emojis_serie";
+        $sql = "SELECT * FROM emojis_juego";
         $stmt = $this->db->query($sql);
         $resultado = $stmt->fetchAll();
         return $resultado;
     }
 
-    public function getSerieRandomEmojis()
+    public function getJuegoRandomEmojis()
     {
-        $sql = "SELECT * FROM emojis_serie ORDER BY RAND() /* LIMIT 1*/"; // Seleccionar un elemento aleatorio de la tabla
+        $sql = "SELECT * FROM emojis_juego ORDER BY RAND() /* LIMIT 1*/"; // Seleccionar un elemento aleatorio de la tabla
         $stmt = $this->db->query($sql);
         $resultado = $stmt->fetchAll();
         return $resultado;
     }
 
-    public function postSerieEmojis($datos)
+    public function postJuegoEmojis($datos)
     {
-        $sql = "INSERT INTO emojis_serie (nombre, emoji, fecha) VALUES (:nombre, :emoji, :fecha)";
+        $sql = "INSERT INTO emojis_juego (nombre, emoji, fecha) VALUES (:nombre, :emoji, :fecha)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':nombre', $datos->nombre);
         $stmt->bindParam(':emoji', $datos->emoji);
@@ -88,30 +88,30 @@ class Series
     }
 
 
-    /*------Funciones para modo de juego Personaje Serie------*/
+    /*------Funciones para modo de juego Personaje Juego------*/
 
-    public function getAllSeriesPersonaje()
+    public function getAllJuegosPersonaje()
     {
-        $sql = "SELECT * FROM personajes_serie";
+        $sql = "SELECT * FROM personajes_juego";
         $stmt = $this->db->query($sql);
         $resultado = $stmt->fetchAll();
         return $resultado;
     }
 
-    public function getSerieRandomPersonaje()
+    public function getJuegoRandomPersonaje()
     {
-        $sql = "SELECT * FROM personajes_serie ORDER BY RAND() /* LIMIT 1*/"; // Seleccionar un elemento aleatorio de la tabla
+        $sql = "SELECT * FROM personajes_juego ORDER BY RAND() /* LIMIT 1*/"; // Seleccionar un elemento aleatorio de la tabla
         $stmt = $this->db->query($sql);
         $resultado = $stmt->fetchAll();
         return $resultado;
     }
 
-    public function postSeriePersonaje($datos)
+    public function postJuegoPersonaje($datos)
     {
-        $sql = "INSERT INTO personajes_serie (nombre, nombre_serie, img, fecha) VALUES (:nombre, :nombre_serie, :img, :fecha)";
+        $sql = "INSERT INTO personajes_juego (nombre, nombre_juego, img, fecha) VALUES (:nombre, :nombre_juego, :img, :fecha)";
         $stmt = $this->db->prepare($sql);
         $stmt->bindParam(':nombre', $datos->nombre);
-        $stmt->bindParam(':nombre_serie', $datos->nombre_serie);
+        $stmt->bindParam(':nombre_juego', $datos->nombre_juego);
         $stmt->bindParam(':img', $datos->img);
         $stmt->bindParam(':fecha', $datos->fecha);
         $stmt->execute();

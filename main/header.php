@@ -43,9 +43,11 @@
         <a href="#" id="btn-question" class="btn-header"><i class="fas fa-question"></i></a>
         <div id="cuadroTextoPreg" class="cuadroTexto">
           <h2>Instrucciones</h2>
-          <p>Fotograma: </p>
-          <p>Emoji: </p>
-          <p>Personaje: </p>
+          <p>¡Cada día aparecerá un reto nuevo!</p>
+          <p><u>Fotograma</u>: Se muestra un fotograma que deberás adivinar introduciendo la respuesta que creas conveniente. Si fallas se mostrará la siguiente imagen del reto.
+          </p>
+          <p><u>Emoji</u>: Se muestra un emoji sobre una temática. Cada vez que falles, se mostrará el siguiente emoji relacionado con el reto.</p>
+          <p><u>Personaje</u>: Se muestra una imagen de un personaje con un zoom en una zola aleatoria. Cada vez que falles se reducirá el zoom.</p>
           <a href="#" id="btn-cerrar-question" class="fas fa-x btn-cerrar-header"></a>
         </div>
         <a href="#" id="btn-info" class="btn-header"><i class="fas fa-info"></i></a>
@@ -59,7 +61,9 @@
             https://medium.com/floodgates/the-complete-and-authoritative-list-of-wordle-spinoffs-fb00bfafc448" target="_blank" rel="noopener noreferrer"> otros</a>.
           </p><br />
           <p>
-            Derechos: Iconos->flaticon
+            <b>Derechos</b><br />
+            • Iconos:<a href="https://www.flaticon.es/" target="_blank" rel="noopener noreferrer">flaticon.</a> <br>
+            • Imágenes de series y películas:<a href="https://beta.flim.ai/" target="_blank" rel="noopener noreferrer">flim.</a>
           </p>
           <a href="#" id="btn-cerrar-info" class="fas fa-x btn-cerrar-header"></a>
         </div>

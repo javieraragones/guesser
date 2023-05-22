@@ -1,4 +1,5 @@
-  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Metrophobic&family=Nanum+Pen+Script&family=Rubik&display=swap');
+
+  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Metrophobic&family=Nanum+Pen+Script&family=Rubik&family=Work+Sans:wght@200;300;400&display=swap');
 
 :root{
     --bg-color: #222831; /*BG COLOR PALETA V1*/
@@ -33,7 +34,7 @@ body {
   }
   
   h1 {
-    font-family: 'metrophobic', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+    font-family: 'Work Sans','metrophobic', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
     color: white;
     font-size: 30px;
     margin-top: 20px;
@@ -68,7 +69,7 @@ body {
     text-decoration: none;
     color: white;
     font-size: 20px;
-    font-family: 'metrophobic', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+    font-family: 'Work Sans','metrophobic', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
   }
 
   #formulario-login {
@@ -152,30 +153,36 @@ body {
   }
 
 /*Listado */
-table {
-    border-collapse: collapse;
-    width: 100%;
+.tabla-listado {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 10px;
 }
-th,
-td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
+
+.tabla-listado th,.tabla-listado td {
+  border: 1px solid var(--text-100);
+  padding: 8px;
+  text-align: left;
 }
-tbody{
-    color: white;
+
+.tabla-listado tbody {
+  color: white;
 }
-th {
-    background-color: #f2f2f2;
+
+.tabla-listado th {
+  background-color: var(--text-200);
 }
 
 .table-container {
-    max-width: 100%;
-    overflow-x: auto;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
+
 .small-image {
-    max-width: 100px;
+    max-width: 160px;
+    height: auto;
     max-height: 100px;
 }
 
@@ -186,7 +193,6 @@ th {
 
 
 /*Formulario añadir reto*/
-
 
 .formulario-agregar-reto {
     width: 1000px;
@@ -228,6 +234,52 @@ th {
     cursor: pointer;
   }
 
+/*Tabla previsualización*/
+/* Estilos adicionales para la tabla de previsualización */
+.tabla-previsualizacion, .table-tabla-previsualizacion {
+  table-layout: fixed;
+  width: 90%;
+  height: 100%;
+  margin: 20px auto;
+  padding: 10px;
+  background-color: var(--box-color);
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  color: white;
+  text-align: center;
+}
 
+.tabla-previsualizacion td, .table-tabla-previsualizacion td {
+  height: auto; /* Establece la altura predefinida para las celdas */
+}
 
+.tabla-previsualizacion th, .table-tabla-previsualizacion th{
+  height: 15px; /* Establece la altura predefinida para las celdas */
+  background-color: var(--box-color);
+}
 
+.tabla-previsualizacion img, .table-tabla-previsualizacion img{
+  max-width: 100%;
+  max-height: 100%;
+}
+.tabla-previsualizacion-emojis{
+  width: 30%;
+}
+.emoji-preview{
+  font-size: 50px;
+}
+.tabla-previsualizacion-personaje{
+width: 60%;
+}
+.personaje-preview {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.personaje-preview img {
+  max-width: 100%;
+  max-height: 100%;
+}

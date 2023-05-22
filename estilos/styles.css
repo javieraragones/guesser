@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Metrophobic&family=Nanum+Pen+Script&family=Rubik&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Metrophobic&family=Nanum+Pen+Script&family=Rubik&family=Work+Sans:wght@200;300;400&display=swap');
 
 :root{
   /*--bg-color: #393940;*/
@@ -75,7 +75,7 @@ header {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    font-family: 'metrophobic';
+    font-family: 'Work Sans','metrophobic';
   }
 .countdown p {
   margin-left: 0px;
@@ -124,22 +124,25 @@ header {
 /*Botones header*/
 .cuadroTexto {
   display: none; /* para ocultar el cuadro de texto inicialmente */
-  width: 550px;
-  height: 300px;
+  width: 400px;
+  height: 450px;
   color: var(-text-100);
   background-color: var(--bg-300);
   padding: 30px;
-  margin-top: -270px; /* para centrar verticalmente el cuadro de texto */
-  margin-left: -275px; /* para centrar horizontalmente el cuadro de texto */
+  margin: 0 auto; /* para centrar horizontalmente el cuadro de texto */
+  margin-top: -150px; /* para centrar verticalmente el cuadro de texto */
   position: fixed; /* para posicionar el cuadro de texto en la pantalla */
   top: 50%; /* para centrar verticalmente el cuadro de texto */
   left: 50%; /* para centrar horizontalmente el cuadro de texto */
+  transform: translate(-50%, -50%); /* para centrar vertical y horizontalmente el cuadro de texto */
   text-align: justify; /* para centrar el texto horizontalmente */
   align-items: left; /* para centrar el texto verticalmente */
   display: flex; /* para centrar el texto verticalmente */
   flex-direction: column; /* para centrar el texto verticalmente */
   border-radius: 10px;
+  border: 1px solid whitesmoke;
 }
+
 .cuadroTexto p{
   text-align: justify;
 }
@@ -277,7 +280,7 @@ header {
   background-color: #fff;
 }
 .cont-container h2{
-  font-family: 'metrophobic', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+  font-family: 'Work Sans','metrophobic', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
   color: white;
   margin-top: 20px;
   margin-bottom: 10px;
@@ -296,6 +299,7 @@ header {
 
 
 /*Estilos botón selector modo de juego*/
+
 .modo-juego-btn {
   width: 80%;
   height: auto;

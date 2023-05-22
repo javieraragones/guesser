@@ -1,14 +1,14 @@
 <?php include './estrucInicioSeries.php'; ?><!-- Incluir el contenido base -->
 
 
-<div class="caja-reto reto-emojis" id="caja-reto-series-emojis" style="font-size: 80px">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
+<div class="caja-reto caja-reto-personaje" id="caja-reto-series-personaje" style="font-size: 80px">
 </div>
-<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-series-emojis">
+
+<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-series-personaje">
 </div>
+
+<button id="btn-reto-siguiente-infinito" class="botones-modo-infinito" style="display:none" onclick="mostrarRetoSiguiente()">Mostrar Reto Siguiente</button>
+<button id="btn-reiniciar-modo-infinito" class="botones-modo-infinito" style="display:none">Reiniciar</button>
 
 <div class="cuadro-busqueda">
     <div class="buscador-container">
@@ -21,8 +21,7 @@
 <!-- Input hidden con la respuesta correcta -->
 <input type="hidden" id="respuesta-correcta" value="">
 
-<script src="./emojiSeries.js"></script>
-
+<script src="./personajeSeriesInfinito.js"></script>
 <div class="historial-intentos" id="historial-intentos">
 </div>
 

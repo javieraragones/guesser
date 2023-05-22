@@ -20,6 +20,10 @@ require_once './header.php';
         });
 
         function agregarFotograma() {
+            // Validar el formulario antes de enviar los datos
+            if (!validarFormulario()) {
+                return;
+            }
             const nombre = document.getElementById('nombre').value;
             const img1 = document.getElementById('img1').value;
             const img2 = document.getElementById('img2').value;
@@ -60,6 +64,27 @@ require_once './header.php';
                 });
         }
 
+        function validarFormulario() {
+            var formulario = document.getElementById("formulario-agregar-fotograma-serie");
+            if (!formulario.checkValidity()) {
+                // Si el formulario no es válido, se muestra un mensaje de error o se realiza alguna acción.
+                alert("Por favor, completa todos los campos requeridos.");
+                return false; // Evita el envío del formulario.
+            }
+            // Si el formulario es válido, se puede proceder con el envío.
+            return true;
+        }
+
+        function updateImagePreview(inputId, previewId) {
+            const input = document.getElementById(inputId);
+            const preview = document.getElementById(previewId);
+
+            input.addEventListener('blur', () => {
+                const imageUrl = input.value;
+                preview.innerHTML = `<img src="${imageUrl}" alt="Imagen">`;
+            });
+        }
+
         function resetForm() {
             document.getElementById('nombre').value = '';
             document.getElementById('img1').value = '';
@@ -75,49 +100,84 @@ require_once './header.php';
 
 <body>
     <h1>Agregar Fotograma de Serie</h1>
-    <form id="formulario-agregar-fotograma-serie" class="formulario-agregar-reto">
+    <form id="formulario-agregar-fotograma-serie" class="formulario-agregar-reto" onsubmit="return validarFormulario()">
         <div class="form-column">
             <div class="form-group">
-                <label for="nombre">Nombre:</label><br>
+                <label for="nombre">Nombre:</label>
                 <input type="text" id="nombre" required>
             </div>
 
             <div class="form-group">
-                <label for="img1">Imagen 1:</label><br>
+                <label for="img1">Imagen 1:</label>
                 <input type="text" id="img1" required>
             </div>
             <div class="form-group">
-                <label for="img3">Imagen 3:</label><br>
+                <label for="img3">Imagen 3:</label>
                 <input type="text" id="img3">
             </div>
             <div class="form-group">
-                <label for="img5">Imagen 5:</label><br>
+                <label for="img5">Imagen 5:</label>
                 <input type="text" id="img5">
             </div>
 
         </div>
+
         <div class="form-column">
             <div class="form-group">
-                <label for="fecha">Fecha:</label><br>
+                <label for="fecha">Fecha:</label>
                 <input type="text" id="fecha" required>
             </div>
             <div class="form-group">
-                <label for="img2">Imagen 2:</label><br>
+                <label for="img2">Imagen 2:</label>
                 <input type="text" id="img2">
             </div>
             <div class="form-group">
-                <label for="img4">Imagen 4:</label><br>
+                <label for="img4">Imagen 4:</label>
                 <input type="text" id="img4">
             </div>
             <div class="form-group">
-                <label for="img6">Imagen 6:</label><br>
+                <label for="img6">Imagen 6:</label>
                 <input type="text" id="img6">
             </div>
         </div>
-        <button type="button" onclick="agregarFotograma()" class="btn-agregar-reto">Agregar Fotograma</button>
         <button type="button" onclick="resetForm()" class="btn-limpiar-form">Limpiar Formulario</button>
+        <button type="button" onclick="agregarFotograma()" class="btn-agregar-reto">Agregar Fotograma</button>
     </form>
 
+    <div id="tabla-previsualizacion-fotogramas-serie" class="tabla-previsualizacion tabla-previsualizacion-fotograma">
+        <table id="table-tabla-previsualizacion-fotogramas-serie" class="table-tabla-previsualizacion">
+            <thead>
+                <tr>
+                    <h2>Previsualización</h2>
+                    <th>Imagen 1</th>
+                    <th>Imagen 2</th>
+                    <th>Imagen 3</th>
+                    <th>Imagen 4</th>
+                    <th>Imagen 5</th>
+                    <th>Imagen 6</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td id="preview-img1"></td>
+                    <td id="preview-img2"></td>
+                    <td id="preview-img3"></td>
+                    <td id="preview-img4"></td>
+                    <td id="preview-img5"></td>
+                    <td id="preview-img6"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script>
+        // Actualizar previsualización de las imágenes
+        updateImagePreview('img1', 'preview-img1');
+        updateImagePreview('img2', 'preview-img2');
+        updateImagePreview('img3', 'preview-img3');
+        updateImagePreview('img4', 'preview-img4');
+        updateImagePreview('img5', 'preview-img5');
+        updateImagePreview('img6', 'preview-img6');
+    </script>
 
 </body>
 

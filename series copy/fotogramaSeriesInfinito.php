@@ -7,6 +7,7 @@
         <img id="imagen-fallo" src="">
     </div>
 </div>
+
 <div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-series-fotogramas">
 </div>
 
@@ -19,6 +20,9 @@
     <button id="btn-img6" class="boton-navegacion">6</button>
 </div>
 
+<button id="btn-reto-siguiente-infinito" class="botones-modo-infinito" style="display:none" onclick="mostrarRetoSiguiente()">Mostrar Reto Siguiente</button>
+<button id="btn-reiniciar-modo-infinito" class="botones-modo-infinito" style="display:none">Reiniciar</button>
+
 <div class="cuadro-busqueda">
     <div class="buscador-container">
         <input type="text" name="buscador" class="input-buscador" placeholder="Buscar..." onkeyup="buscarTitulo(this.value)">
@@ -30,7 +34,7 @@
 <!-- Input hidden con la respuesta correcta -->
 <input type="hidden" id="respuesta-correcta" value="">
 
-<script src="./fotogramaSeries.js"></script>
+<script src="./fotogramaSeriesInfinito.js"></script>
 
 <div class="historial-intentos" id="historial-intentos">
 </div>

@@ -4,7 +4,10 @@ require_once './header.php';
 
 <h1>Fotogramas Serie</h1>
 <div class="add-button">
-    <button onclick="location.href='agregarFotogramasSerie.php';" id="btn-agregar">Agregar Fotograma</button>
+    <button onclick="location.href='agregarFotogramaSerie.php';" id="btn-agregar">Agregar Fotograma</button>
+</div>
+<div class="search-container">
+    <input type="text" id="search-input" placeholder="Buscar por nombre" oninput="searchFotogramas()">
 </div>
 <div class="table-container">
     <table id="fotogramas-table" class="tabla-listado">
@@ -25,6 +28,40 @@ require_once './header.php';
 </div>
 
 <script>
+    const tableBody = document.querySelector('#fotogramas-table tbody');
+    const searchInput = document.querySelector('#search-input');
+
+    // Función para filtrar los fotogramas en función del nombre
+    function searchFotogramas() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const fotogramas = document.querySelectorAll('#fotogramas-table tbody tr');
+
+        fotogramas.forEach(fotograma => {
+            const nombre = fotograma.querySelector('td:nth-child(1)').textContent.toLowerCase();
+
+            if (nombre.includes(searchTerm)) {
+                fotograma.style.display = 'table-row';
+            } else {
+                fotograma.style.display = 'none';
+            }
+        });
+    }
+
+    // Función para ordenar los fotogramas por fecha descendente
+    function sortFotogramasByDate() {
+        const fotogramas = Array.from(document.querySelectorAll('#fotogramas-table tbody tr'));
+
+        fotogramas.sort((a, b) => {
+            const fechaA = new Date(a.querySelector('td:nth-child(8)').textContent);
+            const fechaB = new Date(b.querySelector('td:nth-child(8)').textContent);
+
+            return fechaB - fechaA; // Orden descendente
+        });
+
+        tableBody.innerHTML = '';
+        fotogramas.forEach(fotograma => tableBody.appendChild(fotograma));
+    }
+
     fetch('http://localhost:81/serieFotogramas', {
             method: 'GET',
             headers: {
@@ -33,8 +70,8 @@ require_once './header.php';
         })
         .then(response => response.json())
         .then(data => {
-            const tableBody = document.querySelector('#fotogramas-table tbody');
             const fotogramas = data.message;
+
             fotogramas.forEach(fotograma => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
@@ -49,6 +86,8 @@ require_once './header.php';
                 `;
                 tableBody.appendChild(row);
             });
+
+            sortFotogramasByDate(); // Ordenar los fotogramas por fecha descendente
         })
         .catch(error => {
             console.error('Error:', error);
