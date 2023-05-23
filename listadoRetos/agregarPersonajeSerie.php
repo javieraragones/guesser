@@ -48,7 +48,7 @@ require_once './header.php';
                     console.log(data);
                     alert('Personaje agregado correctamente');
                     resetForm();
-                    window.location.href = 'index.php';
+                    window.location.href = 'listadoPersonajesSeries.php';
                 })
                 .catch(error => {
                     console.error('Error:', error);
@@ -63,8 +63,51 @@ require_once './header.php';
                 alert("Por favor, completa todos los campos requeridos.");
                 return false; // Evita el envío del formulario.
             }
-            // Si el formulario es válido, se puede proceder con el envío.
-            return true;
+            // Ejecuta la comprobación de existencia de nombre después de obtener los retos guardados
+            ejecutarComprobacionNombre();
+            return false; // Evita el envío del formulario hasta que se complete la comprobación del nombre en la base de datos.
+        }
+
+        //Comprobar nombre introducido con los que se encuentran en la tabla
+
+        let arrayEmojis = []; // Array que contendrá los retos de emojis
+
+        // Obtiene los retos guardados de la base de datos mediante una solicitud a la API
+        async function obtenerRetosGuardados() {
+            try {
+                const response = await fetch('http://localhost:81/seriePersonaje');
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                const array = data.message;
+
+                array.forEach((emoji) => {
+                    arrayEmojis.push(emoji);
+                });
+            } catch (error) {
+                console.error(`Error fetching data: ${error}`);
+            }
+        }
+
+        // Ejecuta la comprobación de existencia de nombre después de obtener los retos guardados
+        async function ejecutarComprobacionNombre() {
+            await obtenerRetosGuardados();
+            verificarNombreExistente();
+        }
+
+        // Verifica si el nombre introducido en el campo de entrada ya existe en la base de datos
+        function verificarNombreExistente() {
+            var nombreInput = document.getElementById("nombre").value.toUpperCase();
+
+            if (comprobarNombreExistente(nombreInput)) {
+                alert("El nombre ya se encuentra en la base de datos.");
+            }
+        }
+
+        // Comprueba si el nombre existe en el array de emojis obtenidos de la base de datos
+        function comprobarNombreExistente(nombre) {
+            return arrayEmojis.some(emoji => emoji.nombre.toUpperCase() === nombre);
         }
 
         function updateImagePreview(inputId, previewId) {
@@ -91,7 +134,7 @@ require_once './header.php';
     <form id="formulario-agregar-personaje-serie" class="formulario-agregar-reto" onsubmit="return validarFormulario()">
         <div class="form-group">
             <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" required>
+            <input type="text" id="nombre" required onblur="ejecutarComprobacionNombre()">
         </div>
         <div class="form-group">
             <label for="nombre-serie">Nombre Serie:</label>

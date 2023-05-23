@@ -52,7 +52,7 @@ if (isset($_GET['logout'])) {
         Emojis Juegos
     </a>
 
-    <a href="listadoFotogramasJuegos.php" class="category-box">
+    <a href="listadoPersonajesJuegos.php" class="category-box">
         Personajes Juegos
     </a>
 </div>
