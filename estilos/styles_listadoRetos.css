@@ -1,32 +1,29 @@
 
-  @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Metrophobic&family=Nanum+Pen+Script&family=Rubik&family=Work+Sans:wght@200;300;400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300&family=Metrophobic&family=Nanum+Pen+Script&family=Raleway:wght@300;500&family=Rubik:wght@400;600&family=Work+Sans:wght@200;300;400&display=swap');
 
 :root{
-    --bg-color: #222831; /*BG COLOR PALETA V1*/
-    --box-color:#393E46; /*COLOR CAJAS PALETA V1
 
-    /*Paleta colores azul y morado*/
-    --primary-100:#00ADB5;
-    --primary-200:#AAE3E2;
-    --primary-300:#fdf6fd;
-    --accent-100: #AC7DD2;
-    --accent-200:#fff4ff;
-    --text-100:#EEEEEE;
-    --text-200:#C5C5C5;
-    --bg-100:#222831;
-    --bg-200:#393E46;
-    --bg-300:#454e59;
-  
-    /*---PALETA V2---*/
-    --bg-color: #26292B ; /*PALETA V2*/
-    --box-color:#2E3239; /*PALETA V2*/
-    --primary-100: #5F7ADB;
-    --accent-100: #A2B2EE;
-    --color-fallo: #FF003A;
+    --color-fondo: #1b1c1d;
+    --bg-header:#242628;
+    --txt-navbar:#e8e8e8;
+    --bg-form:#2a2d31;
+    --btn-agregar:#5ad16e;
+    --txt-btn:#1b1c1d;
+    --btn-fallo:#d2214f;
+    --bg-box-categorias:#242628;
+    --txt-box-categorias:#ffffff;
+    --borde-tabla-lista:#e8e8e8;
+    --cuerpo-tabla:#e8e8e8;
+    --bg-th-listado:#ccc;
+    --bg-form-agregar:#2a2d31;
+    --bg-tabla-prev:#2a2d31;
+    --txt-tabla-prev:#ccc;
+    --h1: #e8e8e8;
+
   }
 /* Estilos generales */
 body {
-    background-color: var(--bg-color);
+    background-color: var(--color-fondo);
     padding: 0;
     margin: 0;
     font-family: 'kanit', arial;
@@ -34,8 +31,8 @@ body {
   }
   
   h1 {
-    font-family: 'Work Sans','metrophobic', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
-    color: white;
+    font-family: 'Rubik','Work Sans','metrophobic', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+    color: var(--h1);
     font-size: 30px;
     margin-top: 20px;
     margin-bottom: 10px;
@@ -52,7 +49,7 @@ body {
     align-items: center;
     margin: 0 auto;
     padding: 10px;
-    color: #fff;
+    color: var(--txt-header);
     position: fixed;
     top: 0;
     left: 0;
@@ -60,23 +57,23 @@ body {
     z-index: 9999;
     text-align: center;
     position: fixed;
-    background-color: var(--bg-200);
+    background-color: var(--bg-header);
 }
 .navbar-item, .navbar-item a {
     flex: 1;
     width: 320px;
     height: auto;
     text-decoration: none;
-    color: white;
+    color: var(--txt-navbar);
     font-size: 20px;
-    font-family: 'Work Sans','metrophobic', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
+    font-family: 'Rubik','Work Sans','metrophobic', Impact, 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
   }
 
   #formulario-login {
     max-width: 300px;
     margin: 0 auto;
     padding: 20px;
-    background-color: var(--box-color);
+    background-color: var(--bg-form);
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     color: white;
@@ -84,7 +81,7 @@ body {
   #formulario-login button {
     width: 100%;
     padding: 10px;
-    background-color: var(--primary-100);
+    background-color: var(--btn-form);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -107,8 +104,8 @@ body {
   #btn-agregar {
     width: 30%;
     padding: 10px;
-    background-color: var(--primary-100);
-    color: #fff;
+    background-color: var(--btn-agregar);
+    color: var(--txt-btn);
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -116,8 +113,8 @@ body {
   .tabla-listado button{
     width: 100%;
     padding: 10px;
-    background-color: var(--color-fallo);
-    color: #fff;
+    background-color: var(--btn-fallo);
+    color: var(--txt-btn);
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -137,7 +134,7 @@ body {
   .category-box {
     width: 500px;
     height: 200px;
-    background-color: var(--box-color);
+    background-color: var(--bg-box-categorias);
     text-align: center;
     padding: 20px;
     margin: 10px;
@@ -148,7 +145,7 @@ body {
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
     transition: all 300ms;
     text-decoration: none;
-    color: var(--text-100);
+    color: var(--txt-box-categorias);
     font-size: 34px;
   }
 
@@ -161,17 +158,17 @@ body {
 }
 
 .tabla-listado th,.tabla-listado td {
-  border: 1px solid var(--text-100);
+  border: 1px solid var(--borde-tabla-lista);
   padding: 8px;
   text-align: left;
 }
 
 .tabla-listado tbody {
-  color: white;
+  color: var(--cuerpo-tabla);
 }
 
 .tabla-listado th {
-  background-color: var(--text-200);
+  background-color: var(--bg-th-listado);
 }
 
 .table-container {
@@ -198,7 +195,7 @@ body {
     width: 1000px;
     margin: 0 auto;
     padding: 20px;
-    background-color: var(--box-color);
+    background-color: var(--bg-form-agregar);
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     color: white;
@@ -216,7 +213,7 @@ body {
     margin-bottom: 10px;
 }
 .btn-limpiar-form {
-    background-color: var(--color-fallo) !important; 
+    background-color: var(--btn-fallo) !important; 
     width: 100%;
     padding: 10px;
     color: #fff;
@@ -227,7 +224,7 @@ body {
   .btn-agregar-reto  {
     width: 100%;
     padding: 10px;
-    background-color: var(--primary-100);
+    background-color: var(--btn-agregar);
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -242,10 +239,10 @@ body {
   height: 100%;
   margin: 20px auto;
   padding: 10px;
-  background-color: var(--box-color);
+  background-color: var(--bg-tabla-prev);
   border-radius: 5px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  color: white;
+  color: var(--txt-tabla-prev);
   text-align: center;
 }
 
@@ -255,7 +252,7 @@ body {
 
 .tabla-previsualizacion th, .table-tabla-previsualizacion th{
   height: 15px; /* Establece la altura predefinida para las celdas */
-  background-color: var(--box-color);
+  background-color: var(--bg-tabla-prev);
 }
 
 .tabla-previsualizacion img, .table-tabla-previsualizacion img{

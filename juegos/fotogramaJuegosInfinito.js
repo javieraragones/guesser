@@ -197,7 +197,7 @@ function comprobarRespuesta() {
         mensaje.style.display = 'inline-block';
         //Si el usuario ha acertado, muestra un mensaje de éxito y oculta el input de texto
         mensaje.innerHTML = "¡Respuesta correcta! <br> <span class='respuesta-acertada-mensaje'>" + primeraLetraMayus(respuestaCorrecta) + "</span>"; //Mensaje de respuesta correcta
-        mensaje.style.color = "green"; // establecer color verde para acierto 
+        mensaje.style.color = "#5ad16e"; // establecer color verde para acierto 
         mensaje.style.fontSize = "22px"; // establecer tamaño fuente   
         document.querySelector('.cuadro-busqueda').style.display = 'none'; //Desactivamos cuadro de búsqueda
 

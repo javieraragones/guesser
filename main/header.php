@@ -20,6 +20,7 @@
   <!--Integración cuadro texto js-->
   <script src="../../Guesser/js/cuadroTextoInfo.js"></script>
   <script src="../../Guesser/js/cuadroTextoPregunta.js"></script>
+  <link rel="icon" href="../../Guesser/favicon.png" type="image/x-icon">
 
 </head>
 
@@ -62,7 +63,7 @@
           </p><br />
           <p>
             <b>Derechos</b><br />
-            • Iconos:<a href="https://www.flaticon.es/" target="_blank" rel="noopener noreferrer">flaticon.</a> <br>
+            • Iconos:<a href="https://www.flaticon.es/" target="_blank" rel="noopener noreferrer">flaticon</a>,<a href="https://iconic.app/"> iconic</a> .<br>
             • Imágenes de series y películas:<a href="https://beta.flim.ai/" target="_blank" rel="noopener noreferrer">flim.</a>
           </p>
           <a href="#" id="btn-cerrar-info" class="fas fa-x btn-cerrar-header"></a>
