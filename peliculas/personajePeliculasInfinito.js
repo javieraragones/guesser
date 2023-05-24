@@ -71,7 +71,7 @@ function mostrarRetoSiguiente() {
         document.querySelector('.boton-buscar').disabled = true; // Deshabilitar el botón de envio de respuesta
         const cajaReto = document.getElementById('caja-reto-peliculas-personaje');
         cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
-        cajaReto.style.backgroundSize = 'cover';
+        cajaReto.style.backgroundSize = 'contain';
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
         mensaje.style.display = 'inline-block';
         mensaje.innerHTML = "Has realizado todos los retos disponibles";
@@ -163,7 +163,7 @@ function imagenCompleta() {
 
     // Establecer el tamaño de la imagen de fondo para que cubra completamente el contenedor
     cajaReto.css({
-        'background-size': 'cover',
+        'background-size': 'contain',
         'background-position': 'center' // Centrar la imagen
     });
 }

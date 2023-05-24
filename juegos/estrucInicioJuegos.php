@@ -27,6 +27,19 @@
                         <option value="/Guesser/juegos/emojiJuegos.php">Emoji</option>
                         <option value="/Guesser/juegos/personajeJuegos.php" selected>Personaje</option>
 
+                    <?php elseif ($currentPage == "fotogramaJuegosInfinito.php") : ?>
+                        <option value="/Guesser/juegos/fotogramaJuegosInfinito.php" selected>Fotograma Infinito</option>
+                        <option value="/Guesser/juegos/emojiJuegosInfinito.php">Emoji Infinito</option>
+                        <option value="/Guesser/juegos/personajeJuegosInfinito.php">Personaje Infinito</option>
+                    <?php elseif ($currentPage == "emojiJuegosInfinito.php") : ?>
+                        <option value="/Guesser/juegos/fotogramaJuegosInfinito.php">Fotograma Infinito</option>
+                        <option value="/Guesser/juegos/emojiJuegosInfinito.php" selected>Emoji Infinito</option>
+                        <option value="/Guesser/juegos/personajeJuegosInfinito.php">Personaje Infinito</option>
+                    <?php elseif ($currentPage == "personajeJuegosInfinito.php") : ?>
+                        <option value="/Guesser/juegos/fotogramaJuegosInfinito.php">Fotograma Infinito</option>
+                        <option value="/Guesser/juegos/emojiJuegosInfinito.php">Emoji Infinito</option>
+                        <option value="/Guesser/juegos/personajeJuegosInfinito.php" selected>Personaje Infinito</option>
+
                     <?php else : ?>
                         <option value="/Guesser/juegos/fotogramaJuegos.php">Fotograma</option>
                         <option value="/Guesser/juegos/emojiJuegos.php">Emoji</option>

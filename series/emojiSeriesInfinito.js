@@ -67,7 +67,7 @@ function mostrarRetoSiguiente() {
         const cajaReto = document.getElementById('caja-reto-series-emojis');
         cajaReto.innerHTML = '';
         cajaReto.style.backgroundImage = `url('https://blogs.unsw.edu.au/nowideas/files/2018/11/error-no-es-fracaso.jpg')`;
-        cajaReto.style.backgroundSize = 'cover';
+        cajaReto.style.backgroundSize = 'contain';
         const mensaje = document.querySelector('.mensaje-envio-respuesta');
         mensaje.style.display = 'inline-block';
         mensaje.innerHTML = "Has realizado todos los retos disponibles";

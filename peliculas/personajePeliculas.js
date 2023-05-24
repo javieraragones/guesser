@@ -99,7 +99,7 @@ function reducirZoom() {
 
 // Función con la que hacemos que la imagen se ajuste al cuadro para verla lo mejor posible, manteniendo la relación de aspecto
 function imagenCompleta() {
-    $('#caja-reto-peliculas-personaje').css('background-size', '100%');
+    $('#caja-reto-peliculas-personaje').css('background-size', 'contain');
 }
 
 // Función para poner la primera letra mayúscula

@@ -73,7 +73,7 @@ require_once './header.php';
             }
             // Ejecuta la comprobación de existencia de nombre después de obtener los retos guardados
             ejecutarComprobacionNombre();
-            return false; // Evita el envío del formulario hasta que se complete la comprobación del nombre en la base de datos.
+            return true; // Evita el envío del formulario hasta que se complete la comprobación del nombre en la base de datos.
         }
         //Comprobar nombre introducido con los que se encuentran en la tabla
 

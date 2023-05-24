@@ -27,6 +27,19 @@
                         <option value="/Guesser/series/emojiSeries.php">Emoji</option>
                         <option value="/Guesser/series/personajeSeries.php" selected>Personaje</option>
 
+                    <?php elseif ($currentPage == "fotogramaSeriesInfinito.php") : ?>
+                        <option value="/Guesser/series/fotogramaSeriesInfinito.php" selected>Fotograma Infinito</option>
+                        <option value="/Guesser/series/emojiSeriesInfinito.php">Emoji Infinito</option>
+                        <option value="/Guesser/series/personajeSeriesInfinito.php">Personaje Infinito</option>
+                    <?php elseif ($currentPage == "emojiSeriesInfinito.php") : ?>
+                        <option value="/Guesser/series/fotogramaSeriesInfinito.php">Fotograma Infinito</option>
+                        <option value="/Guesser/series/emojiSeriesInfinito.php" selected>Emoji Infinito</option>
+                        <option value="/Guesser/series/personajeSeriesInfinito.php">Personaje Infinito</option>
+                    <?php elseif ($currentPage == "personajeSeriesInfinito.php") : ?>
+                        <option value="/Guesser/series/fotogramaSeriesInfinito.php">Fotograma Infinito</option>
+                        <option value="/Guesser/series/emojiSeriesInfinito.php">Emoji Infinito</option>
+                        <option value="/Guesser/series/personajeSeriesInfinito.php" selected>Personaje Infinito</option>
+
                     <?php else : ?>
                         <option value="/Guesser/series/fotogramaSeries.php">Fotograma</option>
                         <option value="/Guesser/series/emojiSeries.php">Emoji</option>

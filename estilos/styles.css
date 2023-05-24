@@ -37,6 +37,7 @@
     --txt-btn-modos: #e8e8e8; /*antiguo botón cajas retos*/
     --bg-btn-modos: #303338;
     --bg-btn-modos-hover: #9c9bb1;
+    --bg-reto-emojis:#f6f6f6;
     /*
     --hover-btn-modos: #43e6fa;
     --active-btn-modos: red;
@@ -65,7 +66,7 @@
     --txt-historial-intentos: #e8e8e8;
     --bg-historial-fallo: #d2214f;
     --txt-intentos-restantes: #e8e8e8;
-
+    --btn-enviar-respuesta: #F0F0F0;
 }
 
 
@@ -414,12 +415,12 @@ header {
 /*-------------------------------------------ESTILOS PÁGINAS JUEGOS/*-------------------------------------------*/
 
 .game-cont {
-    height: 95vh; /* Ajusta la altura a tus necesidades */
+    height: 90%; /* Ajusta la altura a tus necesidades */
 }
 
 .game-box{
   width: 700px;
-  height: 100%;
+  height: 90%;
   border-radius: 10px;
   /*background-color: var(--box-color);*/
   display: flex;
@@ -439,7 +440,7 @@ header {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background-size: cover;
+  background-size: contain;
   background-repeat: no-repeat;
   background-position: center center;
 }
@@ -460,6 +461,8 @@ header {
 /*Estilo para la caja de reto de modo de juego emojis*/
 .reto-emojis{
   font-size: 80px;
+  background-color: var(--bg-reto-emojis);
+
 }
 
 /*---BARRA NAVEGACION SERIES---*/
@@ -862,6 +865,7 @@ header {
   outline: none;
   text-align: center;
   border-radius: 0 10px 10px 0;
+  background-color: var(--btn-enviar-respuesta);
 }
 .boton-buscar:hover {
   background-color: var(--btn-buscar-hover); 
@@ -913,7 +917,7 @@ header {
 .historial-intentos{
   color: var(--txt-historial-intentos);
   max-height: 600px;
- 
+  margin-top: 10px;
 }
 .historial-intentos p {
   background-color: var(--bg-historial-fallo);
@@ -977,13 +981,19 @@ header {
 }
 
 @media screen and (max-width: 768px) {
+  .cuadroTexto{
+    width: 90%;
+    height: auto;
   
+    padding: 5px;
+  }
   .cont-container{
     margin: 10px auto 10px auto;
     overflow: auto; /* o overflow: hidden; */
     width: 90%;
   }
   .container {
+    margin-top: 40px;
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -1017,7 +1027,7 @@ header {
   }
 
   .boton-buscar{
-    font-size: 0.8rem !important;
+    font-size: 0.7rem !important;
   }
 }
 

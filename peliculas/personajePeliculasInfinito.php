@@ -1,10 +1,10 @@
-<?php include './estrucInicioJuegos.php'; ?><!-- Incluir el contenido base -->
+<?php include './estrucInicioPeliculas.php'; ?><!-- Incluir el contenido base -->
 
 
-<div class="caja-reto caja-reto-personaje" id="caja-reto-juegos-personaje" style="font-size: 80px">
+<div class="caja-reto caja-reto-personaje" id="caja-reto-peliculas-personaje" style="font-size: 80px">
 </div>
 
-<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-juegos-personaje">
+<div class="mensaje-envio-respuesta" id="mensaje-envio-respuesta-peliculas-personaje">
 </div>
 
 <button id="btn-reto-siguiente-infinito" class="botones-modo-infinito" style="display:none" onclick="mostrarRetoSiguiente()">Mostrar Reto Siguiente</button>
@@ -21,7 +21,7 @@
 <!-- Input hidden con la respuesta correcta -->
 <input type="hidden" id="respuesta-correcta" value="">
 
-<script src="./personajeJuegosInfinito.js"></script>
+<script src="./personajePeliculasInfinito.js"></script>
 <div class="historial-intentos" id="historial-intentos">
 </div>
 
