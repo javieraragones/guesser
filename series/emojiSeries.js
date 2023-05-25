@@ -87,6 +87,7 @@ function comprobarRespuesta() {
         mensaje.style.fontSize = "22px"; // establecer tamaño fuente 
         document.querySelector('.cuadro-busqueda').style.display = 'none'; //Desactivamos cuadro de búsqueda
         document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
+        mostrarEmojis(6);
     } else {
         cantidadFallos++; //Aumentamos la cuenta de fallos
         // Añade la respuesta al historial
@@ -111,7 +112,7 @@ function comprobarRespuesta() {
         mensaje.style.fontSize = "22px"; // establecer tamaño fuente 
         document.querySelector('.cuadro-busqueda').style.display = 'none'; // Desactivamos cuadro de búsqueda
         document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
-
+        mostrarEmojis(6);
     }
     mostrarIntentosRestantes(cuentaIntentosRestantes); //Se muestran al usuario los intentos restantes
     document.querySelector(".input-buscador").value = ""; //Deja el cuadro de respuesta vacío

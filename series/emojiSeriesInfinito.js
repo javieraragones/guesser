@@ -134,7 +134,7 @@ function comprobarRespuesta() {
         mensaje.style.color = "#5ad16e"; // establecer color verde para acierto 
         mensaje.style.fontSize = "22px"; // establecer tamaño fuente 
         document.querySelector('.cuadro-busqueda').style.display = 'none'; //Desactivamos cuadro de búsqueda
-
+        mostrarEmojis(6, retoCount);
         //Reinicio la cantidad de fallos y los intentos restantes
         cantidadFallos = 0;
         cuentaIntentosRestantes = 6;
@@ -166,7 +166,7 @@ function comprobarRespuesta() {
         mensaje.style.fontSize = "22px"; // establecer tamaño fuente 
         document.querySelector('.cuadro-busqueda').style.display = 'none'; //Desactivamos cuadro de búsqueda
         document.querySelector('.intentos-restantes').style.display = 'none'; // Ocultamos los intentos restantes
-
+        mostrarEmojis(6, retoCount);
         // Reiniciamos la cuenta de los fallos y los intentos restantes
         cantidadFallos = 0;
         cuentaIntentosRestantes = 6;
